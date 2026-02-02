@@ -1,0 +1,326 @@
+1. GENERAL / SYSTEMIC (very common)
+Acute conditions
+
+Viral upper respiratory infection
+
+Influenza-like illness
+
+Acute COVID-like illness
+
+Dehydration
+
+Acute allergic reaction (non-anaphylactic)
+
+Fever of unknown origin (initial eval)
+
+Acute fatigue / malaise
+
+Acute pain (unspecified)
+
+Common symptoms
+
+Fever
+
+Chills
+
+Fatigue
+
+Body aches
+
+Dizziness
+
+Lightheadedness
+
+2. CARDIOVASCULAR (initial evaluation only)
+Acute conditions
+
+Acute coronary syndrome (rule-out)
+
+Stable angina flare
+
+Hypertensive urgency
+
+Palpitations (benign vs serious)
+
+Vasovagal syncope
+
+Orthostatic hypotension
+
+Common symptoms
+
+Chest pain
+
+Chest tightness
+
+Palpitations
+
+Shortness of breath
+
+Syncope / near-syncope
+
+Dizziness
+
+3. RESPIRATORY (daily bread and butter)
+Acute conditions
+
+Upper respiratory tract infection
+
+Acute bronchitis
+
+Asthma exacerbation
+
+Pneumonia (community-acquired)
+
+Acute sinusitis
+
+Acute pharyngitis
+
+Pulmonary embolism (initial suspicion only)
+
+Common symptoms
+
+Cough
+
+Shortness of breath
+
+Wheezing
+
+Sore throat
+
+Nasal congestion
+
+Chest discomfort
+
+Fever
+
+4. GASTROINTESTINAL (extremely common)
+Acute conditions
+
+Acute gastroenteritis
+
+Gastritis
+
+GERD flare
+
+Constipation
+
+Acute diarrhea
+
+Appendicitis (initial suspicion)
+
+Gallbladder colic
+
+Food poisoning
+
+Common symptoms
+
+Abdominal pain
+
+Nausea
+
+Vomiting
+
+Diarrhea
+
+Constipation
+
+Bloating
+
+Heartburn
+
+5. GENITOURINARY
+Acute conditions
+
+Urinary tract infection
+
+Pyelonephritis (early)
+
+Renal colic (kidney stones)
+
+Acute urinary retention
+
+Sexually transmitted infection (initial eval)
+
+Common symptoms
+
+Dysuria
+
+Frequency
+
+Urgency
+
+Flank pain
+
+Hematuria
+
+Lower abdominal pain
+
+6. NEUROLOGICAL (acute presentations only)
+Acute conditions
+
+Tension headache
+
+Migraine
+
+Cluster headache
+
+Acute dizziness / vertigo
+
+Transient ischemic attack (rule-out)
+
+Hypoglycemia
+
+Post-ictal state (initial eval)
+
+Common symptoms
+
+Headache
+
+Dizziness
+
+Weakness
+
+Numbness
+
+Visual changes
+
+Confusion
+
+7. MUSCULOSKELETAL
+Acute conditions
+
+Acute low back pain
+
+Muscle strain
+
+Ligament sprain
+
+Acute joint pain
+
+Bursitis
+
+Tendinitis
+
+Common symptoms
+
+Localized pain
+
+Swelling
+
+Limited movement
+
+Stiffness
+
+8. DERMATOLOGIC (very frequent)
+Acute conditions
+
+Cellulitis
+
+Abscess
+
+Contact dermatitis
+
+Urticaria
+
+Insect bites
+
+Herpes zoster (early)
+
+Common symptoms
+
+Rash
+
+Itching
+
+Redness
+
+Painful skin lesions
+
+Swelling
+
+9. ENDOCRINE / METABOLIC (acute issues)
+Acute conditions
+
+Hypoglycemia
+
+Hyperglycemia (non-DKA)
+
+Dehydration-related electrolyte imbalance
+
+Common symptoms
+
+Sweating
+
+Tremor
+
+Confusion
+
+Polyuria
+
+Polydipsia
+
+10. PSYCHIATRIC / FUNCTIONAL (very common in GP)
+Acute conditions
+
+Panic attack
+
+Acute anxiety
+
+Stress-related somatic symptoms
+
+Insomnia (acute)
+
+Adjustment disorder
+
+Common symptoms
+
+Chest tightness
+
+Shortness of breath
+
+Palpitations
+
+Dizziness
+
+Insomnia
+
+GI discomfort
+
+11. TRAUMA / MINOR INJURY
+Acute conditions
+
+Minor head injury (no LOC)
+
+Lacerations
+
+Soft tissue injury
+
+Minor burns
+
+Falls without fracture
+
+Common symptoms
+
+Pain
+
+Swelling
+
+Bruising
+
+Bleeding
+
+12. HIGH-YIELD “CONFUSABLE” SYMPTOM CLUSTERS (important for your app)
+
+These are gold for your simulator because they require good questioning:
+
+Chest pain → MI vs GERD vs anxiety vs costochondritis
+
+Shortness of breath → asthma vs pneumonia vs anxiety vs PE
+
+Abdominal pain → appendicitis vs gastroenteritis vs renal colic
+
+Headache → migraine vs tension vs SAH
+
+Dizziness → vertigo vs orthostatic vs hypoglycemia
+
+Fever → viral vs bacterial vs UTI

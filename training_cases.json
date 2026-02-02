@@ -1,0 +1,2104 @@
+{
+  "metadata": {
+    "total_cases": 62,
+    "source": "Kaggle Disease Symptom Dataset + Medical References",
+    "references": [
+      "Mayo Clinic",
+      "NHS",
+      "MedlinePlus"
+    ],
+    "license": "CC BY-SA 4.0",
+    "description": "GP-level patient cases with detailed clinical presentations",
+    "sources": [
+      "Kaggle Disease Symptom Dataset",
+      "MedQuAD"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "common_cold",
+      "patient": {
+        "age": 28,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "I've had a stuffy nose and sore throat for 3 days now",
+        "history": "Started with a scratchy throat, then developed nasal congestion. No sick contacts known.",
+        "duration": "3 days",
+        "severity": "mild to moderate",
+        "triggers": "possibly exposure at work"
+      },
+      "symptoms": {
+        "reported": [
+          "high fever",
+          "chest pain",
+          "swelled lymph nodes",
+          "malaise",
+          "redness of eyes",
+          "runny nose"
+        ],
+        "negative": [
+          "no high fever",
+          "no shortness of breath",
+          "no chest pain"
+        ],
+        "exam_findings": [
+          "nasal congestion",
+          "mild pharyngeal erythema",
+          "clear lung sounds"
+        ]
+      },
+      "diagnosis": "Common Cold",
+      "description": "The common cold is a viral infection of your nose and throat (upper respiratory tract). It's usually harmless, although it might not feel that way. Many types of viruses can cause a common cold.",
+      "precautions": [
+        "drink vitamin c rich drinks",
+        "take vapour",
+        "avoid cold food",
+        "keep fever in check"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "fungal_infection",
+      "patient": {
+        "age": 35,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "I have an itchy rash between my toes that won't go away",
+        "history": "Uses public gym showers. Noticed redness 2 weeks ago, now spreading.",
+        "duration": "2 weeks",
+        "severity": "moderate",
+        "triggers": "moist environment, shared showers"
+      },
+      "symptoms": {
+        "reported": [
+          "nodal skin eruptions",
+          "dischromic  patches",
+          "skin rash",
+          "itching"
+        ],
+        "negative": [
+          "no fever",
+          "no pain",
+          "no discharge"
+        ],
+        "exam_findings": [
+          "erythematous patches between toes",
+          "scaling skin",
+          "macerated skin"
+        ]
+      },
+      "diagnosis": "Fungal infection",
+      "description": "In humans, fungal infections occur when an invading fungus takes over an area of the body and is too much for the immune system to handle. Fungi can live in the air, soil, water, and plants. There are also some fungi that live naturally in the human body. Like many microbes, there are helpful fungi and harmful fungi.",
+      "precautions": [
+        "bath twice",
+        "use detol or neem in bathing water",
+        "keep infected area dry",
+        "use clean cloths"
+      ],
+      "difficulty": 1
+    },
+    {
+      "case_id": "allergy",
+      "patient": {
+        "age": 24,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "My eyes are watery and I can't stop sneezing since spring started",
+        "history": "Happens every spring. Family history of allergies. Has cat at home.",
+        "duration": "2 weeks, seasonal pattern",
+        "severity": "moderate",
+        "triggers": "pollen, dust, pet dander"
+      },
+      "symptoms": {
+        "reported": [
+          "shivering",
+          "continuous sneezing",
+          "watering from eyes",
+          "chills"
+        ],
+        "negative": [
+          "no fever",
+          "no purulent discharge",
+          "no wheezing"
+        ],
+        "exam_findings": [
+          "conjunctival injection",
+          "clear rhinorrhea",
+          "boggy nasal turbinates"
+        ]
+      },
+      "diagnosis": "Allergy",
+      "description": "An allergy is an immune system response to a foreign substance that's not typically harmful to your body.They can include certain foods, pollen, or pet dander. Your immune system's job is to keep you healthy by fighting harmful pathogens.",
+      "precautions": [
+        "apply calamine",
+        "cover area with bandage",
+        "use ice to compress itching"
+      ],
+      "difficulty": 1
+    },
+    {
+      "case_id": "gerd",
+      "patient": {
+        "age": 45,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "I get a burning feeling in my chest after meals, especially at night",
+        "history": "Worse when lying down. Drinks coffee daily. Occasional regurgitation of sour liquid.",
+        "duration": "3 months",
+        "severity": "moderate",
+        "triggers": "spicy food, coffee, lying down after meals"
+      },
+      "symptoms": {
+        "reported": [
+          "chest pain",
+          "vomiting",
+          "stomach pain",
+          "cough",
+          "ulcers on tongue",
+          "acidity"
+        ],
+        "negative": [
+          "no difficulty swallowing",
+          "no weight loss",
+          "no vomiting blood"
+        ],
+        "exam_findings": [
+          "epigastric tenderness",
+          "normal heart sounds",
+          "no abdominal masses"
+        ]
+      },
+      "diagnosis": "GERD",
+      "description": "Gastroesophageal reflux disease, or GERD, is a digestive disorder that affects the lower esophageal sphincter (LES), the ring of muscle between the esophagus and stomach. Many people, including pregnant women, suffer from heartburn or acid indigestion caused by GERD.",
+      "precautions": [
+        "avoid fatty spicy food",
+        "avoid lying down after eating",
+        "maintain healthy weight",
+        "exercise"
+      ],
+      "difficulty": 2
+    },
+    {
+      "case_id": "gastroenteritis",
+      "patient": {
+        "age": 32,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "I've had diarrhea and vomiting since yesterday after eating out",
+        "history": "Ate at a new restaurant yesterday. Colleague who ate same food also sick.",
+        "duration": "24 hours",
+        "severity": "moderate",
+        "triggers": "contaminated food"
+      },
+      "symptoms": {
+        "reported": [
+          "diarrhoea",
+          "vomiting",
+          "dehydration",
+          "sunken eyes"
+        ],
+        "negative": [
+          "no blood in stool",
+          "no high fever",
+          "no severe abdominal pain"
+        ],
+        "exam_findings": [
+          "mild dehydration",
+          "hyperactive bowel sounds",
+          "diffuse abdominal tenderness"
+        ]
+      },
+      "diagnosis": "Gastroenteritis",
+      "description": "Gastroenteritis is an inflammation of the digestive tract, particularly the stomach, and large and small intestines. Viral and bacterial gastroenteritis are intestinal infections associated with symptoms of diarrhea , abdominal cramps, nausea , and vomiting .",
+      "precautions": [
+        "stop eating solid food for while",
+        "try taking small sips of water",
+        "rest",
+        "ease back into eating"
+      ],
+      "difficulty": 1
+    },
+    {
+      "case_id": "migraine",
+      "patient": {
+        "age": 29,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "I have a throbbing headache on one side with nausea and light sensitivity",
+        "history": "Gets these headaches monthly. Mother has migraines. Missed sleep last night.",
+        "duration": "6 hours",
+        "severity": "severe",
+        "triggers": "stress, lack of sleep, bright lights, menstruation"
+      },
+      "symptoms": {
+        "reported": [
+          "blurred and distorted vision",
+          "indigestion",
+          "excessive hunger",
+          "stiff neck",
+          "acidity",
+          "visual disturbances"
+        ],
+        "negative": [
+          "no fever",
+          "no neck stiffness",
+          "no weakness"
+        ],
+        "exam_findings": [
+          "photophobia",
+          "phonophobia",
+          "normal neurological exam"
+        ]
+      },
+      "diagnosis": "Migraine",
+      "description": "A migraine can cause severe throbbing pain or a pulsing sensation, usually on one side of the head. It's often accompanied by nausea, vomiting, and extreme sensitivity to light and sound. Migraine attacks can last for hours to days, and the pain can be so severe that it interferes with your daily activities.",
+      "precautions": [
+        "meditation",
+        "reduce stress",
+        "use poloroid glasses in sun",
+        "consult doctor"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "vertigo_paroymsal__positional_vertigo",
+      "patient": {
+        "age": 52,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "The room spins when I turn over in bed or look up",
+        "history": "Episodes last less than a minute. No hearing loss. Had a head cold last week.",
+        "duration": "4 days",
+        "severity": "moderate",
+        "triggers": "head position changes, rolling over in bed, looking up"
+      },
+      "symptoms": {
+        "reported": [
+          "spinning movements",
+          "nausea",
+          "vomiting",
+          "unsteadiness",
+          "loss of balance",
+          "headache"
+        ],
+        "negative": [
+          "no hearing loss",
+          "no tinnitus",
+          "no facial weakness"
+        ],
+        "exam_findings": [
+          "positive Dix-Hallpike test",
+          "nystagmus with position change",
+          "normal hearing"
+        ]
+      },
+      "diagnosis": "(vertigo) Paroymsal  Positional Vertigo",
+      "description": "Benign paroxysmal positional vertigo (BPPV) is one of the most common causes of vertigo \u2014 the sudden sensation that you're spinning or that the inside of your head is spinning. Benign paroxysmal positional vertigo causes brief episodes of mild to intense dizziness.",
+      "precautions": [
+        "lie down",
+        "avoid sudden change in body",
+        "avoid abrupt head movment",
+        "relax"
+      ],
+      "difficulty": 2
+    },
+    {
+      "case_id": "acne",
+      "patient": {
+        "age": 19,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "I keep getting pimples on my face that leave marks",
+        "history": "Started at puberty, worse before periods. Uses oil-based makeup.",
+        "duration": "2 years",
+        "severity": "moderate",
+        "triggers": "hormonal changes, oily cosmetics, stress"
+      },
+      "symptoms": {
+        "reported": [
+          "skin rash",
+          "blackheads",
+          "scurring",
+          "pus filled pimples"
+        ],
+        "negative": [
+          "no fever",
+          "no spreading rash",
+          "no systemic symptoms"
+        ],
+        "exam_findings": [
+          "comedones on face",
+          "inflammatory papules",
+          "post-inflammatory hyperpigmentation"
+        ]
+      },
+      "diagnosis": "Acne",
+      "description": "Acne vulgaris is the formation of comedones, papules, pustules, nodules, and/or cysts as a result of obstruction and inflammation of pilosebaceous units (hair follicles and their accompanying sebaceous gland). Acne develops on the face and upper trunk. It most often affects adolescents.",
+      "precautions": [
+        "bath twice",
+        "avoid fatty spicy food",
+        "drink plenty of water",
+        "avoid too many products"
+      ],
+      "difficulty": 1
+    },
+    {
+      "case_id": "urinary_tract_infection",
+      "patient": {
+        "age": 26,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "It burns when I urinate and I need to go constantly",
+        "history": "Sexually active. Not drinking enough water. Had UTIs before.",
+        "duration": "2 days",
+        "severity": "moderate",
+        "triggers": "sexual activity, dehydration, holding urine"
+      },
+      "symptoms": {
+        "reported": [
+          "continuous feel of urine",
+          "burning micturition",
+          "bladder discomfort",
+          "foul smell of urine"
+        ],
+        "negative": [
+          "no fever",
+          "no back pain",
+          "no vaginal discharge"
+        ],
+        "exam_findings": [
+          "suprapubic tenderness",
+          "no costovertebral angle tenderness",
+          "cloudy urine"
+        ]
+      },
+      "diagnosis": "Urinary tract infection",
+      "description": "Urinary tract infection: An infection of the kidney, ureter, bladder, or urethra. Abbreviated UTI. Not everyone with a UTI has symptoms, but common symptoms include a frequent urge to urinate and pain or burning when urinating.",
+      "precautions": [
+        "drink plenty of water",
+        "increase vitamin c intake",
+        "drink cranberry juice",
+        "take probiotics"
+      ],
+      "difficulty": 1
+    },
+    {
+      "case_id": "impetigo",
+      "patient": {
+        "age": 5,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "My child has honey-colored crusty sores around the mouth",
+        "history": "Started as small blisters, now spreading. Other kids at daycare have it.",
+        "duration": "5 days",
+        "severity": "mild",
+        "triggers": "skin break, close contact with infected person"
+      },
+      "symptoms": {
+        "reported": [
+          "high fever",
+          "blister",
+          "yellow crust ooze",
+          "skin rash",
+          "red sore around nose"
+        ],
+        "negative": [
+          "no fever",
+          "no deep tissue involvement",
+          "no systemic illness"
+        ],
+        "exam_findings": [
+          "honey-colored crusts",
+          "erythematous base",
+          "lesions around mouth and nose"
+        ]
+      },
+      "diagnosis": "Impetigo",
+      "description": "Impetigo (im-puh-TIE-go) is a common and highly contagious skin infection that mainly affects infants and children. Impetigo usually appears as red sores on the face, especially around a child's nose and mouth, and on hands and feet. The sores burst and develop honey-colored crusts.",
+      "precautions": [
+        "soak affected area in warm water",
+        "use antibiotics",
+        "remove scabs with wet compressed cloth",
+        "consult doctor"
+      ],
+      "difficulty": 2
+    },
+    {
+      "case_id": "hypoglycemia",
+      "patient": {
+        "age": 58,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "I feel shaky, sweaty and confused if I skip meals",
+        "history": "Diabetic on insulin. Skipped lunch today. Took regular insulin dose.",
+        "duration": "1 hour",
+        "severity": "moderate to severe",
+        "triggers": "missed meals, excess insulin, strenuous exercise"
+      },
+      "symptoms": {
+        "reported": [
+          "nausea",
+          "blurred and distorted vision",
+          "vomiting",
+          "anxiety",
+          "slurred speech",
+          "palpitations"
+        ],
+        "negative": [
+          "no chest pain",
+          "no seizure",
+          "no loss of consciousness"
+        ],
+        "exam_findings": [
+          "diaphoresis",
+          "tremor",
+          "tachycardia",
+          "confusion"
+        ]
+      },
+      "diagnosis": "Hypoglycemia",
+      "description": " Hypoglycemia is a condition in which your blood sugar (glucose) level is lower than normal. Glucose is your body's main energy source. Hypoglycemia is often related to diabetes treatment. But other drugs and a variety of conditions \u2014 many rare \u2014 can cause low blood sugar in people who don't have diabetes.",
+      "precautions": [
+        "lie down on side",
+        "check in pulse",
+        "drink sugary drinks",
+        "consult doctor"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "bronchial_asthma",
+      "patient": {
+        "age": 22,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "I'm wheezing and my chest feels tight, especially at night",
+        "history": "Childhood asthma, uses inhaler. Got worse after getting a cat.",
+        "duration": "1 week, worsening",
+        "severity": "moderate",
+        "triggers": "pet dander, cold air, exercise, dust"
+      },
+      "symptoms": {
+        "reported": [
+          "high fever",
+          "family history",
+          "breathlessness",
+          "cough",
+          "mucoid sputum",
+          "fatigue"
+        ],
+        "negative": [
+          "no fever",
+          "no productive cough",
+          "no weight loss"
+        ],
+        "exam_findings": [
+          "expiratory wheezes",
+          "prolonged expiration",
+          "accessory muscle use"
+        ]
+      },
+      "diagnosis": "Bronchial Asthma",
+      "description": "Bronchial asthma is a medical condition which causes the airway path of the lungs to swell and narrow. Due to this swelling, the air path produces excess mucus making it hard to breathe, which results in coughing, short breath, and wheezing. The disease is chronic and interferes with daily working.",
+      "precautions": [
+        "switch to loose cloothing",
+        "take deep breaths",
+        "get away from trigger",
+        "seek help"
+      ],
+      "difficulty": 2
+    },
+    {
+      "case_id": "pneumonia",
+      "patient": {
+        "age": 55,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "I have a cough with yellow-green mucus, fever, and trouble breathing",
+        "history": "Had a cold last week that got worse. Smoker. Feels weak and tired.",
+        "duration": "5 days",
+        "severity": "moderate to severe",
+        "triggers": "preceding viral infection, smoking, weakened immunity"
+      },
+      "symptoms": {
+        "reported": [
+          "high fever",
+          "chest pain",
+          "malaise",
+          "fast heart rate",
+          "phlegm",
+          "breathlessness"
+        ],
+        "negative": [
+          "no hemoptysis",
+          "no chest trauma",
+          "no recent travel"
+        ],
+        "exam_findings": [
+          "crackles in right lower lobe",
+          "dullness to percussion",
+          "fever 38.5C",
+          "tachypnea"
+        ]
+      },
+      "diagnosis": "Pneumonia",
+      "description": "Pneumonia is an infection in one or both lungs. Bacteria, viruses, and fungi cause it. The infection causes inflammation in the air sacs in your lungs, which are called alveoli. The alveoli fill with fluid or pus, making it difficult to breathe.",
+      "precautions": [
+        "consult doctor",
+        "medication",
+        "rest",
+        "follow up"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "peptic_ulcer_diseae",
+      "patient": {
+        "age": 48,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "I have a gnawing stomach pain that gets better after eating",
+        "history": "Takes ibuprofen regularly for back pain. Drinks alcohol on weekends.",
+        "duration": "3 weeks",
+        "severity": "moderate",
+        "triggers": "NSAIDs, alcohol, stress, H. pylori infection"
+      },
+      "symptoms": {
+        "reported": [
+          "passage of gases",
+          "vomiting",
+          "indigestion",
+          "loss of appetite",
+          "abdominal pain",
+          "internal itching"
+        ],
+        "negative": [
+          "no vomiting blood",
+          "no black stools",
+          "no weight loss"
+        ],
+        "exam_findings": [
+          "epigastric tenderness",
+          "no rebound",
+          "normal bowel sounds"
+        ]
+      },
+      "diagnosis": "Peptic ulcer diseae",
+      "description": "Peptic ulcer disease (PUD) is a break in the inner lining of the stomach, the first part of the small intestine, or sometimes the lower esophagus. An ulcer in the stomach is called a gastric ulcer, while one in the first part of the intestines is a duodenal ulcer.",
+      "precautions": [
+        "avoid fatty spicy food",
+        "consume probiotic food",
+        "eliminate milk",
+        "limit alcohol"
+      ],
+      "difficulty": 2
+    },
+    {
+      "case_id": "chicken_pox",
+      "patient": {
+        "age": 6,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "My child has an itchy rash with blisters all over the body and a fever",
+        "history": "Not vaccinated. Exposed to child with chickenpox 2 weeks ago.",
+        "duration": "3 days",
+        "severity": "moderate",
+        "triggers": "exposure to varicella zoster virus"
+      },
+      "symptoms": {
+        "reported": [
+          "high fever",
+          "swelled lymph nodes",
+          "malaise",
+          "mild fever",
+          "loss of appetite",
+          "fatigue"
+        ],
+        "negative": [
+          "no difficulty breathing",
+          "no severe headache",
+          "no neck stiffness"
+        ],
+        "exam_findings": [
+          "vesicular rash in different stages",
+          "lesions on trunk, face, scalp",
+          "fever 38C",
+          "pruritus"
+        ]
+      },
+      "diagnosis": "Chicken pox",
+      "description": "Chickenpox is a highly contagious disease caused by the varicella-zoster virus (VZV). It can cause an itchy, blister-like rash. The rash first appears on the chest, back, and face, and then spreads over the entire body, causing between 250 and 500 itchy blisters.",
+      "precautions": [
+        "use neem in bathing ",
+        "consume neem leaves",
+        "take vaccine",
+        "avoid public places"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "dengue",
+      "patient": {
+        "age": 34,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "I have high fever, severe body aches, and pain behind my eyes",
+        "history": "Returned from tropical trip 1 week ago. Many mosquito bites during travel.",
+        "duration": "4 days",
+        "severity": "severe",
+        "triggers": "mosquito bite in endemic area"
+      },
+      "symptoms": {
+        "reported": [
+          "high fever",
+          "malaise",
+          "vomiting",
+          "nausea",
+          "loss of appetite",
+          "pain behind the eyes"
+        ],
+        "negative": [
+          "no bleeding",
+          "no severe abdominal pain",
+          "no persistent vomiting"
+        ],
+        "exam_findings": [
+          "high fever 39.5C",
+          "maculopapular rash",
+          "petechiae",
+          "hepatomegaly"
+        ]
+      },
+      "diagnosis": "Dengue",
+      "description": "an acute infectious disease caused by a flavivirus (species Dengue virus of the genus Flavivirus), transmitted by aedes mosquitoes, and characterized by headache, severe joint pain, and a rash. \u2014 called also breakbone fever, dengue fever.",
+      "precautions": [
+        "drink papaya leaf juice",
+        "avoid fatty spicy food",
+        "keep mosquitos away",
+        "keep hydrated"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "typhoid",
+      "patient": {
+        "age": 30,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "I've had a persistent fever for a week with headache and stomach pain",
+        "history": "Returned from South Asia 2 weeks ago. Drank local water. Progressive fever.",
+        "duration": "7 days",
+        "severity": "moderate to severe",
+        "triggers": "contaminated food or water in endemic area"
+      },
+      "symptoms": {
+        "reported": [
+          "high fever",
+          "diarrhoea",
+          "vomiting",
+          "nausea",
+          "toxic look (typhos)",
+          "belly pain"
+        ],
+        "negative": [
+          "no jaundice",
+          "no bloody diarrhea",
+          "no altered consciousness"
+        ],
+        "exam_findings": [
+          "rose spots on abdomen",
+          "relative bradycardia",
+          "hepatosplenomegaly",
+          "coated tongue"
+        ]
+      },
+      "diagnosis": "Typhoid",
+      "description": "An acute illness characterized by fever caused by infection with the bacterium Salmonella typhi. Typhoid fever has an insidious onset, with fever, headache, constipation, malaise, chills, and muscle pain. Diarrhea is uncommon, and vomiting is not usually severe.",
+      "precautions": [
+        "eat high calorie vegitables",
+        "antiboitic therapy",
+        "consult doctor",
+        "medication"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "malaria",
+      "patient": {
+        "age": 42,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "I have episodes of chills followed by high fever and sweating",
+        "history": "Returned from Africa 2 weeks ago. Didn't complete antimalarial prophylaxis.",
+        "duration": "5 days, cyclic pattern",
+        "severity": "severe",
+        "triggers": "mosquito bite in malaria-endemic area"
+      },
+      "symptoms": {
+        "reported": [
+          "high fever",
+          "diarrhoea",
+          "vomiting",
+          "nausea",
+          "sweating",
+          "headache"
+        ],
+        "negative": [
+          "no altered consciousness",
+          "no seizures",
+          "no severe anemia symptoms"
+        ],
+        "exam_findings": [
+          "fever 40C during paroxysm",
+          "splenomegaly",
+          "pallor",
+          "jaundice"
+        ]
+      },
+      "diagnosis": "Malaria",
+      "description": "An infectious disease caused by protozoan parasites from the Plasmodium family that can be transmitted by the bite of the Anopheles mosquito or by a contaminated needle or transfusion. Falciparum malaria is the most deadly type.",
+      "precautions": [
+        "Consult nearest hospital",
+        "avoid oily food",
+        "avoid non veg food",
+        "keep mosquitos out"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "psoriasis",
+      "patient": {
+        "age": 38,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "I have thick, scaly patches on my elbows and knees that keep coming back",
+        "history": "Father has psoriasis. Stress at work recently. Patches appeared after strep throat.",
+        "duration": "6 months, chronic",
+        "severity": "moderate",
+        "triggers": "stress, streptococcal infection, cold weather, skin trauma"
+      },
+      "symptoms": {
+        "reported": [
+          "skin peeling",
+          "joint pain",
+          "skin rash",
+          "inflammatory nails",
+          "small dents in nails",
+          "silver like dusting"
+        ],
+        "negative": [
+          "no joint pain",
+          "no nail changes",
+          "no fever"
+        ],
+        "exam_findings": [
+          "well-demarcated erythematous plaques",
+          "silvery scales",
+          "Auspitz sign positive"
+        ]
+      },
+      "diagnosis": "Psoriasis",
+      "description": "Psoriasis is a common skin disorder that forms thick, red, bumpy patches covered with silvery scales. They can pop up anywhere, but most appear on the scalp, elbows, knees, and lower back. Psoriasis can't be passed from person to person. It does sometimes happen in members of the same family.",
+      "precautions": [
+        "wash hands with warm soapy water",
+        "stop bleeding using pressure",
+        "consult doctor",
+        "salt baths"
+      ],
+      "difficulty": 2
+    },
+    {
+      "case_id": "drug_reaction",
+      "patient": {
+        "age": 33,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "I developed a rash all over after starting a new antibiotic",
+        "history": "Started amoxicillin 3 days ago for sinus infection. Never had drug allergies before.",
+        "duration": "2 days",
+        "severity": "moderate",
+        "triggers": "new medication (antibiotic)"
+      },
+      "symptoms": {
+        "reported": [
+          "burning micturition",
+          "stomach pain",
+          "spotting  urination",
+          "skin rash",
+          "itching"
+        ],
+        "negative": [
+          "no facial swelling",
+          "no difficulty breathing",
+          "no blistering"
+        ],
+        "exam_findings": [
+          "morbilliform rash",
+          "symmetrical distribution",
+          "no mucosal involvement"
+        ]
+      },
+      "diagnosis": "Drug Reaction",
+      "description": "An adverse drug reaction (ADR) is an injury caused by taking medication. ADRs may occur following a single dose or prolonged administration of a drug or result from the combination of two or more drugs.",
+      "precautions": [
+        "stop irritation",
+        "consult nearest hospital",
+        "stop taking drug",
+        "follow up"
+      ],
+      "difficulty": 2
+    },
+    {
+      "case_id": "hypothyroidism",
+      "patient": {
+        "age": 45,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "I feel tired all the time, I'm gaining weight, and I'm always cold",
+        "history": "Fatigue worsening over 6 months. Constipation. Dry skin. Hair falling out.",
+        "duration": "6 months",
+        "severity": "moderate",
+        "triggers": "autoimmune thyroiditis (Hashimoto's)"
+      },
+      "symptoms": {
+        "reported": [
+          "enlarged thyroid",
+          "abnormal menstruation",
+          "brittle nails",
+          "puffy face and eyes",
+          "cold hands and feets",
+          "swollen extremeties"
+        ],
+        "negative": [
+          "no goiter pain",
+          "no palpitations",
+          "no heat intolerance"
+        ],
+        "exam_findings": [
+          "bradycardia",
+          "dry skin",
+          "delayed DTRs",
+          "periorbital edema",
+          "non-pitting edema"
+        ]
+      },
+      "diagnosis": "Hypothyroidism",
+      "description": "Hypothyroidism, also called underactive thyroid or low thyroid, is a disorder of the endocrine system in which the thyroid gland does not produce enough thyroid hormone.",
+      "precautions": [
+        "reduce stress",
+        "exercise",
+        "eat healthy",
+        "get proper sleep"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "hyperthyroidism",
+      "patient": {
+        "age": 35,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "I've lost weight even though I'm eating more, and my heart races",
+        "history": "Lost 5kg in 2 months. Trembling hands. Anxious and can't sleep. Heat intolerant.",
+        "duration": "2 months",
+        "severity": "moderate",
+        "triggers": "Graves' disease, thyroid nodule"
+      },
+      "symptoms": {
+        "reported": [
+          "diarrhoea",
+          "abnormal menstruation",
+          "restlessness",
+          "fast heart rate",
+          "excessive hunger",
+          "fatigue"
+        ],
+        "negative": [
+          "no eye pain",
+          "no vision changes",
+          "no neck mass"
+        ],
+        "exam_findings": [
+          "tachycardia",
+          "fine tremor",
+          "warm moist skin",
+          "lid lag",
+          "diffuse goiter"
+        ]
+      },
+      "diagnosis": "Hyperthyroidism",
+      "description": "Hyperthyroidism (overactive thyroid) occurs when your thyroid gland produces too much of the hormone thyroxine. Hyperthyroidism can accelerate your body's metabolism, causing unintentional weight loss and a rapid or irregular heartbeat.",
+      "precautions": [
+        "eat healthy",
+        "massage",
+        "use lemon balm",
+        "take radioactive iodine treatment"
+      ],
+      "difficulty": 3
+    },
+    {
+      "case_id": "arthritis",
+      "patient": {
+        "age": 42,
+        "gender": "Female"
+      },
+      "presentation": {
+        "chief_complaint": "My joints are swollen and stiff, especially in the morning",
+        "history": "Morning stiffness lasting over an hour. Affects small joints of hands symmetrically.",
+        "duration": "3 months",
+        "severity": "moderate",
+        "triggers": "autoimmune (rheumatoid arthritis)"
+      },
+      "symptoms": {
+        "reported": [
+          "swelling joints",
+          "movement stiffness",
+          "stiff neck",
+          "muscle weakness",
+          "painful walking"
+        ],
+        "negative": [
+          "no fever",
+          "no rash",
+          "no recent infection"
+        ],
+        "exam_findings": [
+          "synovitis of MCP and PIP joints",
+          "symmetric involvement",
+          "warmth and swelling"
+        ]
+      },
+      "diagnosis": "Arthritis",
+      "description": "Arthritis is the swelling and tenderness of one or more of your joints. The main symptoms of arthritis are joint pain and stiffness, which typically worsen with age. The most common types of arthritis are osteoarthritis and rheumatoid arthritis.",
+      "precautions": [
+        "exercise",
+        "use hot and cold therapy",
+        "try acupuncture",
+        "massage"
+      ],
+      "difficulty": 2
+    },
+    {
+      "case_id": "osteoarthristis",
+      "patient": {
+        "age": 62,
+        "gender": "Male"
+      },
+      "presentation": {
+        "chief_complaint": "My knees hurt when I climb stairs and after sitting for a long time",
+        "history": "Pain worse with activity, better with rest. Occasional creaking sound. Overweight.",
+        "duration": "1 year, progressive",
+        "severity": "moderate",
+        "triggers": "age, obesity, prior joint injury, repetitive stress"
+      },
+      "symptoms": {
+        "reported": [
+          "neck pain",
+          "swelling joints",
+          "knee pain",
+          "joint pain",
+          "hip joint pain",
+          "painful walking"
+        ],
+        "negative": [
+          "no morning stiffness over 30 min",
+          "no joint warmth",
+          "no fever"
+        ],
+        "exam_findings": [
+          "crepitus on knee flexion",
+          "bony enlargement",
+          "reduced ROM",
+          "no synovitis"
+        ]
+      },
+      "diagnosis": "Osteoarthristis",
+      "description": "Osteoarthritis is the most common form of arthritis, affecting millions of people worldwide. It occurs when the protective cartilage that cushions the ends of your bones wears down over time.",
+      "precautions": [
+        "acetaminophen",
+        "consult nearest hospital",
+        "follow up",
+        "salt baths"
+      ],
+      "difficulty": 2
+    },
+    {
+      "case_id": "urinary_tract_infections",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Symptoms May Vary Symptoms may differ depending on age, gender, and catheter use",
+        "history": "Most urinary tract infections, or UTIs, are caused by bacteria that enter the urethra and then the bladder. A type of bacteria that normally lives in the bowel (called E. coli) causes most UTIs. UTIs can also be caused by fungus (another type of germ). Who Gets UTIs? Although everyone has some risk ",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Most urinary tract infections, or UTIs, are caused by bacteria that enter the urethra and then the bladder. A type of bacteria that normally lives in the bowel (called E. coli) causes most UTIs. UTIs "
+      },
+      "symptoms": {
+        "reported": [
+          "- cloudy",
+          "bloody",
+          "or foul-smelling urine  - pain or burning during urination  - strong",
+          "frequent need to urinate"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Urinary Tract Infections",
+      "description": "A Common Problem With Aging Urinary tract infections (UTIs) are a common bladder problem, especially as people age. UTIs are the second most common type of infection in the body. Each year, UTIs cause more than 8 million visits to health care providers. UTIs can happen anywhere in the urinary system (which includes the kidneys, bladder, and urethra). But UTIs are most common in the bladder. A UTI in the bladder is called cystitis. Infections in the bladder can spread to the kidneys. A UTI in the",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "bronchitis",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Acute Bronchitis Acute bronchitis caused by an infection usually develops after you already have a cold or the flu",
+        "history": "Acute Bronchitis\n                \nInfections or lung irritants cause acute bronchitis. The same viruses that cause colds and the flu are the most common cause of acute bronchitis. Sometimes bacteria can cause the condition.\n                \nCertain substances can irritate your lungs and airways and ",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Acute Bronchitis\n                \nInfections or lung irritants cause acute bronchitis. The same viruses that cause colds and the flu are the most common cause of acute bronchitis. Sometimes bacteria c"
+      },
+      "symptoms": {
+        "reported": [
+          "sore throat",
+          "fatigue (tiredness)",
+          "fever",
+          "body aches",
+          "stuffy or runny nose",
+          "vomiting",
+          "diarrhea"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Bronchitis",
+      "description": "Espaol\n                \nBronchitis (bron-KI-tis) is a condition in which the bronchial tubes become inflamed. These tubes carry air to your lungs. (For more information about the bronchial tubes and airways, go to the Diseases and Conditions Index How the Lungs Work article.)\n                \nPeople who have bronchitis often have a cough that brings up mucus. Mucus is a slimy substance made by the lining of the bronchial tubes. Bronchitis also may cause wheezing (a whistling or squeaky sound whe",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "viral_gastroenteritis",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Some viruses cause symptoms that last longer",
+        "history": "Four types of viruses cause most cases of viral gastroenteritis.\n                \nRotavirus\n                \nRotavirus is the leading cause of gastroenteritis among infants and young children. Rotavirus infections are most common in infants 3 to 15 months old. Symptoms usually appear 1 to 3 days aft",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Four types of viruses cause most cases of viral gastroenteritis.\n                \nRotavirus\n                \nRotavirus is the leading cause of gastroenteritis among infants and young children. Rotavir"
+      },
+      "symptoms": {
+        "reported": [
+          "watery diarrhea  - vomiting",
+          "headache  - fever  - chills  - abdominal pain"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Viral Gastroenteritis",
+      "description": "Viral gastroenteritis is inflammation of the lining of the stomach, small intestine, and large intestine. Several different viruses can cause viral gastroenteritis, which is highly contagious and extremely common. Viral gastroenteritis causes millions of cases of diarrhea each year.\n                \nAnyone can get viral gastroenteritis and most people recover without any complications, unless they become dehydrated.",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "asthma",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "What are the signs and symptoms of Asthma? The Human Phenotype Ontology provides the following list of signs and symptoms for Asthma",
+        "history": "The exact cause of asthma isn't known. Researchers think some genetic and environmental factors interact to cause asthma, most often early in life. These factors include:\n                \nAn inherited tendency to develop allergies, called atopy (AT-o-pe)\n                \nParents who have asthma\n    ",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "The exact cause of asthma isn't known. Researchers think some genetic and environmental factors interact to cause asthma, most often early in life. These factors include:\n                \nAn inherited"
+      },
+      "symptoms": {
+        "reported": [
+          "- Wheezing    - Coughing"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Asthma",
+      "description": "Asthma is a chronic disease that affects your airways. Your airways are tubes that carry air in and out of your lungs. If you have asthma, the inside walls of your airways become sore and swollen. That makes them very sensitive, and they may react strongly to things that you are allergic to or find irritating. When your airways react, they get narrower and your lungs get less air.    Symptoms of asthma include       - Wheezing    - Coughing, especially early in the morning or at night    - Chest",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "indigestion",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Most people with indigestion experience more than one of the following symptoms: - Fullness during a meal",
+        "history": "Indigestion can be caused by a condition in the digestive tract such as gastroesophageal reflux disease (GERD), peptic ulcer disease, cancer, or abnormality of the pancreas or bile ducts. If the condition improves or resolves, the symptoms of indigestion usually improve.\n                \nSometimes a",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Indigestion can be caused by a condition in the digestive tract such as gastroesophageal reflux disease (GERD), peptic ulcer disease, cancer, or abnormality of the pancreas or bile ducts. If the condi"
+      },
+      "symptoms": {
+        "reported": [
+          "nauseated",
+          "tired",
+          "burning"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Indigestion",
+      "description": "Nearly everyone has had indigestion at one time. It's a feeling of discomfort or a burning feeling in your upper abdomen. You may have heartburn or belch and feel bloated. You may also feel nauseated, or even throw up.    You might get indigestion from eating too much or too fast, eating high-fat foods, or eating when you're stressed. Smoking, drinking too much alcohol, using some medicines, being tired, and having ongoing stress can also cause indigestion or make it worse. Sometimes the cause i",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "diarrhea",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Diarrhea may be accompanied by cramping, abdominal pain, nausea, an urgent need to use the bathroom, or loss of bowel control",
+        "history": "Acute diarrhea is usually caused by a bacterial, viral, or parasitic infection. Chronic diarrhea is usually related to a functional disorder such as irritable bowel syndrome or an intestinal disease such as Crohns disease.\n                \nThe most common causes of diarrhea include the following:\n  ",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Acute diarrhea is usually caused by a bacterial, viral, or parasitic infection. Chronic diarrhea is usually related to a functional disorder such as irritable bowel syndrome or an intestinal disease s"
+      },
+      "symptoms": {
+        "reported": [
+          "bacteria",
+          "viruses or parasites",
+          "certain medicines",
+          "food intolerances",
+          "diseases that affect the stomach",
+          "small intestine or colon"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Diarrhea",
+      "description": "Diarrhea means that you have loose, watery stools more than three times in one day. You may also have cramps, bloating, nausea and an urgent need to have a bowel movement.     Causes of diarrhea include bacteria, viruses or parasites, certain medicines, food intolerances and diseases that affect the stomach, small intestine or colon. In many cases, no cause can be found.     Although usually not harmful, diarrhea can become dangerous or signal a more serious problem. You should talk to your doct",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "cough",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "When you cough, mucus (a slimy substance) may come up",
+        "history": "Coughing occurs when the nerve endings in your airways become irritated. Certain irritants and allergens, medical conditions, and medicines can irritate these nerve endings.\n                \nIrritants and Allergens\n                \nAn irritant is something you're sensitive to. For example, smoking o",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Coughing occurs when the nerve endings in your airways become irritated. Certain irritants and allergens, medical conditions, and medicines can irritate these nerve endings.\n                \nIrritants"
+      },
+      "symptoms": {
+        "reported": [
+          "Coughing"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Cough",
+      "description": "Coughing is a reflex that keeps your throat and airways clear. Although it can be annoying, coughing helps your body heal or protect itself. Coughs can be either acute or chronic. Acute coughs begin suddenly and usually last no more than 2 to 3 weeks. Acute coughs are the kind you most often get with a cold, flu, or acute bronchitis. Chronic coughs last longer than 2 to 3 weeks. Causes of chronic cough include       - Chronic bronchitis    - Asthma    - Allergies    - COPD (chronic obstructive p",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "insomnia",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "The main symptom of insomnia is trouble falling or staying asleep, which leads to lack of sleep",
+        "history": "Secondary Insomnia\n                \nSecondary insomnia is the symptom or side effect of another problem. This type of insomnia often is a symptom of an emotional, neurological, or other medical or sleep disorder.\n                \nEmotional disorders that can cause insomnia include depression, anxiet",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Secondary Insomnia\n                \nSecondary insomnia is the symptom or side effect of another problem. This type of insomnia often is a symptom of an emotional, neurological, or other medical or sle"
+      },
+      "symptoms": {
+        "reported": [
+          "sleep histories",
+          "a physical exam"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Insomnia",
+      "description": "Insomnia is a common sleep disorder. If you have it, you may have trouble falling asleep, staying asleep, or both. As a result, you may get too little sleep or have poor-quality sleep. You may not feel refreshed when you wake up.    Symptoms of insomnia include:       - Lying awake for a long time before you fall asleep    -  Sleeping for only short periods    - Being awake for much of the night    - Feeling as if you haven't slept at all    - Waking up too early       Your doctor will diagnose ",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "high_blood_pressure",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "High blood pressure is often called the \"silent killer\" because you can have it for years without knowing it",
+        "history": "Changes in Body Functions Researchers continue to study how various changes in normal body functions cause high blood pressure. The key functions affected in high blood pressure include -  kidney fluid and salt balances  -  the renin-angiotensin-aldosterone system   - the sympathetic nervous system ",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Changes in Body Functions Researchers continue to study how various changes in normal body functions cause high blood pressure. The key functions affected in high blood pressure include -  kidney flui"
+      },
+      "symptoms": {
+        "reported": [
+          "memory loss",
+          "difficulty finding words",
+          "losing focus during conversations"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "High Blood Pressure",
+      "description": "High blood pressure is a common disease in which blood flows through blood vessels (arteries) at higher than normal pressures. What Is Blood Pressure? Blood pressure is the force of blood pushing against the walls of the blood vessels as the heart pumps blood. If your blood pressure rises and stays high over time, its called high blood pressure. High blood pressure is dangerous because it makes the heart work too hard, and the high force of the blood flow can harm arteries and organs such as the",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "anemia",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "The most common symptom of anemia is fatigue (feeling tired or weak)",
+        "history": "The three main causes of anemia are:\n                \nBlood loss\n                \nLack of red blood cell production\n                \nHigh rates of red blood cell destruction\n                \nFor some people, the condition is caused by more than one of these factors.\n                \nBlood Loss\n     ",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "The three main causes of anemia are:\n                \nBlood loss\n                \nLack of red blood cell production\n                \nHigh rates of red blood cell destruction\n                \nFor some "
+      },
+      "symptoms": {
+        "reported": [
+          "folic acid or vitamin B12    - Blood disorders such as sickle cell anemia",
+          "thalassemia",
+          "or cancer    - Aplastic anemia",
+          "a condition that can be inherited or acquired    - G6PD deficiency",
+          "a metabolic disorder       Anemia can make you feel tired",
+          "cold",
+          "dizzy",
+          "irritable"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Anemia",
+      "description": "If you have anemia, your blood does not carry enough oxygen to the rest of your body. The most common cause of anemia is not having enough iron. Your body needs iron to make hemoglobin. Hemoglobin is an iron-rich protein that gives the red color to blood. It carries oxygen from the lungs to the rest of the body.    Anemia has three main causes: blood loss, lack of red blood cell production, and high rates of red blood cell destruction.    Conditions that may lead to anemia include       - Heavy ",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "iron-deficiency_anemia",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "The signs and symptoms of iron-deficiency anemia depend on its severity",
+        "history": "Not having enough iron in your body causes iron-deficiency anemia. Lack of iron usually is due to blood loss, poor diet, or an inability to absorb enough iron from food.\n                \nBlood Loss\n                \nWhen you lose blood, you lose iron. If you don't have enough iron stored in your body",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not having enough iron in your body causes iron-deficiency anemia. Lack of iron usually is due to blood loss, poor diet, or an inability to absorb enough iron from food.\n                \nBlood Loss\n  "
+      },
+      "symptoms": {
+        "reported": [
+          "poor appetite",
+          "slowed growth",
+          "development",
+          "behavioral problems"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Iron-Deficiency Anemia",
+      "description": "Espaol\n                \nIron-deficiency anemia is a common, easily treated condition that occurs if you don't have enough iron in your body. Low iron levels usually are due to blood loss, poor diet, or an inability to absorb enough iron from food.\n                \nOverview\n                \nIron-deficiency anemia is a common type of anemia. The term \"anemia\" usually refers to a condition in which your blood has a lower than normal number of red blood cells. Red blood cells carry oxygen and remove",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "gout",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Attacks Usually Start at Night Gout is a form of arthritis that causes sudden onset of intense pain and swelling in the joints, which also may be warm and red",
+        "history": "A Buildup of Uric Acid Most people with gout have too much uric acid in their blood, a condition called hyperuricemia. Uric acid is a substance that results from the breakdown of purines which are a part of all human tissue and found in many foods. Needle-like crystals of uric acid can build up in t",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "A Buildup of Uric Acid Most people with gout have too much uric acid in their blood, a condition called hyperuricemia. Uric acid is a substance that results from the breakdown of purines which are a p"
+      },
+      "symptoms": {
+        "reported": [
+          "producing a swollen",
+          "warm joint  arthritis that develops in a day",
+          "producing a swollen",
+          "warm joint -  an attack of arthritis in only one joint",
+          "often the toe",
+          "ankle",
+          "or knee"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Gout",
+      "description": "Sudden, Intense Joint Pain Gout is a form of arthritis that causes the sudden onset of intense pain and swelling in the joints, which also may be warm and red. Attacks frequently occur at night and can be triggered by stressful events, alcohol or drugs, or the presence of another illness. Early attacks usually subside within 3 to 10 days, even without treatment, and the next attack may not occur for months or even years. Where Gout Usually Occurs Sometime during the course of the disease, many p",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "shingles",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Burning, Itching, Tingling, Then a Rash An outbreak of shingles usually begins with a burning, itching, or tingling sensation on the back, chest, or around the rib cage or waist",
+        "history": "Caused By A Virus Shingles is caused by a virus called varicella-zoster virus -- the one that gave you chickenpox when you were a child. As you recovered from chickenpox, the sores healed and the other symptoms went away, but the virus remained. It is with you for life. The virus hides out in nerve ",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Caused By A Virus Shingles is caused by a virus called varicella-zoster virus -- the one that gave you chickenpox when you were a child. As you recovered from chickenpox, the sores healed and the othe"
+      },
+      "symptoms": {
+        "reported": [
+          "painful",
+          "rash",
+          "Itching",
+          "Burning"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Shingles",
+      "description": "Shingles is a painful rash that develops on one side of the face or body. The rash forms blisters that typically scab over in 7 to 10 days and clear up within 2 to 4 weeks. Most commonly, the rash occurs in a single stripe around either the left or the right side of the body. In other cases, the rash occurs on one side of the face. In rare cases (usually among people with weakened immune systems), the rash may be more widespread and look similar to a chickenpox rash. Shingles is very common. Fif",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "rheumatoid_arthritis",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Swelling and Pain in the Joints Different types of arthritis have different symptoms",
+        "history": "Actual Cause Is Unknown Scientists believe that rheumatoid arthritis may result from the interaction of many factors such as genetics, hormones, and the environment. Although rheumatoid arthritis sometimes runs in families, the actual cause of rheumatoid arthritis is still unknown. Research suggests",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Actual Cause Is Unknown Scientists believe that rheumatoid arthritis may result from the interaction of many factors such as genetics, hormones, and the environment. Although rheumatoid arthritis some"
+      },
+      "symptoms": {
+        "reported": [
+          "pain-relieving drugs",
+          "medications that slow joint damage",
+          "a balance between rest",
+          "exercise",
+          "patient education",
+          "support programs"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Rheumatoid Arthritis",
+      "description": "An Inflammatory, Autoimmune Disease Rheumatoid arthritis is an inflammatory disease that causes pain, swelling, stiffness, and loss of function in the joints. It can cause mild to severe symptoms. Rheumatoid arthritis not only affects the joints, but may also attack tissue in the skin, lungs, eyes, and blood vessels. People with rheumatoid arthritis may feel sick, tired, and sometimes feverish. Rheumatoid arthritis is classified as an autoimmune disease. An autoimmune disease occurs when the imm",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "anxiety_disorders",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Excessive, Irrational Fear Each anxiety disorder has different symptoms, but all the symptoms cluster around excessive, irrational fear and dread. Unlike the relatively mild, brief anxiety caused by a",
+        "history": "Generalized anxiety disorder (GAD) affects about 6.8 million American adults, including twice as many women as men. The disorder develops gradually and can begin at any point in the life cycle, although the years of highest risk are between childhood and middle age. The average age of onset is 31 ye",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Generalized anxiety disorder (GAD) affects about 6.8 million American adults, including twice as many women as men. The disorder develops gradually an"
+      },
+      "symptoms": {
+        "reported": [
+          "job performance",
+          "school work",
+          "relationships"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Anxiety Disorders",
+      "description": "Occasional anxiety is a normal part of life. You might feel anxious when faced with a problem at work, before taking a test, or making an important decision. However, anxiety disorders involve more than temporary worry or fear. For a person with an anxiety disorder, the anxiety does not go away and can get worse over time. These feelings can interfere with daily activities such as job performance, school work, and relationships. (Watch the video to learn about the types of anxiety disorders. To ",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "back_pain",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "If you've ever groaned, \"Oh, my aching back!\", you are not alone. Back pain is one of the most common medical problems, affecting 8 out of 10 people at some point during their lives. Back pain can ran",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "pain",
+          "ache"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Back Pain",
+      "description": "If you've ever groaned, \"Oh, my aching back!\", you are not alone. Back pain is one of the most common medical problems, affecting 8 out of 10 people at some point during their lives. Back pain can range from a dull, constant ache to a sudden, sharp pain. Acute back pain comes on suddenly and usually lasts from a few days to a few weeks. Back pain is called chronic if it lasts for more than three months.    Most back pain goes away on its own, though it may take awhile. Taking over-the-counter pa",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "benign_paroxysmal_positional_vertigo",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "What are the signs and symptoms of Benign paroxysmal positional vertigo? The Human Phenotype Ontology provides the following list of signs and symptoms for Benign paroxysmal positional vertigo. If the",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "See description"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Benign paroxysmal positional vertigo",
+      "description": "What are the signs and symptoms of Benign paroxysmal positional vertigo? The Human Phenotype Ontology provides the following list of signs and symptoms for Benign paroxysmal positional vertigo. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Autosomal dominant in",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "cold_sores",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Cold sores are caused by a contagious virus called herpes simplex virus (HSV). There are two types of HSV. Type 1 usually causes oral herpes, or cold sores. Type 1 herpes virus infects more than half ",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "painful",
+          "sores"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Cold Sores",
+      "description": "Cold sores are caused by a contagious virus called herpes simplex virus (HSV). There are two types of HSV. Type 1 usually causes oral herpes, or cold sores. Type 1 herpes virus infects more than half of the U.S. population by the time they reach their 20s. Type 2 usually affects the genital area     Some people have no symptoms from the infection. But others develop painful and unsightly cold sores. Cold sores usually occur outside the mouth, on or around the lips. When they are inside the mouth",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "constipation",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Constipation means that a person has three or fewer bowel movements in a week. The stool can be hard and dry. Sometimes it is painful to pass. At one time or another, almost everyone gets constipated.",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "painful"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Constipation",
+      "description": "Constipation means that a person has three or fewer bowel movements in a week. The stool can be hard and dry. Sometimes it is painful to pass. At one time or another, almost everyone gets constipated. In most cases, it lasts a short time and is not serious.     There are many things you can do to prevent constipation. They include       -  Eating more fruits, vegetables and grains, which are high in fiber    -  Drinking plenty of water and other liquids    -  Getting enough exercise    -  Taking",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "depression",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Common Symptoms There are many symptoms associated with depression, and some will vary depending on the individual. However, some of the most common symptoms are listed below. If you have several of t",
+        "history": "Several lines of research have shown that depressive illnesses are disorders of the brain. But the exact causes for these illnesses are not yet clear and are still being studied. Changes in the Brain Imaging technologies show that the brains of people with depression look different or are working di",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Several lines of research have shown that depressive illnesses are disorders of the brain. But the exact causes for these illnesses are not yet clear "
+      },
+      "symptoms": {
+        "reported": [
+          "listed below"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Depression",
+      "description": "Everyone feels blue or sad now and then, but these feelings don't usually last long and pass within a couple of days. When a person has depression, it interferes with daily life and normal functioning, and causes pain for both the person with depression and those who care about him or her. Doctors call this condition \"depressive disorder,\" or \"clinical depression.\" Depression in Older Adults Important life changes that happen as we get older may cause feelings of uneasiness, stress, and sadness.",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "ear_infections",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Ear infections are the most common reason parents bring their child to a doctor. Three out of four children will have at least one ear infection by their third birthday. Adults can also get ear infect",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "See description"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Ear Infections",
+      "description": "Ear infections are the most common reason parents bring their child to a doctor. Three out of four children will have at least one ear infection by their third birthday. Adults can also get ear infections, but they are less common.    The infection usually affects the middle ear and is called otitis media. The tubes inside the ears become clogged with fluid and mucus. This can affect hearing, because sound cannot get through all that fluid.    If your child isn't old enough to say \"My ear hurts,",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "eczema",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Eczema is a term for several different types of skin swelling. Eczema is also called dermatitis. Most types cause dry, itchy skin and rashes on the face, inside the elbows and behind the knees, and on",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "rashes",
+          "itchy",
+          "swelling"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Eczema",
+      "description": "Eczema is a term for several different types of skin swelling. Eczema is also called dermatitis. Most types cause dry, itchy skin and rashes on the face, inside the elbows and behind the knees, and on the hands and feet. Scratching the skin can cause it to turn red, and to swell and itch even more.    Eczema is not contagious. The cause is not known. It is likely caused by both genetic and environmental factors. Eczema may get better or worse over time, but it is often a long-lasting disease. Pe",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "flu",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Flu is a respiratory infection caused by a number of viruses. The viruses pass through the air and enter your body through your nose or mouth. Between 5% and 20% of people in the U.S. get the flu each",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "aches",
+          "Fever",
+          "Cough"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Flu",
+      "description": "Flu is a respiratory infection caused by a number of viruses. The viruses pass through the air and enter your body through your nose or mouth. Between 5% and 20% of people in the U.S. get the flu each year. The flu can be serious or even deadly for elderly people, newborn babies, and people with certain chronic illnesses.    Symptoms of the flu come on suddenly and are worse than those of the common cold. They may include        - Body or muscle aches    - Chills     - Cough     - Fever     - He",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "headache",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Almost everyone has had a headache. Headache is the most common form of pain. It's a major reason people miss days at work or school or visit the doctor.    The most common type of headache is a tensi",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "pain",
+          "headache",
+          "headache"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Headache",
+      "description": "Almost everyone has had a headache. Headache is the most common form of pain. It's a major reason people miss days at work or school or visit the doctor.    The most common type of headache is a tension headache. Tension headaches are due to tight muscles in your shoulders, neck, scalp and jaw. They are often related to stress, depression or anxiety. You are more likely to get tension headaches if you work too much, don't get enough sleep, miss meals, or use alcohol.    Other common types of hea",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "heartburn",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Heartburn is a painful burning feeling in your chest or throat. It happens when stomach acid backs up into your esophagus, the tube that carries food from your mouth to your stomach.    If you have he",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "painful",
+          "Heartburn"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Heartburn",
+      "description": "Heartburn is a painful burning feeling in your chest or throat. It happens when stomach acid backs up into your esophagus, the tube that carries food from your mouth to your stomach.    If you have heartburn more than twice a week, you may have GERD. But you can have GERD without having heartburn.    Pregnancy, certain foods, alcohol, and some medications can bring on heartburn. Treating heartburn is important because over time reflux can damage the esophagus.    Over-the-counter medicines may h",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "hives",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Hives are red and sometimes itchy bumps on your skin. An allergic reaction to a drug or food usually causes them. Allergic reactions cause your body to release chemicals that can make your skin swell ",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "itchy",
+          "swell"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Hives",
+      "description": "Hives are red and sometimes itchy bumps on your skin. An allergic reaction to a drug or food usually causes them. Allergic reactions cause your body to release chemicals that can make your skin swell up in hives. People who have other allergies are more likely to get hives than other people. Other causes include infections and stress.    Hives are very common. They usually go away on their own, but if you have a serious case, you might need medicine or a shot. In rare cases, hives can cause a da",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "hay_fever",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Each spring, summer, and fall, trees, weeds, and grasses release tiny pollen grains into the air. Some of the pollen ends up in your nose and throat. This can trigger a type of allergy called hay feve",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "fever",
+          "Coughing",
+          "Itching"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Hay Fever",
+      "description": "Each spring, summer, and fall, trees, weeds, and grasses release tiny pollen grains into the air. Some of the pollen ends up in your nose and throat. This can trigger a type of allergy called hay fever.    Symptoms can include       - Sneezing, often with a runny or clogged nose    - Coughing and postnasal drip    - Itching eyes, nose and throat    - Red and watery eyes    - Dark circles under the eyes       Your health care provider may diagnose hay fever based on a physical exam and your sympt",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "nausea_and_vomiting",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Nausea is an uneasy or unsettled feeling in the stomach together with an urge to vomit. Nausea and vomiting, or throwing up, are not diseases. They can be symptoms of many different conditions. These ",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "headaches",
+          "Nausea",
+          "vomit",
+          "headaches"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Nausea and Vomiting",
+      "description": "Nausea is an uneasy or unsettled feeling in the stomach together with an urge to vomit. Nausea and vomiting, or throwing up, are not diseases. They can be symptoms of many different conditions. These include morning sickness during pregnancy, infections, migraine headaches, motion sickness, food poisoning, cancer chemotherapy or other medicines.     For vomiting in children and adults, avoid solid foods until vomiting has stopped for at least six hours. Then work back to a normal diet. Drink sma",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "scabies",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Scabies is an itchy skin condition caused by the microscopic mite Sarcoptes scabei. It is common all over the world, and can affect anyone. Scabies spreads quickly in crowded conditions where there is",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "- Pimple-like irritations or a rash     - Intense itching",
+          "finding burrows in the skin"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Scabies",
+      "description": "Scabies is an itchy skin condition caused by the microscopic mite Sarcoptes scabei. It is common all over the world, and can affect anyone. Scabies spreads quickly in crowded conditions where there is frequent skin-to-skin contact between people. Hospitals, child-care centers, and nursing homes are examples. Scabies can easily infect sex partners and other household members. Sharing clothes, towels, and bedding can sometimes spread scabies. This can happen much more easily when the infested pers",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "sinusitis",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Sinusitis means your sinuses are inflamed. The cause can be an infection or another problem. Your sinuses are hollow air spaces within the bones surrounding the nose. They produce mucus, which drains ",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "pain"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Sinusitis",
+      "description": "Sinusitis means your sinuses are inflamed. The cause can be an infection or another problem. Your sinuses are hollow air spaces within the bones surrounding the nose. They produce mucus, which drains into the nose. If your nose is swollen, this can block the sinuses and cause pain.    There are several types of sinusitis, including       - Acute, which lasts up to 4 weeks    - Subacute, which lasts 4 to 12 weeks    - Chronic, which lasts more than 12 weeks and can continue for months or even yea",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "sore_throat",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.    You can have a sore throat f",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "sore"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Sore Throat",
+      "description": "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.    You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include:       - Allergies    - Mononucleosis    - Smoking    - Strep throat    - Tonsillitis - an infection in the tonsils       Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "sprains_and_strains",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "A sprain is a stretched or torn ligament. Ligaments are tissues that connect bones at a joint. Falling, twisting, or getting hit can all cause a sprain. Ankle and wrist sprains are common. Symptoms in",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "pain",
+          "swelling",
+          "bruising",
+          "being unable to move your joint"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Sprains and Strains",
+      "description": "A sprain is a stretched or torn ligament. Ligaments are tissues that connect bones at a joint. Falling, twisting, or getting hit can all cause a sprain. Ankle and wrist sprains are common. Symptoms include pain, swelling, bruising, and being unable to move your joint. You might feel a pop or tear when the injury happens.     A strain is a stretched or torn muscle or tendon. Tendons are tissues that connect muscle to bone. Twisting or pulling these tissues can cause a strain. Strains can happen s",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "streptococcal_infections",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Strep is short for Streptococcus, a type of bacteria. There are two types: group A and group B.    Group A strep causes       - Strep throat - a sore, red throat, sometimes with white spots on the ton",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "fever",
+          "rash",
+          "sore"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Streptococcal Infections",
+      "description": "Strep is short for Streptococcus, a type of bacteria. There are two types: group A and group B.    Group A strep causes       - Strep throat - a sore, red throat, sometimes with white spots on the tonsils    - Scarlet fever - an illness that follows strep throat. It causes a red rash on the body.    - Impetigo - a skin infection    - Toxic shock syndrome    - Cellulitis and necrotizing fasciitis (flesh-eating disease)       Group B strep can cause blood infections, pneumonia and meningitis in ne",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "tendinitis",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Tendons are flexible bands of tissue that connect muscles to bones. They help your muscles move your bones. Tendinitis is the severe swelling of a tendon.    Tendinitis usually happens after repeated ",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "the wrist or ankle"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Tendinitis",
+      "description": "Tendons are flexible bands of tissue that connect muscles to bones. They help your muscles move your bones. Tendinitis is the severe swelling of a tendon.    Tendinitis usually happens after repeated injury to an area such as the wrist or ankle. It causes pain and soreness around a joint. Some common forms of tendinitis are named after the sports that increase their risk. They include tennis elbow, golfer's elbow, pitcher's shoulder, swimmer's shoulder, and jumper's knee.    Doctors diagnose ten",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "warts",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Warts are growths on your skin caused by an infection with humanpapilloma virus, or HPV. Types of warts include        - Common warts, which often appear on your fingers     - Plantar warts, which sho",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "See description"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Warts",
+      "description": "Warts are growths on your skin caused by an infection with humanpapilloma virus, or HPV. Types of warts include        - Common warts, which often appear on your fingers     - Plantar warts, which show up on the soles of your feet     - Genital warts, which are a sexually transmitted disease     - Flat warts, which appear in places you shave frequently        In children, warts often go away on their own. In adults, they tend to stay. If they hurt or bother you, or if they multiply, you can remo",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "yeast_infections",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Candida is the scientific name for yeast. It is a fungus that lives almost everywhere, including in your body. Usually, your immune system keeps yeast under control. If you are sick or taking antibiot",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "See description"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Yeast Infections",
+      "description": "Candida is the scientific name for yeast. It is a fungus that lives almost everywhere, including in your body. Usually, your immune system keeps yeast under control. If you are sick or taking antibiotics, it can multiply and cause an infection.     Yeast infections affect different parts of the body in different ways:        - Thrush is a yeast infection that causes white patches in your mouth     - Candida esophagitis is thrush that spreads to your esophagus, the tube that takes food from your ",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "atopic_dermatitis",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "Atopic dermatitis (also known as atopic eczema) is a disorder characterized by inflammation of the skin (dermatitis). The condition usually begins in early infancy, and it often disappears before adol",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "rashes",
+          "itchy"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "atopic dermatitis",
+      "description": "Atopic dermatitis (also known as atopic eczema) is a disorder characterized by inflammation of the skin (dermatitis). The condition usually begins in early infancy, and it often disappears before adolescence. However, in some affected individuals the condition continues into adulthood or does not begin until adulthood. Hallmarks of atopic dermatitis include dry, itchy skin and red rashes that can come and go. The rashes can occur on any part of the body, although the pattern tends to be differen",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    },
+    {
+      "case_id": "rashes",
+      "patient": {
+        "age": "Adult",
+        "gender": "Unspecified"
+      },
+      "presentation": {
+        "chief_complaint": "A rash is an area of irritated or swollen skin. Many rashes are itchy, red, painful, and irritated. Some rashes can also lead to blisters or patches of raw skin. Rashes are a symptom of many different",
+        "history": "Not specified",
+        "duration": "As described",
+        "severity": "Variable",
+        "triggers": "Not specified"
+      },
+      "symptoms": {
+        "reported": [
+          "a  A rash is an area of irritated or swollen skin"
+        ],
+        "negative": [],
+        "exam_findings": []
+      },
+      "diagnosis": "Rashes",
+      "description": "A rash is an area of irritated or swollen skin. Many rashes are itchy, red, painful, and irritated. Some rashes can also lead to blisters or patches of raw skin. Rashes are a symptom of many different medical problems. Other causes include irritating substances and allergies. Certain genes can make people more likely to get rashes.    Contact dermatitis is a common type of rash. It causes redness, itching, and sometimes small bumps. You get the rash where you have touched an irritant, such as a ",
+      "precautions": [],
+      "difficulty": 2,
+      "source": "MedQuAD"
+    }
+  ]
+}
