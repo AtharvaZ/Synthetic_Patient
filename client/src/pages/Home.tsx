@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { 
   Stethoscope, Brain, Target, Award, ArrowRight, Activity, Zap,
-  Heart, Pill, Microscope, Thermometer, Clipboard, GraduationCap
+  Heart, Pill, Microscope, Thermometer, Clipboard, GraduationCap, ChevronRight
 } from "lucide-react";
 
 export default function Home() {
@@ -103,19 +103,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Medical Specialties Diagram */}
+      {/* Medical Specialties - Clickable */}
       <section className="py-16 border-y border-[#283039]">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold mb-2">Medical Specialties Covered</h2>
-            <p className="text-muted-foreground">Train across multiple disciplines</p>
+            <p className="text-muted-foreground">Click on a specialty to explore what's covered</p>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
-            <SpecialtyBadge icon={Heart} label="Cardiology" color="red" />
-            <SpecialtyBadge icon={Brain} label="Neurology" color="purple" />
-            <SpecialtyBadge icon={Activity} label="Pulmonology" color="cyan" />
-            <SpecialtyBadge icon={Pill} label="Gastroenterology" color="green" />
-            <SpecialtyBadge icon={Thermometer} label="Endocrinology" color="orange" />
+            <SpecialtyLink icon={Heart} label="Cardiology" color="red" href="/specialty/cardiology" />
+            <SpecialtyLink icon={Brain} label="Neurology" color="purple" href="/specialty/neurology" />
+            <SpecialtyLink icon={Activity} label="Pulmonology" color="cyan" href="/specialty/pulmonology" />
+            <SpecialtyLink icon={Pill} label="Gastroenterology" color="green" href="/specialty/gastroenterology" />
+            <SpecialtyLink icon={Thermometer} label="Endocrinology" color="orange" href="/specialty/endocrinology" />
           </div>
         </div>
       </section>
@@ -295,20 +295,26 @@ export default function Home() {
   );
 }
 
-function SpecialtyBadge({ icon: Icon, label, color }: { icon: any, label: string, color: string }) {
+function SpecialtyLink({ icon: Icon, label, color, href }: { icon: any, label: string, color: string, href: string }) {
   const colors: Record<string, string> = {
-    red: "bg-red-500/10 text-red-400 border-red-500/20",
-    purple: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    cyan: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-    green: "bg-green-500/10 text-green-400 border-green-500/20",
-    orange: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+    red: "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 hover:shadow-lg hover:shadow-red-500/20",
+    purple: "bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20",
+    cyan: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20 hover:bg-cyan-500/20 hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/20",
+    green: "bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500/20 hover:border-green-500/40 hover:shadow-lg hover:shadow-green-500/20",
+    orange: "bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20 hover:border-orange-500/40 hover:shadow-lg hover:shadow-orange-500/20",
   };
   
   return (
-    <div className={`flex items-center gap-3 px-5 py-3 rounded-xl border ${colors[color]}`}>
-      <Icon className="w-5 h-5" />
-      <span className="font-semibold">{label}</span>
-    </div>
+    <Link href={href}>
+      <div 
+        className={`flex items-center gap-3 px-5 py-3 rounded-xl border cursor-pointer transition-all duration-300 hover:scale-105 hover:-translate-y-1 ${colors[color]}`}
+        data-testid={`link-specialty-${label.toLowerCase()}`}
+      >
+        <Icon className="w-5 h-5" />
+        <span className="font-semibold">{label}</span>
+        <ChevronRight className="w-4 h-4 opacity-50" />
+      </div>
+    </Link>
   );
 }
 
