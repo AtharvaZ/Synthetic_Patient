@@ -24,12 +24,12 @@ precautions (id, case_id, precaution)
 ```
 backend/
 ├── main.py              # FastAPI app with endpoints
-├── database.py          # SQLAlchemy connection + session
-├── models.py            # SQLAlchemy ORM models
+├── models.py            # SQLAlchemy connection, session, and ORM models
 ├── crud.py              # CRUD operations
 ├── schemas.py           # Pydantic schemas for API
 ├── db_setup.py          # Database schema creation
 ├── requirements.txt     # Python dependencies
+├── .env.example         # Environment variable template
 └── training_cases.json  # Backup data
 ```
 

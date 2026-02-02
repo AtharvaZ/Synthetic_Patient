@@ -11,8 +11,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from database import get_db, engine, Base
-from models import Case, Symptom, CaseSymptom, Precaution
+from models import get_db, engine, Base, Case, Symptom, CaseSymptom, Precaution
 import crud
 import schemas
 

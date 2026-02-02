@@ -1,10 +1,27 @@
 """
-SQLAlchemy ORM models for medical case database
+Database connection, session management, and ORM models for medical case database
 """
 
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, CheckConstraint, DateTime, func
-from sqlalchemy.orm import relationship
-from database import Base
+import os
+from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, CheckConstraint, DateTime, func
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is not set")
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class Symptom(Base):
