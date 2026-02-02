@@ -4,7 +4,7 @@ expertMode = true
 
 [nix]
 channel = "stable-25_05"
-packages = ["arrow-cpp", "glibcLocales", "pkg-config"]
+packages = ["arrow-cpp", "glibcLocales", "libxcrypt", "pkg-config"]
 
 [workflows]
 runButton = "Project"
@@ -27,7 +27,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python backend/app.py"
+args = "cd backend && python main.py"
 waitForPort = 5000
 
 [[ports]]
