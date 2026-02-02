@@ -3,10 +3,32 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { 
   Stethoscope, Brain, Target, Award, ArrowRight, Activity, Zap,
-  Heart, Pill, Microscope, Thermometer, Clipboard, GraduationCap, ChevronRight
+  Heart, Pill, Microscope, Thermometer, Clipboard, GraduationCap, ChevronRight,
+  Star, Trophy, Sparkles, BookOpen, Globe, Palette, Calculator, FlaskConical
 } from "lucide-react";
+import { useState, useEffect } from "react";
+
+// Animated counter component
+function AnimatedCounter({ end, duration = 2000 }: { end: number; duration?: number }) {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    let startTime: number;
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      setCount(Math.floor(progress * end));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [end, duration]);
+  
+  return <>{count}</>;
+}
 
 export default function Home() {
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-white selection:bg-primary/30">
       {/* Navigation */}
