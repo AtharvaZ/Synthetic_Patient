@@ -1,17 +1,16 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Stethoscope, Lightbulb, ArrowRight, Check, X, 
-  RotateCcw, Trophy, Home, Brain, ChevronRight
+  RotateCcw, Trophy, Home, Brain, Send, Sparkles
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
 
-// Mock disease data - this will come from database later
+// Mock disease data
 const diseaseData = [
   {
     id: 1,
@@ -95,6 +94,13 @@ const diseaseData = [
   }
 ];
 
+type Message = {
+  id: string;
+  type: "ai" | "user" | "system" | "hint";
+  content: string;
+  isCorrect?: boolean;
+};
+
 export default function Quiz() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswer, setUserAnswer] = useState("");
@@ -103,41 +109,112 @@ export default function Quiz() {
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [answeredQuestions, setAnsweredQuestions] = useState<number[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   const currentQuestion = diseaseData[currentQuestionIndex];
   const totalQuestions = diseaseData.length;
   const progress = ((answeredQuestions.length) / totalQuestions) * 100;
 
+  // Initialize first question
+  useEffect(() => {
+    if (messages.length === 0) {
+      initializeQuestion();
+    }
+  }, []);
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const initializeQuestion = () => {
+    const symptomsText = currentQuestion.symptoms.map((s, i) => `${i + 1}. ${s}`).join("\n");
+    const aiMessage: Message = {
+      id: `ai-${Date.now()}`,
+      type: "ai",
+      content: `**Case ${currentQuestionIndex + 1}: ${currentQuestion.category}**\n\nA patient presents with the following symptoms:\n\n${symptomsText}\n\nWhat is your diagnosis?`
+    };
+    setMessages(prev => [...prev, aiMessage]);
+  };
+
   const handleSubmitAnswer = () => {
-    if (!userAnswer.trim()) return;
+    if (!userAnswer.trim() || showResult) return;
+
+    // Add user message
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      type: "user",
+      content: userAnswer
+    };
+    setMessages(prev => [...prev, userMessage]);
 
     const isCorrect = userAnswer.toLowerCase().trim() === currentQuestion.disease.toLowerCase();
     
-    if (isCorrect) {
-      setShowResult("correct");
-      const pointsEarned = Math.max(10 - hintsUsed * 3, 1);
-      setScore(prev => prev + pointsEarned);
-    } else {
-      setShowResult("incorrect");
-    }
-
-    setAnsweredQuestions(prev => [...prev, currentQuestionIndex]);
+    setTimeout(() => {
+      if (isCorrect) {
+        setShowResult("correct");
+        const pointsEarned = Math.max(10 - hintsUsed * 3, 1);
+        setScore(prev => prev + pointsEarned);
+        
+        const correctMessage: Message = {
+          id: `system-${Date.now()}`,
+          type: "system",
+          content: `Correct! The diagnosis is **${currentQuestion.disease}**. You earned **+${pointsEarned} points**!`,
+          isCorrect: true
+        };
+        setMessages(prev => [...prev, correctMessage]);
+      } else {
+        setShowResult("incorrect");
+        
+        const incorrectMessage: Message = {
+          id: `system-${Date.now()}`,
+          type: "system",
+          content: `Incorrect. The correct diagnosis is **${currentQuestion.disease}**. Keep practicing!`,
+          isCorrect: false
+        };
+        setMessages(prev => [...prev, incorrectMessage]);
+      }
+      setAnsweredQuestions(prev => [...prev, currentQuestionIndex]);
+    }, 500);
+    
+    setUserAnswer("");
   };
 
   const handleNextQuestion = () => {
     setShowResult(null);
-    setUserAnswer("");
     setHintsUsed(0);
 
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
+      
+      // Add next question after state update
+      setTimeout(() => {
+        const nextQuestion = diseaseData[currentQuestionIndex + 1];
+        const symptomsText = nextQuestion.symptoms.map((s, i) => `${i + 1}. ${s}`).join("\n");
+        const aiMessage: Message = {
+          id: `ai-${Date.now()}`,
+          type: "ai",
+          content: `**Case ${currentQuestionIndex + 2}: ${nextQuestion.category}**\n\nA patient presents with the following symptoms:\n\n${symptomsText}\n\nWhat is your diagnosis?`
+        };
+        setMessages(prev => [...prev, aiMessage]);
+      }, 100);
     } else {
       setQuizCompleted(true);
     }
   };
 
   const handleUseHint = () => {
-    if (hintsUsed < currentQuestion.hints.length) {
+    if (hintsUsed < currentQuestion.hints.length && !showResult) {
+      const hintMessage: Message = {
+        id: `hint-${Date.now()}`,
+        type: "hint",
+        content: `**Hint ${hintsUsed + 1}:** ${currentQuestion.hints[hintsUsed]}`
+      };
+      setMessages(prev => [...prev, hintMessage]);
       setHintsUsed(prev => prev + 1);
     }
   };
@@ -150,6 +227,18 @@ export default function Quiz() {
     setScore(0);
     setQuizCompleted(false);
     setAnsweredQuestions([]);
+    setMessages([]);
+    
+    setTimeout(() => {
+      const firstQuestion = diseaseData[0];
+      const symptomsText = firstQuestion.symptoms.map((s, i) => `${i + 1}. ${s}`).join("\n");
+      const aiMessage: Message = {
+        id: `ai-${Date.now()}`,
+        type: "ai",
+        content: `**Case 1: ${firstQuestion.category}**\n\nA patient presents with the following symptoms:\n\n${symptomsText}\n\nWhat is your diagnosis?`
+      };
+      setMessages([aiMessage]);
+    }, 100);
   };
 
   if (quizCompleted) {
@@ -160,135 +249,183 @@ export default function Quiz() {
           animate={{ opacity: 1, scale: 1 }}
           className="max-w-lg w-full"
         >
-          <Card className="bg-[#161618] border-[#283039]">
-            <CardContent className="p-8 text-center">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#137fec]/20 flex items-center justify-center">
-                <Trophy className="w-10 h-10 text-[#137fec]" />
-              </div>
-              <h2 className="text-3xl font-bold mb-2">Quiz Complete!</h2>
-              <p className="text-slate-400 mb-6">Great job practicing your diagnostic skills</p>
-              
-              <div className="bg-[#0a0a0c] rounded-xl p-6 mb-6">
-                <p className="text-sm text-slate-400 mb-2">Your Score</p>
-                <p className="text-5xl font-black text-[#137fec]">{score}</p>
-                <p className="text-sm text-slate-500 mt-2">out of {totalQuestions * 10} possible points</p>
-              </div>
+          <div className="bg-[#161618] border border-[#283039] rounded-2xl p-8 text-center">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#137fec]/20 flex items-center justify-center">
+              <Trophy className="w-10 h-10 text-[#137fec]" />
+            </div>
+            <h2 className="text-3xl font-bold mb-2">Quiz Complete!</h2>
+            <p className="text-slate-400 mb-6">Great job practicing your diagnostic skills</p>
+            
+            <div className="bg-[#0a0a0c] rounded-xl p-6 mb-6">
+              <p className="text-sm text-slate-400 mb-2">Your Score</p>
+              <p className="text-5xl font-black text-[#137fec]">{score}</p>
+              <p className="text-sm text-slate-500 mt-2">out of {totalQuestions * 10} possible points</p>
+            </div>
 
-              <div className="flex gap-4">
+            <div className="flex gap-4">
+              <Button
+                onClick={handleRestart}
+                className="flex-1 bg-[#137fec] hover:bg-[#137fec]/90 h-12"
+                data-testid="button-restart-quiz"
+              >
+                <RotateCcw className="w-4 h-4 mr-2" />
+                Try Again
+              </Button>
+              <Link href="/" className="flex-1">
                 <Button
-                  onClick={handleRestart}
-                  className="flex-1 bg-[#137fec] hover:bg-[#137fec]/90 h-12"
-                  data-testid="button-restart-quiz"
+                  variant="outline"
+                  className="w-full border-[#283039] hover:bg-[#283039] h-12"
+                  data-testid="button-go-home"
                 >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  Try Again
+                  <Home className="w-4 h-4 mr-2" />
+                  Home
                 </Button>
-                <Link href="/" className="flex-1">
-                  <Button
-                    variant="outline"
-                    className="w-full border-[#283039] hover:bg-[#283039] h-12"
-                    data-testid="button-go-home"
-                  >
-                    <Home className="w-4 h-4 mr-2" />
-                    Home
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+              </Link>
+            </div>
+          </div>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] text-white">
+    <div className="h-screen bg-[#0a0a0c] text-white flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#283039] bg-[#0a0a0c]/80 backdrop-blur-md">
-        <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="flex-shrink-0 border-b border-[#283039] bg-[#0a0a0c]">
+        <div className="max-w-[1400px] mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/">
-            <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-              <div className="size-8 bg-[#137fec] rounded flex items-center justify-center text-white">
-                <Stethoscope className="w-5 h-5" />
+            <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+              <div className="size-7 bg-[#137fec] rounded flex items-center justify-center text-white">
+                <Stethoscope className="w-4 h-4" />
               </div>
-              <h2 className="text-xl font-bold tracking-tight">MediTutor AI</h2>
+              <h2 className="text-lg font-bold tracking-tight">MediTutor AI</h2>
             </div>
           </Link>
           
           <div className="flex items-center gap-6">
-            <div className="hidden sm:flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm">
               <Trophy className="w-4 h-4 text-[#137fec]" />
               <span className="font-semibold">{score} pts</span>
             </div>
             <Link href="/">
-              <Button variant="ghost" size="sm" data-testid="button-exit-quiz">
-                Exit Quiz
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white" data-testid="button-exit-quiz">
+                Exit
               </Button>
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        {/* Progress Section */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-slate-400">
-              Question {currentQuestionIndex + 1} of {totalQuestions}
-            </span>
-            <span className="text-sm font-medium text-[#137fec]">
+      {/* Progress Bar */}
+      <div className="flex-shrink-0 bg-[#161618] border-b border-[#283039] px-4 py-3">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-slate-400">
+                Question {currentQuestionIndex + 1} of {totalQuestions}
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-[#137fec]/10 border border-[#137fec]/20 text-[#137fec] text-xs font-bold">
+                {currentQuestion.category}
+              </span>
+            </div>
+            <span className="text-sm font-bold text-[#137fec]">
               {Math.round(progress)}% Complete
             </span>
           </div>
           <Progress value={progress} className="h-2 bg-[#283039]" data-testid="progress-bar" />
         </div>
+      </div>
 
-        {/* Category Badge */}
-        <div className="flex items-center gap-2 mb-6">
-          <span className="px-3 py-1 rounded-full bg-[#137fec]/10 border border-[#137fec]/20 text-[#137fec] text-xs font-bold uppercase tracking-wider">
-            {currentQuestion.category}
-          </span>
-        </div>
+      {/* Chat Area */}
+      <div className="flex-1 overflow-hidden flex">
+        <div className="flex-1 max-w-[1400px] mx-auto w-full flex flex-col">
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+            <AnimatePresence>
+              {messages.map((message) => (
+                <motion.div
+                  key={message.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={clsx(
+                    "flex gap-3",
+                    message.type === "user" && "justify-end"
+                  )}
+                >
+                  {/* AI Avatar */}
+                  {(message.type === "ai" || message.type === "hint" || message.type === "system") && (
+                    <div className={clsx(
+                      "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
+                      message.type === "hint" && "bg-amber-500",
+                      message.type === "system" && message.isCorrect && "bg-green-500",
+                      message.type === "system" && message.isCorrect === false && "bg-red-500",
+                      message.type === "ai" && "bg-[#137fec]"
+                    )}>
+                      {message.type === "hint" && <Lightbulb className="w-4 h-4 text-white" />}
+                      {message.type === "system" && message.isCorrect && <Check className="w-4 h-4 text-white" />}
+                      {message.type === "system" && message.isCorrect === false && <X className="w-4 h-4 text-white" />}
+                      {message.type === "ai" && <Brain className="w-4 h-4 text-white" />}
+                    </div>
+                  )}
+                  
+                  {/* Message Bubble */}
+                  <div className={clsx(
+                    "rounded-2xl p-4 max-w-xl",
+                    message.type === "user" && "bg-[#137fec] rounded-tr-sm",
+                    message.type === "ai" && "bg-[#161618] border border-[#283039] rounded-tl-sm",
+                    message.type === "hint" && "bg-amber-500/10 border border-amber-500/30 rounded-tl-sm",
+                    message.type === "system" && message.isCorrect && "bg-green-500/10 border border-green-500/30 rounded-tl-sm",
+                    message.type === "system" && message.isCorrect === false && "bg-red-500/10 border border-red-500/30 rounded-tl-sm"
+                  )}>
+                    <p className={clsx(
+                      "text-sm whitespace-pre-wrap",
+                      message.type === "user" && "text-white",
+                      message.type === "ai" && "text-slate-300",
+                      message.type === "hint" && "text-amber-200",
+                      message.type === "system" && message.isCorrect && "text-green-400",
+                      message.type === "system" && message.isCorrect === false && "text-red-400"
+                    )}>
+                      {message.content.split('**').map((part, i) => 
+                        i % 2 === 1 ? <strong key={i} className="font-bold">{part}</strong> : part
+                      )}
+                    </p>
+                  </div>
+                  
+                  {/* User Avatar */}
+                  {message.type === "user" && (
+                    <div className="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center flex-shrink-0">
+                      <span className="text-xs font-bold">You</span>
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            
+            {/* Next Question Button */}
+            {showResult && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex justify-center pt-4"
+              >
+                <Button
+                  onClick={handleNextQuestion}
+                  className="bg-[#137fec] hover:bg-[#137fec]/90 px-6"
+                  data-testid="button-next-question"
+                >
+                  {currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "See Results"}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </motion.div>
+            )}
+            
+            <div ref={chatEndRef} />
+          </div>
 
-        {/* Main Quiz Card */}
-        <Card className="bg-[#161618] border-[#283039] mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#137fec]/10 flex items-center justify-center">
-                <Brain className="w-5 h-5 text-[#137fec]" />
-              </div>
-              <span>Identify the Disease</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* Symptoms List */}
-            <div className="mb-6">
-              <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">
-                Patient Symptoms:
-              </h3>
-              <ul className="space-y-3">
-                {currentQuestion.symptoms.map((symptom, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex items-start gap-3 p-3 rounded-lg bg-[#0a0a0c] border border-[#283039]"
-                  >
-                    <ChevronRight className="w-4 h-4 text-[#137fec] mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-slate-300">{symptom}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Hints Section */}
-            <div className="mb-6 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Lightbulb className="w-4 h-4 text-amber-500" />
-                  <span className="text-sm font-semibold text-amber-500">Hints</span>
-                </div>
+          {/* Input Area */}
+          <div className="flex-shrink-0 border-t border-[#283039] bg-[#161618] p-4">
+            <div className="max-w-3xl mx-auto">
+              <div className="flex items-center gap-3 mb-3">
                 <Button
                   variant="outline"
                   size="sm"
@@ -298,125 +435,36 @@ export default function Quiz() {
                   data-testid="button-use-hint"
                 >
                   <Lightbulb className="w-3 h-3 mr-2" />
-                  Get Hint ({currentQuestion.hints.length - hintsUsed} left)
+                  Hint ({currentQuestion.hints.length - hintsUsed} left)
                 </Button>
+                <span className="text-xs text-slate-500">Using hints reduces points earned</span>
               </div>
-              
-              <AnimatePresence>
-                {hintsUsed > 0 && (
-                  <motion.div className="space-y-2">
-                    {currentQuestion.hints.slice(0, hintsUsed).map((hint, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="flex items-start gap-2 text-sm text-amber-200/80"
-                      >
-                        <span className="text-amber-500 font-bold">{index + 1}.</span>
-                        <span>{hint}</span>
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              
-              {hintsUsed === 0 && (
-                <p className="text-sm text-slate-500">Use hints if you're stuck. Each hint reduces potential points.</p>
-              )}
-            </div>
-
-            {/* Answer Input */}
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-slate-400 mb-2 block">
-                  Your Diagnosis:
-                </label>
-                <div className="flex gap-3">
+              <div className="flex gap-3">
+                <div className="relative flex-1">
+                  <Sparkles className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <Input
                     value={userAnswer}
                     onChange={(e) => setUserAnswer(e.target.value)}
-                    placeholder="Enter the disease name..."
+                    placeholder="Type your diagnosis..."
                     disabled={showResult !== null}
-                    className="flex-1 bg-[#0a0a0c] border-[#283039] focus-visible:ring-[#137fec] h-12"
+                    className="pl-11 bg-[#0a0a0c] border-[#283039] focus-visible:ring-[#137fec] h-12 rounded-xl"
                     onKeyDown={(e) => e.key === "Enter" && !showResult && handleSubmitAnswer()}
                     data-testid="input-diagnosis"
                   />
-                  <Button
-                    onClick={handleSubmitAnswer}
-                    disabled={!userAnswer.trim() || showResult !== null}
-                    className="bg-[#137fec] hover:bg-[#137fec]/90 h-12 px-6"
-                    data-testid="button-submit-answer"
-                  >
-                    Submit
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
                 </div>
+                <Button
+                  onClick={handleSubmitAnswer}
+                  disabled={!userAnswer.trim() || showResult !== null}
+                  className="bg-[#137fec] hover:bg-[#137fec]/90 h-12 px-6 rounded-xl"
+                  data-testid="button-submit-answer"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
               </div>
-
-              {/* Result Feedback */}
-              <AnimatePresence>
-                {showResult && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className={clsx(
-                      "p-4 rounded-xl flex items-center justify-between",
-                      showResult === "correct"
-                        ? "bg-green-500/10 border border-green-500/30"
-                        : "bg-red-500/10 border border-red-500/30"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      {showResult === "correct" ? (
-                        <Check className="w-5 h-5 text-green-500" />
-                      ) : (
-                        <X className="w-5 h-5 text-red-500" />
-                      )}
-                      <div>
-                        <p className={clsx(
-                          "font-semibold",
-                          showResult === "correct" ? "text-green-500" : "text-red-500"
-                        )}>
-                          {showResult === "correct" ? "Correct!" : "Incorrect"}
-                        </p>
-                        <p className="text-sm text-slate-400">
-                          {showResult === "correct"
-                            ? `+${Math.max(10 - hintsUsed * 3, 1)} points earned`
-                            : `The answer was: ${currentQuestion.disease}`}
-                        </p>
-                      </div>
-                    </div>
-                    <Button
-                      onClick={handleNextQuestion}
-                      className="bg-[#137fec] hover:bg-[#137fec]/90"
-                      data-testid="button-next-question"
-                    >
-                      {currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "See Results"}
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Score Summary */}
-        <div className="flex items-center justify-between p-4 rounded-xl bg-[#161618] border border-[#283039]">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-[#137fec]" />
-              <span className="text-sm font-medium">Current Score:</span>
-              <span className="text-lg font-bold text-[#137fec]">{score}</span>
-            </div>
-          </div>
-          <div className="text-sm text-slate-400">
-            {answeredQuestions.length} of {totalQuestions} answered
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
