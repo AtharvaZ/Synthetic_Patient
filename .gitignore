@@ -45,3 +45,13 @@ medical_datasets/
 # Misc
 .DS_Store
 *.log
+
+# Replit-specific files
+replit.md
+pyproject.toml
+uv.lock
+.upm/
+.cache/
+.local/
+attached_assets/
+.replit
