@@ -11,14 +11,14 @@
       darkMode: "class",
       theme: {
         extend: {
-          colors: {
-            "primary": "#137fec",
-            "background-dark": "#0a0a0c",
-            "surface-dark": "#161618",
-            "border-dark": "#283039",
-          },
-          fontFamily: {
-            "sans": ["Inter", "sans-serif"]
+          fontFamily: { "sans": ["Inter", "sans-serif"] },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-slow': 'pulse 3s ease-in-out infinite',
+            'bounce-slow': 'bounce 2s ease-in-out infinite',
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
+            'slide-up': 'slideUp 0.5s ease-out forwards',
+            'glow': 'glow 2s ease-in-out infinite alternate',
           }
         }
       }
@@ -26,210 +26,550 @@
   </script>
   <style>
     body { font-family: 'Inter', sans-serif; }
+    
     .text-gradient {
       background: linear-gradient(to right, #60a5fa, #6366f1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
+    
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes glow {
+      from { box-shadow: 0 0 20px rgba(19, 127, 236, 0.3); }
+      to { box-shadow: 0 0 40px rgba(19, 127, 236, 0.6); }
+    }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    /* Interactive Elements */
+    .btn-primary {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px rgba(19, 127, 236, 0.4);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(-1px);
+    }
+    
+    /* Card Hover Effects */
+    .card-interactive {
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .card-interactive:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* Specialty Badge Hover */
+    .specialty-badge {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .specialty-badge:hover {
+      transform: scale(1.08);
+    }
+    
+    /* Flow Step Hover */
+    .flow-step {
+      transition: all 0.3s ease;
+    }
+    
+    .flow-step:hover .flow-icon {
+      transform: scale(1.15) rotate(5deg);
+    }
+    
+    .flow-icon {
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    /* Chat Message Animation */
+    .chat-message {
+      animation: slideUp 0.4s ease-out forwards;
+    }
+    
+    .chat-message:nth-child(1) { animation-delay: 0.1s; }
+    .chat-message:nth-child(2) { animation-delay: 0.3s; }
+    .chat-message:nth-child(3) { animation-delay: 0.5s; }
+    
+    /* Typing Indicator */
+    .typing-dot {
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: 0s; }
+    .typing-dot:nth-child(2) { animation-delay: 0.16s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.32s; }
+    
+    /* Nav Link Hover */
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #137fec;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    /* Progress Bar Animation */
+    .progress-fill {
+      animation: shimmer 2s linear infinite;
+      background: linear-gradient(90deg, #137fec 0%, #6366f1 50%, #137fec 100%);
+      background-size: 200% 100%;
+    }
+    
+    /* Floating Background Orbs */
+    .orb {
+      animation: float 8s ease-in-out infinite;
+    }
+    
+    .orb-1 { animation-delay: 0s; }
+    .orb-2 { animation-delay: 2s; }
+    
+    /* Pulse Ring Effect */
+    .pulse-ring::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid #137fec;
+      animation: pulse-ring 2s ease-out infinite;
+    }
+    
+    /* Input Focus Effect */
+    .input-glow:focus {
+      box-shadow: 0 0 0 3px rgba(19, 127, 236, 0.3);
+    }
+    
+    /* Section Fade In on Scroll */
+    .fade-section {
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+    
+    .fade-section:nth-of-type(1) { animation-delay: 0.1s; }
+    .fade-section:nth-of-type(2) { animation-delay: 0.2s; }
+    .fade-section:nth-of-type(3) { animation-delay: 0.3s; }
+    
+    /* Stat Counter Glow */
+    .stat-number {
+      text-shadow: 0 0 30px rgba(19, 127, 236, 0.5);
+    }
+    
+    /* Icon Spin on Hover */
+    .icon-spin:hover svg {
+      animation: spin 0.5s ease;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
-<body class="bg-[#0a0a0c] text-white min-h-screen">
+<body class="bg-[#0a0a0c] text-white min-h-screen overflow-x-hidden">
 
   <!-- Navigation -->
   <header class="sticky top-0 z-50 w-full border-b border-[#283039] bg-[#0a0a0c]/80 backdrop-blur-md">
     <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-[#137fec] rounded flex items-center justify-center text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17a4 4 0 0 1-8 0v-5a8 8 0 0 1 16 0v5a4 4 0 0 1-8 0"/><path d="m3 12a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1z"/><path d="m18 12a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1z"/></svg>
+      <div class="flex items-center gap-3 group cursor-pointer">
+        <div class="w-8 h-8 bg-[#137fec] rounded flex items-center justify-center transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17a4 4 0 0 1-8 0v-5a8 8 0 0 1 16 0v5a4 4 0 0 1-8 0"/></svg>
         </div>
-        <h2 class="text-xl font-bold tracking-tight">MediTutor AI</h2>
+        <h2 class="text-xl font-bold tracking-tight transition-colors duration-300 group-hover:text-[#137fec]">MediTutor AI</h2>
       </div>
-      <nav class="hidden md:flex items-center gap-8">
-        <a class="text-sm font-medium hover:text-[#137fec] transition-colors" href="#">Home</a>
-        <a class="text-sm font-medium hover:text-[#137fec] transition-colors" href="#">Courses</a>
-        <a class="text-sm font-medium hover:text-[#137fec] transition-colors" href="#">Progress</a>
-        <a class="text-sm font-medium hover:text-[#137fec] transition-colors" href="#">Profile</a>
-      </nav>
-      <div class="flex items-center gap-4">
-        <button class="hidden sm:block text-sm font-semibold hover:text-[#137fec] transition-colors">Log In</button>
+      <a href="quiz.html">
+        <button class="btn-primary bg-[#137fec] text-white px-5 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2">
+          Start Quiz
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform duration-300 group-hover:translate-x-1"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        </button>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden fade-section">
+    <!-- Animated Background Orbs -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
+      <div class="orb orb-1 absolute top-20 right-0 w-[500px] h-[500px] bg-[#137fec]/20 rounded-full blur-[120px] opacity-50"></div>
+      <div class="orb orb-2 absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px] opacity-30"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      <!-- Animated Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-pulse">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#137fec" stroke-width="2" class="animate-bounce"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+        <span class="text-sm font-medium text-white/80">AI-Powered Medical Training</span>
+      </div>
+
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6" style="animation: slideUp 0.6s ease-out forwards;">
+        Master the Art of <br/>
+        <span class="text-gradient">Clinical Diagnosis</span>
+      </h1>
+
+      <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-10" style="animation: slideUp 0.6s ease-out 0.2s forwards; opacity: 0;">
+        Chat with our AI tutor to learn disease diagnosis. Get symptoms, use hints, and build your clinical reasoning skills.
+      </p>
+
+      <div style="animation: slideUp 0.6s ease-out 0.4s forwards; opacity: 0;">
         <a href="quiz.html">
-          <button class="bg-[#137fec] hover:bg-[#137fec]/90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105">
-            Get Started
+          <button class="btn-primary h-14 px-10 text-lg rounded-2xl bg-[#137fec] text-white font-semibold shadow-lg shadow-[#137fec]/25 inline-flex items-center gap-2 animate-glow">
+            Start Learning Now
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+          </button>
+        </a>
+      </div>
+
+      <!-- Animated Stats -->
+      <div class="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto" style="animation: fadeIn 1s ease-out 0.6s forwards; opacity: 0;">
+        <div class="text-center group cursor-pointer">
+          <p class="stat-number text-3xl font-bold text-[#137fec] transition-transform duration-300 group-hover:scale-125">50+</p>
+          <p class="text-sm text-gray-500 transition-colors duration-300 group-hover:text-white">Diseases</p>
+        </div>
+        <div class="text-center group cursor-pointer">
+          <p class="stat-number text-3xl font-bold text-[#137fec] transition-transform duration-300 group-hover:scale-125">200+</p>
+          <p class="text-sm text-gray-500 transition-colors duration-300 group-hover:text-white">Symptoms</p>
+        </div>
+        <div class="text-center group cursor-pointer">
+          <p class="stat-number text-3xl font-bold text-[#137fec] transition-transform duration-300 group-hover:scale-125">5</p>
+          <p class="text-sm text-gray-500 transition-colors duration-300 group-hover:text-white">Specialties</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Medical Specialties -->
+  <section class="py-16 border-y border-[#283039] fade-section">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl font-bold mb-2">Medical Specialties Covered</h2>
+        <p class="text-gray-500">Train across multiple disciplines</p>
+      </div>
+      <div class="flex flex-wrap justify-center items-center gap-6">
+        <div class="specialty-badge flex items-center gap-3 px-5 py-3 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 hover:shadow-lg hover:shadow-red-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <span class="font-semibold">Cardiology</span>
+        </div>
+        <div class="specialty-badge flex items-center gap-3 px-5 py-3 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>
+          <span class="font-semibold">Neurology</span>
+        </div>
+        <div class="specialty-badge flex items-center gap-3 px-5 py-3 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>
+          <span class="font-semibold">Pulmonology</span>
+        </div>
+        <div class="specialty-badge flex items-center gap-3 px-5 py-3 rounded-xl bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20 hover:border-green-500/40 hover:shadow-lg hover:shadow-green-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+          <span class="font-semibold">Gastroenterology</span>
+        </div>
+        <div class="specialty-badge flex items-center gap-3 px-5 py-3 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20 hover:bg-orange-500/20 hover:border-orange-500/40 hover:shadow-lg hover:shadow-orange-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg>
+          <span class="font-semibold">Endocrinology</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="py-20 bg-[#0d0d10] fade-section">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-[700px] mx-auto mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
+        <p class="text-gray-500">Learn clinical diagnosis through interactive AI conversations</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Step 1 -->
+        <div class="card-interactive relative p-8 rounded-3xl bg-[#161618] border border-white/5 hover:border-[#137fec]/50">
+          <div class="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-[#137fec] flex items-center justify-center font-bold text-white shadow-lg shadow-[#137fec]/30 pulse-ring">1</div>
+          <div class="icon-spin w-14 h-14 rounded-2xl bg-[#137fec]/10 flex items-center justify-center mb-6 transition-all duration-300 hover:bg-[#137fec]/20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#137fec" stroke-width="2"><path d="m11 17a4 4 0 0 1-8 0v-5a8 8 0 0 1 16 0v5a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">AI Presents Symptoms</h3>
+          <p class="text-gray-500">Our AI tutor presents you with realistic patient symptoms to analyze.</p>
+        </div>
+        <!-- Step 2 -->
+        <div class="card-interactive relative p-8 rounded-3xl bg-[#161618] border border-white/5 hover:border-purple-500/50">
+          <div class="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-500/30 pulse-ring" style="--pulse-color: #a855f7;">2</div>
+          <div class="icon-spin w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 transition-all duration-300 hover:bg-purple-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Make Your Diagnosis</h3>
+          <p class="text-gray-500">Use your knowledge to identify the disease. Request hints if needed.</p>
+        </div>
+        <!-- Step 3 -->
+        <div class="card-interactive relative p-8 rounded-3xl bg-[#161618] border border-white/5 hover:border-green-500/50">
+          <div class="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center font-bold text-white shadow-lg shadow-green-500/30 pulse-ring" style="--pulse-color: #22c55e;">3</div>
+          <div class="icon-spin w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mb-6 transition-all duration-300 hover:bg-green-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Learn & Progress</h3>
+          <p class="text-gray-500">Get instant feedback and track your improvement over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning Flow Diagram -->
+  <section class="py-20 border-t border-white/5 fade-section">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4">The Learning Flow</h2>
+        <p class="text-gray-500">Your journey to diagnostic mastery</p>
+      </div>
+      
+      <div class="relative">
+        <!-- Animated Connection Line -->
+        <div class="hidden md:block absolute top-8 left-[12%] right-[12%] h-1 rounded-full overflow-hidden">
+          <div class="h-full w-full progress-fill"></div>
+        </div>
+        
+        <div class="grid md:grid-cols-4 gap-6">
+          <div class="flow-step flex flex-col items-center text-center cursor-pointer">
+            <div class="flow-icon w-16 h-16 rounded-2xl bg-[#137fec] shadow-lg shadow-[#137fec]/30 flex items-center justify-center mb-4 relative z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+            </div>
+            <h3 class="font-bold mb-1">Read Case</h3>
+            <p class="text-sm text-gray-500">Review symptoms</p>
+          </div>
+          <div class="flow-step flex flex-col items-center text-center cursor-pointer">
+            <div class="flow-icon w-16 h-16 rounded-2xl bg-purple-500 shadow-lg shadow-purple-500/30 flex items-center justify-center mb-4 relative z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>
+            </div>
+            <h3 class="font-bold mb-1">Analyze</h3>
+            <p class="text-sm text-gray-500">Use clinical reasoning</p>
+          </div>
+          <div class="flow-step flex flex-col items-center text-center cursor-pointer">
+            <div class="flow-icon w-16 h-16 rounded-2xl bg-cyan-500 shadow-lg shadow-cyan-500/30 flex items-center justify-center mb-4 relative z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></svg>
+            </div>
+            <h3 class="font-bold mb-1">Diagnose</h3>
+            <p class="text-sm text-gray-500">Submit your answer</p>
+          </div>
+          <div class="flow-step flex flex-col items-center text-center cursor-pointer">
+            <div class="flow-icon w-16 h-16 rounded-2xl bg-green-500 shadow-lg shadow-green-500/30 flex items-center justify-center mb-4 relative z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+            </div>
+            <h3 class="font-bold mb-1">Learn</h3>
+            <p class="text-sm text-gray-500">Review feedback</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chat Preview -->
+  <section class="py-20 bg-[#0d0d10] border-t border-white/5 fade-section">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4">Interactive AI Chat</h2>
+        <p class="text-gray-500">Learn through natural conversation with our AI tutor</p>
+      </div>
+      
+      <div class="card-interactive bg-[#161618] rounded-2xl border border-[#283039] overflow-hidden shadow-2xl hover:shadow-[#137fec]/10">
+        <div class="p-4 border-b border-[#283039] flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full bg-red-500 hover:scale-125 transition-transform cursor-pointer"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500 hover:scale-125 transition-transform cursor-pointer"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500 hover:scale-125 transition-transform cursor-pointer"></div>
+          <span class="ml-4 text-sm text-gray-500">MediTutor Chat</span>
+          <div class="ml-auto flex items-center gap-2 text-xs text-green-500">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            AI Online
+          </div>
+        </div>
+        <div class="p-6 space-y-4 min-h-[300px]">
+          <!-- AI Message -->
+          <div class="chat-message flex gap-3" style="opacity: 0;">
+            <div class="w-8 h-8 rounded-full bg-[#137fec] flex items-center justify-center flex-shrink-0 animate-pulse">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/></svg>
+            </div>
+            <div class="bg-[#0a0a0c] rounded-2xl rounded-tl-sm p-4 max-w-md border border-[#283039] hover:border-[#137fec]/30 transition-colors">
+              <p class="text-sm text-slate-300">
+                <strong class="text-[#137fec]">Case 1: Cardiology</strong><br/><br/>
+                A patient presents with:<br/>
+                1. Severe chest pain radiating to left arm<br/>
+                2. Shortness of breath<br/>
+                3. Nausea and cold sweats<br/><br/>
+                What is your diagnosis?
+              </p>
+            </div>
+          </div>
+          
+          <!-- User Message -->
+          <div class="chat-message flex gap-3 justify-end" style="opacity: 0;">
+            <div class="bg-[#137fec] rounded-2xl rounded-tr-sm p-4 max-w-md hover:bg-[#137fec]/90 transition-colors cursor-pointer">
+              <p class="text-sm text-white">Myocardial Infarction</p>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center flex-shrink-0 hover:bg-slate-500 transition-colors">
+              <span class="text-xs font-bold">You</span>
+            </div>
+          </div>
+          
+          <!-- AI Response -->
+          <div class="chat-message flex gap-3" style="opacity: 0;">
+            <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <div class="bg-green-500/10 border border-green-500/30 rounded-2xl rounded-tl-sm p-4 max-w-md hover:bg-green-500/20 transition-colors">
+              <p class="text-sm text-green-400">
+                <strong>Correct!</strong> The diagnosis is Myocardial Infarction. You earned <strong>+10 points</strong>!
+              </p>
+            </div>
+          </div>
+
+          <!-- Typing Indicator -->
+          <div class="flex gap-3 mt-4">
+            <div class="w-8 h-8 rounded-full bg-[#137fec]/50 flex items-center justify-center flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/></svg>
+            </div>
+            <div class="bg-[#0a0a0c] rounded-2xl rounded-tl-sm px-4 py-3 border border-[#283039] flex items-center gap-1">
+              <div class="typing-dot w-2 h-2 rounded-full bg-gray-400"></div>
+              <div class="typing-dot w-2 h-2 rounded-full bg-gray-400"></div>
+              <div class="typing-dot w-2 h-2 rounded-full bg-gray-400"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Input Area -->
+        <div class="border-t border-[#283039] p-4 bg-[#0d0d10]">
+          <div class="flex items-center gap-3 mb-3">
+            <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-xs font-semibold hover:bg-amber-500/20 transition-all hover:scale-105">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+              Get Hint
+            </button>
+            <span class="text-xs text-gray-500">3 hints remaining</span>
+          </div>
+          <div class="flex gap-3">
+            <input type="text" placeholder="Type your diagnosis..." class="input-glow flex-1 bg-[#0a0a0c] border border-[#283039] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#137fec] transition-all"/>
+            <button class="btn-primary bg-[#137fec] hover:bg-[#137fec]/90 px-4 py-3 rounded-xl transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Progress Bar Demo -->
+  <section class="py-16 border-t border-white/5 fade-section">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold mb-2">Track Your Progress</h2>
+        <p class="text-gray-500">Visual feedback on your learning journey</p>
+      </div>
+      
+      <div class="bg-[#161618] rounded-2xl border border-[#283039] p-6">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-medium text-gray-400">Question 3 of 5</span>
+          <span class="text-sm font-bold text-[#137fec]">60% Complete</span>
+        </div>
+        <div class="h-3 bg-[#283039] rounded-full overflow-hidden">
+          <div class="progress-fill h-full rounded-full" style="width: 60%;"></div>
+        </div>
+        <div class="mt-6 grid grid-cols-5 gap-2">
+          <div class="h-2 rounded-full bg-green-500"></div>
+          <div class="h-2 rounded-full bg-green-500"></div>
+          <div class="h-2 rounded-full bg-[#137fec] animate-pulse"></div>
+          <div class="h-2 rounded-full bg-[#283039]"></div>
+          <div class="h-2 rounded-full bg-[#283039]"></div>
+        </div>
+        <div class="mt-4 flex justify-between text-xs text-gray-500">
+          <span class="text-green-500">Correct</span>
+          <span class="text-green-500">Correct</span>
+          <span class="text-[#137fec]">Current</span>
+          <span>Pending</span>
+          <span>Pending</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 fade-section">
+    <div class="card-interactive bg-gradient-to-r from-[#137fec]/20 to-indigo-500/20 rounded-3xl p-12 text-center border border-[#283039] relative overflow-hidden">
+      <div class="orb orb-1 absolute top-0 right-0 w-64 h-64 bg-[#137fec]/10 rounded-full blur-3xl"></div>
+      <div class="orb orb-2 absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
+      
+      <div class="relative z-10">
+        <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-[#137fec]/20 flex items-center justify-center animate-bounce">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#137fec" stroke-width="2"><path d="m11 17a4 4 0 0 1-8 0v-5a8 8 0 0 1 16 0v5a4 4 0 0 1-8 0"/></svg>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Start Learning?</h2>
+        <p class="text-gray-400 mb-8 max-w-[500px] mx-auto">Begin your journey to becoming a better diagnostician with AI-powered training.</p>
+        <a href="quiz.html">
+          <button class="btn-primary bg-[#137fec] text-white px-8 py-4 rounded-xl text-base font-bold inline-flex items-center gap-2 animate-glow">
+            Start Quiz Now
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
           </button>
         </a>
       </div>
     </div>
-  </header>
-
-  <main>
-    <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-      <!-- Background Gradients -->
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
-        <div class="absolute top-20 right-0 w-[500px] h-[500px] bg-[#137fec]/20 rounded-full blur-[120px] opacity-50"></div>
-        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px] opacity-30"></div>
-      </div>
-
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <!-- Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#137fec" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
-          <span class="text-sm font-medium text-white/80">Next-Gen Medical Training</span>
-        </div>
-
-        <!-- Title -->
-        <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8">
-          Master the Art of <br/>
-          <span class="text-gradient">Diagnosis with AI</span>
-        </h1>
-
-        <!-- Description -->
-        <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-          Test your diagnostic skills with our AI-powered symptom quiz. Learn to identify diseases from symptoms with instant feedback, hints, and progress tracking.
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="quiz.html">
-            <button class="h-14 px-8 text-lg rounded-2xl bg-[#137fec] hover:bg-[#137fec]/90 text-white font-semibold shadow-lg shadow-[#137fec]/25 flex items-center gap-2">
-              Start Learning Now
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </button>
-          </a>
-          <button class="h-14 px-8 text-lg rounded-2xl border border-white/10 hover:bg-white/5 text-white font-semibold flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
-            Watch Demo
-          </button>
-        </div>
-
-        <!-- Social Proof -->
-        <div class="mt-16 flex items-center justify-center gap-4">
-          <div class="flex -space-x-4">
-            <img class="w-10 h-10 rounded-full border-2 border-[#0a0a0c]" src="https://i.pravatar.cc/100?img=1" alt="User 1"/>
-            <img class="w-10 h-10 rounded-full border-2 border-[#0a0a0c]" src="https://i.pravatar.cc/100?img=2" alt="User 2"/>
-            <img class="w-10 h-10 rounded-full border-2 border-[#0a0a0c]" src="https://i.pravatar.cc/100?img=3" alt="User 3"/>
-            <img class="w-10 h-10 rounded-full border-2 border-[#0a0a0c]" src="https://i.pravatar.cc/100?img=4" alt="User 4"/>
-          </div>
-          <p class="text-sm text-gray-500">
-            Joined by <span class="text-white font-semibold">10,000+</span> medical students
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Partners -->
-    <section class="border-y border-[#283039] py-12 bg-[#161618]/30">
-      <div class="max-w-[1200px] mx-auto px-6">
-        <p class="text-center text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mb-8">Trusted by students from</p>
-        <div class="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-          <div class="font-black text-2xl italic">H-MED</div>
-          <div class="font-black text-2xl italic">STANFORD</div>
-          <div class="font-black text-2xl italic">MAYO-C</div>
-          <div class="font-black text-2xl italic">J-HOPKINS</div>
-          <div class="font-black text-2xl italic">OXFORD</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="py-24 bg-[#0d0d10] border-t border-white/5">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-[700px] mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4">Empowering Your Medical Journey</h2>
-          <p class="text-gray-400">Designed for the modern medical student, our platform provides tools that bridge the gap between theory and practice.</p>
-        </div>
-        <div class="grid md:grid-cols-3 gap-8">
-          <!-- Feature 1 -->
-          <div class="p-8 rounded-3xl bg-[#161618] border border-white/5 hover:border-[#137fec]/50 transition-colors group">
-            <div class="w-14 h-14 rounded-2xl bg-[#137fec]/10 flex items-center justify-center mb-6 group-hover:bg-[#137fec]/20 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#137fec" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M12 18v-3"/></svg>
-            </div>
-            <h3 class="text-2xl font-bold mb-3">AI Symptom Quiz</h3>
-            <p class="text-gray-400 leading-relaxed">Test your diagnostic skills with AI-generated symptom scenarios and instant feedback.</p>
-          </div>
-          <!-- Feature 2 -->
-          <div class="p-8 rounded-3xl bg-[#161618] border border-white/5 hover:border-teal-500/50 transition-colors group">
-            <div class="w-14 h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center mb-6 group-hover:bg-teal-500/20 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            </div>
-            <h3 class="text-2xl font-bold mb-3">Smart Hints</h3>
-            <p class="text-gray-400 leading-relaxed">Get progressive hints to guide your learning without giving away the answer immediately.</p>
-          </div>
-          <!-- Feature 3 -->
-          <div class="p-8 rounded-3xl bg-[#161618] border border-white/5 hover:border-indigo-500/50 transition-colors group">
-            <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-6 group-hover:bg-indigo-500/20 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg>
-            </div>
-            <h3 class="text-2xl font-bold mb-3">Progress Tracking</h3>
-            <p class="text-gray-400 leading-relaxed">Monitor your mastery with detailed progress bars and performance analytics.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="py-24 border-t border-white/5">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-          <p class="text-gray-400">Master your clinical skills in 4 simple steps</p>
-        </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-          <div class="hidden lg:block absolute top-12 left-0 w-full h-0.5 bg-[#283039] -z-10"></div>
-          
-          <div class="flex flex-col gap-4">
-            <div class="w-12 h-12 rounded-full bg-[#137fec] text-white flex items-center justify-center font-bold text-lg ring-8 ring-[#0a0a0c]">1</div>
-            <h3 class="text-xl font-bold">Read Symptoms</h3>
-            <p class="text-sm text-gray-500">AI presents you with a set of patient symptoms.</p>
-          </div>
-          
-          <div class="flex flex-col gap-4">
-            <div class="w-12 h-12 rounded-full bg-[#137fec] text-white flex items-center justify-center font-bold text-lg ring-8 ring-[#0a0a0c]">2</div>
-            <h3 class="text-xl font-bold">Use Hints</h3>
-            <p class="text-sm text-gray-500">Request hints if you need help narrowing down.</p>
-          </div>
-          
-          <div class="flex flex-col gap-4">
-            <div class="w-12 h-12 rounded-full bg-[#137fec] text-white flex items-center justify-center font-bold text-lg ring-8 ring-[#0a0a0c]">3</div>
-            <h3 class="text-xl font-bold">Make Diagnosis</h3>
-            <p class="text-sm text-gray-500">Submit your diagnosis and get instant feedback.</p>
-          </div>
-          
-          <div class="flex flex-col gap-4">
-            <div class="w-12 h-12 rounded-full bg-[#137fec] text-white flex items-center justify-center font-bold text-lg ring-8 ring-[#0a0a0c]">4</div>
-            <h3 class="text-xl font-bold">Track Progress</h3>
-            <p class="text-sm text-gray-500">See your improvement over time with analytics.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="max-w-[1200px] mx-auto px-6 py-24">
-      <div class="bg-gradient-to-r from-[#137fec]/20 to-indigo-500/20 rounded-3xl p-12 text-center border border-[#283039]">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Test Your Skills?</h2>
-        <p class="text-gray-400 mb-8 max-w-[500px] mx-auto">Start diagnosing diseases from symptoms and track your progress as you learn.</p>
-        <a href="quiz.html">
-          <button class="bg-[#137fec] text-white px-8 py-4 rounded-xl text-base font-bold inline-flex items-center gap-2">
-            Start Quiz Now
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </button>
-        </a>
-      </div>
-    </section>
-  </main>
+  </section>
 
   <!-- Footer -->
-  <footer class="py-12 border-t border-white/5 bg-[#0d0d10]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-      <div class="flex items-center gap-2">
-        <div class="bg-[#137fec]/10 p-2 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#137fec" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17a4 4 0 0 1-8 0v-5a8 8 0 0 1 16 0v5a4 4 0 0 1-8 0"/></svg>
+  <footer class="py-8 border-t border-white/5 bg-[#0d0d10]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 group cursor-pointer">
+        <div class="bg-[#137fec]/10 p-2 rounded-xl transition-all duration-300 group-hover:bg-[#137fec]/20 group-hover:scale-110">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#137fec" stroke-width="2"><path d="m11 17a4 4 0 0 1-8 0v-5a8 8 0 0 1 16 0v5a4 4 0 0 1-8 0"/></svg>
         </div>
-        <span class="text-lg font-bold">MediTutor AI</span>
+        <span class="text-lg font-bold transition-colors duration-300 group-hover:text-[#137fec]">MediTutor AI</span>
       </div>
-      <p class="text-sm text-gray-500">© 2024 MediTutor AI. All rights reserved.</p>
+      <p class="text-sm text-gray-500">© 2024 MediTutor AI. Educational purposes only.</p>
     </div>
   </footer>
 
