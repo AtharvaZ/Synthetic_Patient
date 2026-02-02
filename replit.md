@@ -33,7 +33,8 @@ backend/
 ```
 
 ## API Endpoints
-- `GET /` - Web viewer (HTML)
+- `GET /` - API info
+- `GET /docs` - Interactive API documentation (Swagger)
 - `GET /api/stats` - Database statistics
 - `GET /api/cases` - All cases with symptoms
 - `GET /api/cases/{id}` - Single case detail
