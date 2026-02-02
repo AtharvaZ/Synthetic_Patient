@@ -172,49 +172,141 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Interactive Diagram */}
-      <section className="py-20 border-t border-white/5">
+      {/* Learning Journey Map */}
+      <section className="py-20 border-t border-white/5 overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">The Learning Flow</h2>
-            <p className="text-muted-foreground">Your journey to diagnostic mastery</p>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">The Learning Journey</h2>
+            <p className="text-muted-foreground">Follow the path to diagnostic mastery</p>
           </div>
           
-          {/* Flow Diagram */}
+          {/* Map Container */}
           <div className="relative">
-            {/* Connection Lines */}
-            <div className="hidden md:block absolute top-1/2 left-[12%] right-[12%] h-1 bg-gradient-to-r from-[#137fec] via-purple-500 to-green-500 -translate-y-1/2 rounded-full opacity-30" />
+            {/* SVG Path connecting all nodes */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#137fec" />
+                  <stop offset="33%" stopColor="#a855f7" />
+                  <stop offset="66%" stopColor="#06b6d4" />
+                  <stop offset="100%" stopColor="#22c55e" />
+                </linearGradient>
+              </defs>
+              {/* Curved path */}
+              <motion.path
+                d="M 100 100 Q 250 100 300 200 Q 350 300 500 300 Q 650 300 700 200"
+                fill="none"
+                stroke="url(#pathGradient)"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeDasharray="10 5"
+                initial={{ pathLength: 0, opacity: 0 }}
+                whileInView={{ pathLength: 1, opacity: 0.6 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
+                viewport={{ once: true }}
+              />
+              {/* Animated dots along path */}
+              <motion.circle
+                r="6"
+                fill="#137fec"
+                initial={{ offsetDistance: "0%" }}
+                animate={{ offsetDistance: "100%" }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                style={{ offsetPath: "path('M 100 100 Q 250 100 300 200 Q 350 300 500 300 Q 650 300 700 200')" }}
+              />
+            </svg>
             
-            <div className="grid md:grid-cols-4 gap-6">
-              <FlowStep 
-                icon={Clipboard}
-                title="Read Case"
-                desc="Review symptoms"
-                color="blue"
-                number={1}
-              />
-              <FlowStep 
-                icon={Brain}
-                title="Analyze"
-                desc="Use clinical reasoning"
-                color="purple"
-                number={2}
-              />
-              <FlowStep 
-                icon={Microscope}
-                title="Diagnose"
-                desc="Submit your answer"
-                color="cyan"
-                number={3}
-              />
-              <FlowStep 
-                icon={GraduationCap}
-                title="Learn"
-                desc="Review feedback"
-                color="green"
-                number={4}
-              />
+            {/* Map Nodes */}
+            <div className="relative grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
+              {/* Node 1 - Top Left */}
+              <motion.div 
+                className="flex flex-col items-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                viewport={{ once: true }}
+              >
+                <div className="relative mb-4">
+                  <div className="absolute -inset-3 bg-[#137fec]/20 rounded-full blur-xl" />
+                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#137fec] to-blue-600 flex items-center justify-center shadow-lg shadow-[#137fec]/30 border-4 border-[#0a0a0c]">
+                    <Clipboard className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#137fec] flex items-center justify-center text-sm font-bold border-2 border-[#0a0a0c]">
+                    1
+                  </div>
+                </div>
+                <h3 className="font-bold text-lg mb-1">Read Case</h3>
+                <p className="text-sm text-muted-foreground text-center">Review patient symptoms</p>
+              </motion.div>
+
+              {/* Node 2 - Top Right */}
+              <motion.div 
+                className="flex flex-col items-center md:mt-16"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                <div className="relative mb-4">
+                  <div className="absolute -inset-3 bg-purple-500/20 rounded-full blur-xl" />
+                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-lg shadow-purple-500/30 border-4 border-[#0a0a0c]">
+                    <Brain className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-purple-500 flex items-center justify-center text-sm font-bold border-2 border-[#0a0a0c]">
+                    2
+                  </div>
+                </div>
+                <h3 className="font-bold text-lg mb-1">Analyze</h3>
+                <p className="text-sm text-muted-foreground text-center">Use clinical reasoning</p>
+              </motion.div>
+
+              {/* Node 3 - Bottom Left */}
+              <motion.div 
+                className="flex flex-col items-center md:mt-24"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                viewport={{ once: true }}
+              >
+                <div className="relative mb-4">
+                  <div className="absolute -inset-3 bg-cyan-500/20 rounded-full blur-xl" />
+                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500 to-cyan-700 flex items-center justify-center shadow-lg shadow-cyan-500/30 border-4 border-[#0a0a0c]">
+                    <Microscope className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-cyan-500 flex items-center justify-center text-sm font-bold border-2 border-[#0a0a0c]">
+                    3
+                  </div>
+                </div>
+                <h3 className="font-bold text-lg mb-1">Diagnose</h3>
+                <p className="text-sm text-muted-foreground text-center">Submit your answer</p>
+              </motion.div>
+
+              {/* Node 4 - Bottom Right */}
+              <motion.div 
+                className="flex flex-col items-center md:mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                viewport={{ once: true }}
+              >
+                <div className="relative mb-4">
+                  <div className="absolute -inset-3 bg-green-500/20 rounded-full blur-xl" />
+                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg shadow-green-500/30 border-4 border-[#0a0a0c]">
+                    <GraduationCap className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-green-500 flex items-center justify-center text-sm font-bold border-2 border-[#0a0a0c]">
+                    4
+                  </div>
+                </div>
+                <h3 className="font-bold text-lg mb-1">Learn</h3>
+                <p className="text-sm text-muted-foreground text-center">Review feedback</p>
+              </motion.div>
             </div>
+
+            {/* Decorative elements */}
+            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-[#137fec] rounded-full animate-pulse" />
+            <div className="absolute top-1/2 right-1/3 w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: "0.5s" }} />
+            <div className="absolute bottom-1/4 left-1/2 w-2 h-2 bg-cyan-500 rounded-full animate-pulse" style={{ animationDelay: "1s" }} />
           </div>
         </div>
       </section>
@@ -355,21 +447,3 @@ function FeatureCard({ icon: Icon, title, desc, step }: { icon: any, title: stri
   );
 }
 
-function FlowStep({ icon: Icon, title, desc, color, number }: { icon: any, title: string, desc: string, color: string, number: number }) {
-  const colors: Record<string, string> = {
-    blue: "bg-[#137fec] shadow-[#137fec]/30",
-    purple: "bg-purple-500 shadow-purple-500/30",
-    cyan: "bg-cyan-500 shadow-cyan-500/30",
-    green: "bg-green-500 shadow-green-500/30",
-  };
-  
-  return (
-    <div className="flex flex-col items-center text-center">
-      <div className={`w-16 h-16 rounded-2xl ${colors[color]} shadow-lg flex items-center justify-center mb-4 relative z-10`}>
-        <Icon className="w-8 h-8 text-white" />
-      </div>
-      <h3 className="font-bold mb-1">{title}</h3>
-      <p className="text-sm text-muted-foreground">{desc}</p>
-    </div>
-  );
-}
