@@ -1,3 +1,6 @@
+# Raw datasets - not needed in repo
+data/
+
 # Python
 __pycache__/
 *.py[cod]

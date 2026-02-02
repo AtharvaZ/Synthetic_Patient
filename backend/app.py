@@ -8,8 +8,12 @@ import json
 
 app = Flask(__name__)
 
+import os
+
 def load_cases():
-    with open('training_cases.json', 'r', encoding='utf-8') as f:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    json_path = os.path.join(base_dir, 'training_cases.json')
+    with open(json_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 HTML_TEMPLATE = '''
