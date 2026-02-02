@@ -7,7 +7,7 @@ import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from models import SessionLocal, Case, Symptom, CaseSymptom, Precaution
+from models import SessionLocal, Case, Symptom, CaseSymptom
 import crud
 from schemas import CaseCreate, CaseUpdate, SymptomCreate
 
@@ -119,13 +119,6 @@ def test_all():
             assert str(cs.symptom_type) == "presenting"
     run_test("get_case_symptoms by type", test_get_case_symptoms_by_type)
     
-    print("\n[Precaution Operations]")
-    
-    def test_get_case_precautions():
-        precautions = crud.get_case_precautions(db, first_case_id)
-        assert isinstance(precautions, list), "Should return list"
-    run_test("get_case_precautions", test_get_case_precautions)
-    
     print("\n[Case Detail]")
     
     def test_get_case_detail():
@@ -134,7 +127,6 @@ def test_all():
         assert "presenting_symptoms" in detail
         assert "absent_symptoms" in detail
         assert "exam_findings" in detail
-        assert "precautions" in detail
         assert "diagnosis" in detail
     run_test("get_case_detail structure", test_get_case_detail)
     
@@ -199,7 +191,6 @@ def test_all():
     test_case_id = None
     test_symptom_id = None
     test_case_symptom_id = None
-    test_precaution_id = None
     
     def test_create_symptom():
         nonlocal test_symptom_id
@@ -256,28 +247,15 @@ def test_all():
         assert cs.id is not None
     run_test("add_case_symptom", test_add_case_symptom)
     
-    def test_add_precaution():
-        nonlocal test_precaution_id
-        p = crud.add_precaution(db, test_case_id, "Test precaution")
-        test_precaution_id = p.id
-        assert p.id is not None
-    run_test("add_precaution", test_add_precaution)
-    
     def test_case_detail_with_new_data():
         detail = crud.get_case_detail(db, test_case_id)
         assert "test_symptom_xyz_123" in detail["presenting_symptoms"]
-        assert "Test precaution" in detail["precautions"]
     run_test("get_case_detail with new data", test_case_detail_with_new_data)
     
     def test_remove_case_symptom():
         result = crud.remove_case_symptom(db, test_case_symptom_id)
         assert result == True
     run_test("remove_case_symptom", test_remove_case_symptom)
-    
-    def test_remove_precaution():
-        result = crud.remove_precaution(db, test_precaution_id)
-        assert result == True
-    run_test("remove_precaution", test_remove_precaution)
     
     def test_delete_case():
         result = crud.delete_case(db, test_case_id)

@@ -6,14 +6,13 @@ Medical student training API with GP-level patient cases for diagnostic skill pr
 ## Current State
 - **62 unique cases** from 2 validated datasets stored in PostgreSQL
 - FastAPI backend with SQLAlchemy ORM
-- Full CRUD operations for cases, symptoms, and precautions
+- Full CRUD operations for cases and symptoms
 
 ## Database Schema
 ```sql
 symptoms (id, name, category, severity_weight)
 cases (id, case_id, age, gender, chief_complaint, history, duration, severity, triggers, diagnosis, description, difficulty, source)
 case_symptoms (id, case_id, symptom_id, symptom_type: presenting/absent/exam_finding)
-precautions (id, case_id, precaution)
 ```
 
 ## Data Sources

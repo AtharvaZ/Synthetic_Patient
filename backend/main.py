@@ -11,7 +11,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from models import get_db, engine, Base, Case, Symptom, CaseSymptom, Precaution
+from models import get_db, engine, Base, Case, Symptom, CaseSymptom
 import crud
 import schemas
 
@@ -125,8 +125,6 @@ def read_root(db: Session = Depends(get_db)):
         .info-item span {{ font-weight: 500; }}
         .diagnosis-reveal {{ background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 15px; }}
         .diagnosis-reveal h3 {{ color: #92400e; margin-bottom: 5px; }}
-        .precaution-list {{ list-style: none; }}
-        .precaution-list li {{ padding: 8px 12px; background: #f0fdf4; margin-bottom: 5px; border-radius: 6px; border-left: 3px solid #22c55e; font-size: 0.9em; }}
     </style>
 </head>
 <body>
@@ -182,7 +180,6 @@ def read_root(db: Session = Depends(get_db)):
             let reportedHtml = '<div class="symptom-list">' + c.presenting_symptoms.map(s => `<span class="symptom-tag">${{s}}</span>`).join('') + '</div>';
             let examHtml = '<div class="symptom-list">' + c.exam_findings.map(s => `<span class="symptom-tag exam">${{s}}</span>`).join('') + '</div>';
             let negativeHtml = '<div class="symptom-list">' + c.absent_symptoms.map(s => `<span class="symptom-tag negative">${{s}}</span>`).join('') + '</div>';
-            let precautionsHtml = '<ul class="precaution-list">' + c.precautions.map(p => `<li>${{p}}</li>`).join('') + '</ul>';
             document.getElementById('modal-body').innerHTML = `
                 <div class="section"><h4>Chief Complaint</h4><div class="chief-complaint">"${{c.chief_complaint}}"</div></div>
                 <div class="section"><h4>History</h4><p>${{c.history}}</p></div>
@@ -195,7 +192,6 @@ def read_root(db: Session = Depends(get_db)):
                 <div class="section"><h4>Physical Exam Findings</h4>${{examHtml}}</div>
                 <div class="section"><h4>Patient Denies</h4>${{negativeHtml}}</div>
                 <div class="diagnosis-reveal"><h3>Diagnosis: ${{c.diagnosis}}</h3><p style="margin-top:10px; font-size:0.9em; color:#666;">${{c.description}}</p></div>
-                <div class="section" style="margin-top:20px;"><h4>Precautions</h4>${{precautionsHtml}}</div>
             `;
             document.getElementById('modal').style.display = 'block';
         }}

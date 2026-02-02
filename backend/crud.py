@@ -4,7 +4,7 @@ CRUD operations for medical case database
 
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from models import Case, Symptom, CaseSymptom, Precaution
+from models import Case, Symptom, CaseSymptom
 from schemas import CaseCreate, CaseUpdate, SymptomCreate
 
 
@@ -137,39 +137,16 @@ def remove_case_symptom(db: Session, case_symptom_id: int) -> bool:
     return True
 
 
-def get_case_precautions(db: Session, case_id: int):
-    return db.query(Precaution).filter(Precaution.case_id == case_id).all()
-
-
-def add_precaution(db: Session, case_id: int, precaution_text: str) -> Precaution:
-    db_precaution = Precaution(case_id=case_id, precaution=precaution_text)
-    db.add(db_precaution)
-    db.commit()
-    db.refresh(db_precaution)
-    return db_precaution
-
-
-def remove_precaution(db: Session, precaution_id: int) -> bool:
-    db_precaution = db.query(Precaution).filter(Precaution.id == precaution_id).first()
-    if not db_precaution:
-        return False
-    
-    db.delete(db_precaution)
-    db.commit()
-    return True
-
-
 def get_case_detail(db: Session, case_id: int) -> dict | None:
     case = get_case(db, case_id)
     if not case:
         return None
     
     case_symptoms = get_case_symptoms(db, case_id)
-    precautions = get_case_precautions(db, case_id)
     
-    presenting = [cs.symptom.name for cs in case_symptoms if str(cs.symptom_type) == 'presenting']
-    absent = [cs.symptom.name for cs in case_symptoms if str(cs.symptom_type) == 'absent']
-    exam = [cs.symptom.name for cs in case_symptoms if str(cs.symptom_type) == 'exam_finding']
+    presenting = [cs.symptom.name for cs in case_symptoms if str(cs.symptom_type) == 'presenting' and cs.symptom]
+    absent = [cs.symptom.name for cs in case_symptoms if str(cs.symptom_type) == 'absent' and cs.symptom]
+    exam = [cs.symptom.name for cs in case_symptoms if str(cs.symptom_type) == 'exam_finding' and cs.symptom]
     
     return {
         "id": case.id,
@@ -188,8 +165,7 @@ def get_case_detail(db: Session, case_id: int) -> dict | None:
         "created_at": case.created_at,
         "presenting_symptoms": presenting,
         "absent_symptoms": absent,
-        "exam_findings": exam,
-        "precautions": [p.precaution for p in precautions]
+        "exam_findings": exam
     }
 
 

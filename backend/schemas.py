@@ -24,22 +24,6 @@ class SymptomResponse(SymptomBase):
         from_attributes = True
 
 
-class PrecautionBase(BaseModel):
-    precaution: str
-
-
-class PrecautionCreate(PrecautionBase):
-    pass
-
-
-class PrecautionResponse(PrecautionBase):
-    id: int
-    case_id: int
-    
-    class Config:
-        from_attributes = True
-
-
 class CaseSymptomBase(BaseModel):
     symptom_id: int
     symptom_type: str
@@ -103,7 +87,6 @@ class CaseDetailResponse(CaseResponse):
     presenting_symptoms: list[str] = []
     absent_symptoms: list[str] = []
     exam_findings: list[str] = []
-    precautions: list[str] = []
 
 
 class CaseListResponse(BaseModel):

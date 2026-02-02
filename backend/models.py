@@ -54,7 +54,6 @@ class Case(Base):
     created_at = Column(DateTime, server_default=func.now())
     
     case_symptoms = relationship("CaseSymptom", back_populates="case", cascade="all, delete-orphan")
-    precautions = relationship("Precaution", back_populates="case", cascade="all, delete-orphan")
 
 
 class CaseSymptom(Base):
@@ -71,13 +70,3 @@ class CaseSymptom(Base):
     
     case = relationship("Case", back_populates="case_symptoms")
     symptom = relationship("Symptom", back_populates="case_symptoms")
-
-
-class Precaution(Base):
-    __tablename__ = "precautions"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    case_id = Column(Integer, ForeignKey("cases.id", ondelete="CASCADE"), nullable=False)
-    precaution = Column(Text, nullable=False)
-    
-    case = relationship("Case", back_populates="precautions")

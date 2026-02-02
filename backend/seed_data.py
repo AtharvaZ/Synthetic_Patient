@@ -10,7 +10,7 @@ import json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from sqlalchemy.orm import Session
-from models import engine, Base, SessionLocal, Symptom, Case, CaseSymptom, Precaution
+from models import engine, Base, SessionLocal, Symptom, Case, CaseSymptom
 
 
 def get_or_create_symptom(db: Session, name: str, category: str = "other") -> Symptom:
@@ -99,10 +99,6 @@ def seed_database():
                 symptom = get_or_create_symptom(db, symptom_name, categorize_symptom(symptom_name))
                 case_symptom = CaseSymptom(case_id=case.id, symptom_id=symptom.id, symptom_type='exam_finding')
                 db.add(case_symptom)
-            
-            for precaution_text in case_data['diagnosis'].get('precautions', []):
-                precaution = Precaution(case_id=case.id, precaution=precaution_text)
-                db.add(precaution)
             
             db.commit()
             print(f"  Added: {case_data['case_id']}")
