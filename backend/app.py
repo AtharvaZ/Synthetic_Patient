@@ -4,17 +4,73 @@ Browse GP-level patient cases for medical student training
 """
 
 from flask import Flask, render_template_string, jsonify
-import json
+import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 app = Flask(__name__)
 
-import os
+def get_db_connection():
+    return psycopg2.connect(os.environ['DATABASE_URL'])
 
-def load_cases():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    json_path = os.path.join(base_dir, 'training_cases.json')
-    with open(json_path, 'r', encoding='utf-8') as f:
-        return json.load(f)
+def load_cases_from_db():
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    
+    cur.execute("""
+        SELECT id, case_id, age, gender, chief_complaint, history, duration, 
+               severity, triggers, diagnosis, description, difficulty, source
+        FROM cases
+        ORDER BY id
+    """)
+    cases_raw = cur.fetchall()
+    
+    cases = []
+    for c in cases_raw:
+        cur.execute("""
+            SELECT s.name, cs.symptom_type
+            FROM case_symptoms cs
+            JOIN symptoms s ON cs.symptom_id = s.id
+            WHERE cs.case_id = %s
+        """, (c['id'],))
+        symptoms = cur.fetchall()
+        
+        cur.execute("SELECT precaution FROM precautions WHERE case_id = %s", (c['id'],))
+        precautions = [p['precaution'] for p in cur.fetchall()]
+        
+        presenting = [s['name'] for s in symptoms if s['symptom_type'] == 'presenting']
+        absent = [s['name'] for s in symptoms if s['symptom_type'] == 'absent']
+        exam = [s['name'] for s in symptoms if s['symptom_type'] == 'exam_finding']
+        
+        cases.append({
+            'case_id': c['case_id'],
+            'patient': {'age': c['age'], 'gender': c['gender']},
+            'presentation': {
+                'chief_complaint': c['chief_complaint'],
+                'history': c['history'],
+                'duration': c['duration'],
+                'severity': c['severity'],
+                'triggers': c['triggers']
+            },
+            'symptoms': {
+                'reported': presenting,
+                'negative': absent,
+                'exam_findings': exam
+            },
+            'diagnosis': c['diagnosis'],
+            'description': c['description'],
+            'precautions': precautions,
+            'difficulty': c['difficulty'],
+            'source': c['source']
+        })
+    
+    cur.close()
+    conn.close()
+    
+    return {
+        'metadata': {'total_cases': len(cases)},
+        'cases': cases
+    }
 
 HTML_TEMPLATE = '''
 <!DOCTYPE html>
@@ -214,13 +270,21 @@ HTML_TEMPLATE = '''
             border-left: 3px solid #22c55e;
             font-size: 0.9em;
         }
+        .source-badge {
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            color: #64748b;
+            margin-left: 8px;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
             <h1>Medical Training Cases</h1>
-            <p>24 unique GP-level patient cases with detailed clinical presentations</p>
+            <p>{{ data.metadata.total_cases }} GP-level patient cases with detailed clinical presentations</p>
         </div>
     </header>
 
@@ -255,14 +319,14 @@ HTML_TEMPLATE = '''
             {% for case in data.cases %}
             <div class="case-card" data-difficulty="{{ case.difficulty }}" onclick="showCase({{ loop.index0 }})">
                 <div class="case-header">
-                    <span class="case-id">Case #{{ loop.index }}</span>
+                    <span class="case-id">Case #{{ loop.index }}<span class="source-badge">{{ case.source }}</span></span>
                     <span class="badge badge-diff-{{ case.difficulty }}">
                         {% if case.difficulty == 1 %}Easy{% elif case.difficulty == 2 %}Medium{% else %}Hard{% endif %}
                     </span>
                 </div>
                 <div class="case-body">
                     <div class="patient-info">
-                        <span>{{ case.patient.age }} years old</span>
+                        <span>{{ case.patient.age }}</span>
                         <span>{{ case.patient.gender }}</span>
                     </div>
                     <div class="chief-complaint">"{{ case.presentation.chief_complaint }}"</div>
@@ -313,7 +377,7 @@ HTML_TEMPLATE = '''
         
         function showCase(index) {
             const c = cases[index];
-            document.getElementById('modal-title').textContent = `Case #${index + 1}: ${c.patient.age}yo ${c.patient.gender}`;
+            document.getElementById('modal-title').textContent = `Case #${index + 1}: ${c.patient.age} ${c.patient.gender}`;
             
             const diffText = c.difficulty === 1 ? 'Easy' : (c.difficulty === 2 ? 'Medium' : 'Hard');
             document.getElementById('modal-badge').innerHTML = 
@@ -360,7 +424,7 @@ HTML_TEMPLATE = '''
                     </div>
                 </div>
                 <div class="section">
-                    <h4>Reported Symptoms</h4>
+                    <h4>Presenting Symptoms</h4>
                     ${reportedHtml}
                 </div>
                 <div class="section">
@@ -368,7 +432,7 @@ HTML_TEMPLATE = '''
                     ${examHtml}
                 </div>
                 <div class="section">
-                    <h4>Negative Symptoms (patient denies)</h4>
+                    <h4>Patient Denies</h4>
                     ${negativeHtml}
                 </div>
                 <div class="diagnosis-reveal">
@@ -399,7 +463,7 @@ HTML_TEMPLATE = '''
 
 @app.route('/')
 def index():
-    data = load_cases()
+    data = load_cases_from_db()
     
     diff_counts = {1: 0, 2: 0, 3: 0}
     for case in data['cases']:
@@ -409,7 +473,14 @@ def index():
 
 @app.route('/api/cases')
 def api_cases():
-    return jsonify(load_cases())
+    return jsonify(load_cases_from_db())
+
+@app.route('/api/cases/<int:case_id>')
+def api_case_detail(case_id):
+    data = load_cases_from_db()
+    if case_id < 1 or case_id > len(data['cases']):
+        return jsonify({'error': 'Case not found'}), 404
+    return jsonify(data['cases'][case_id - 1])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
