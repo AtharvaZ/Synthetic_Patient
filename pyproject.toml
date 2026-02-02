@@ -8,5 +8,6 @@ dependencies = [
     "ipython>=9.10.0",
     "multiversity>=2.0.8",
     "pandas>=3.0.0",
+    "psycopg2-binary>=2.9.11",
     "pyarrow>=23.0.0",
 ]
