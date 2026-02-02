@@ -23,14 +23,14 @@ precautions (id, case_id, precaution)
 ## Project Structure
 ```
 backend/
-├── main.py              # FastAPI app with endpoints
+├── main.py              # FastAPI app with endpoints (auto-creates tables on startup)
 ├── models.py            # SQLAlchemy connection, session, and ORM models
 ├── crud.py              # CRUD operations
 ├── schemas.py           # Pydantic schemas for API
-├── db_setup.py          # Database schema creation
+├── seed_data.py         # Script to populate database from training_cases.json
 ├── requirements.txt     # Python dependencies
 ├── .env.example         # Environment variable template
-└── training_cases.json  # Backup data
+└── training_cases.json  # Case data (62 cases)
 ```
 
 ## API Endpoints
@@ -49,15 +49,17 @@ backend/
 - `GET /api/search/symptom/{name}` - Search cases by symptom
 - `GET /api/search/diagnosis/{name}` - Search cases by diagnosis
 
-## Local Setup
+## Local Setup (New Database)
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-export DATABASE_URL="postgresql://..."
+cp .env.example .env
+# Edit .env with your DATABASE_URL
+python seed_data.py      # Populate database with 62 cases
 uvicorn main:app --reload --port 5000
 ```
+
+Tables are created automatically on app startup. The seed script loads all cases from training_cases.json.
 
 ## How to Run (Replit)
 FastAPI app runs on port 5000 via workflow: `cd backend && python main.py`
