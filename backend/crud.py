@@ -167,9 +167,9 @@ def get_case_detail(db: Session, case_id: int) -> dict | None:
     case_symptoms = get_case_symptoms(db, case_id)
     precautions = get_case_precautions(db, case_id)
     
-    presenting = [cs.symptom.name for cs in case_symptoms if cs.symptom_type == 'presenting']
-    absent = [cs.symptom.name for cs in case_symptoms if cs.symptom_type == 'absent']
-    exam = [cs.symptom.name for cs in case_symptoms if cs.symptom_type == 'exam_finding']
+    presenting = [cs.symptom.name for cs in case_symptoms if str(cs.symptom_type) == 'presenting']
+    absent = [cs.symptom.name for cs in case_symptoms if str(cs.symptom_type) == 'absent']
+    exam = [cs.symptom.name for cs in case_symptoms if str(cs.symptom_type) == 'exam_finding']
     
     return {
         "id": case.id,
@@ -195,7 +195,8 @@ def get_case_detail(db: Session, case_id: int) -> dict | None:
 
 def get_all_cases_detail(db: Session, difficulty: int | None = None) -> list[dict]:
     cases = get_cases(db, limit=1000, difficulty=difficulty)
-    return [get_case_detail(db, c.id) for c in cases]
+    results = [get_case_detail(db, int(c.id)) for c in cases]  # type: ignore[arg-type]
+    return [r for r in results if r is not None]
 
 
 def get_stats(db: Session) -> dict:
@@ -232,9 +233,11 @@ def search_cases_by_symptom(db: Session, symptom_name: str):
         CaseSymptom.symptom_type == 'presenting'
     ).all()
     
-    return [get_case_detail(db, cs.case_id) for cs in case_symptoms]
+    results = [get_case_detail(db, int(cs.case_id)) for cs in case_symptoms]  # type: ignore[arg-type]
+    return [r for r in results if r is not None]
 
 
 def search_cases_by_diagnosis(db: Session, diagnosis: str):
     cases = db.query(Case).filter(Case.diagnosis.ilike(f"%{diagnosis}%")).all()
-    return [get_case_detail(db, c.id) for c in cases]
+    results = [get_case_detail(db, int(c.id)) for c in cases]  # type: ignore[arg-type]
+    return [r for r in results if r is not None]
