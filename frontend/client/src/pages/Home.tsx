@@ -36,7 +36,7 @@ export default function Home() {
       <header className={`sticky top-0 z-50 w-full border-b ${isDarkMode ? 'border-[#283039] bg-[#0a0a0c]/80' : 'border-slate-200 bg-white/80'} backdrop-blur-md`}>
         <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="size-8 bg-gradient-to-br from-[#137fec] to-purple-600 rounded flex items-center justify-center text-white">
+            <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
               <Stethoscope className="w-5 h-5" />
             </div>
             <h2 className="text-xl font-bold tracking-tight">MediTutor AI</h2>
@@ -49,7 +49,7 @@ export default function Home() {
               {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
             </button>
             <Link href="/quiz">
-              <Button className="bg-gradient-to-r from-[#137fec] to-purple-600 hover:opacity-90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105" data-testid="button-get-started">
+              <Button className="bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105" data-testid="button-get-started">
                 Start Quiz
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -63,9 +63,9 @@ export default function Home() {
         {/* Background Gradients */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
           <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-[#137fec]/20 rounded-full blur-[120px] opacity-50 mix-blend-screen" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px] opacity-30 mix-blend-screen" />
-          <div className="absolute top-1/2 left-1/3 w-[300px] h-[300px] bg-pink-500/15 rounded-full blur-[100px] opacity-40 mix-blend-screen" />
-          <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[100px] opacity-30 mix-blend-screen" />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-500/20 rounded-full blur-[120px] opacity-30 mix-blend-screen" />
+          <div className="absolute top-1/2 left-1/3 w-[300px] h-[300px] bg-cyan-500/15 rounded-full blur-[100px] opacity-40 mix-blend-screen" />
+          <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[100px] opacity-30 mix-blend-screen" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -86,7 +86,7 @@ export default function Home() {
             className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}
           >
             Master the Art of <br />
-            <span className="bg-gradient-to-r from-[#137fec] via-purple-600 to-pink-600 bg-clip-text text-transparent">Clinical Diagnosis</span>
+            <span className="bg-gradient-to-r from-[#137fec] via-teal-500 to-cyan-500 bg-clip-text text-transparent">Clinical Diagnosis</span>
           </motion.h1>
 
           <motion.p 
@@ -104,7 +104,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Link href="/quiz">
-              <Button size="lg" className="h-14 px-10 text-lg rounded-2xl bg-gradient-to-r from-[#137fec] via-purple-500 to-pink-500 hover:opacity-90 shadow-lg shadow-purple-500/25" data-testid="button-start-learning">
+              <Button size="lg" className="h-14 px-10 text-lg rounded-2xl bg-gradient-to-r from-[#137fec] via-teal-500 to-cyan-500 hover:opacity-90 shadow-lg shadow-teal-500/25" data-testid="button-start-learning">
                 Start Learning Now
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
@@ -123,7 +123,7 @@ export default function Home() {
               <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Patient Cases</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent"><AnimatedCounter end={150} />+</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent"><AnimatedCounter end={150} />+</p>
               <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Symptoms</p>
             </div>
           </motion.div>
@@ -159,136 +159,88 @@ export default function Home() {
           <div className="relative">
             {/* Map Nodes */}
             <div className="relative grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
-              {/* Node 1 - Read Case */}
+              {/* Node 1 - Meet Patient */}
               <motion.div 
                 className="flex flex-col items-center"
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  delay: 0,
-                  duration: 0.5,
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 15
-                }}
+                initial={{ y: 0 }}
+                whileInView={{ y: [0, -20, 0] }}
+                transition={{ delay: 0, duration: 0.5, ease: "easeOut" }}
                 viewport={{ once: false, amount: 0.5 }}
               >
-                <motion.div 
-                  className="relative mb-4"
-                  initial={{ y: 0 }}
-                  whileInView={{ y: [0, -15, 0] }}
-                  transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-                  viewport={{ once: false, amount: 0.5 }}
-                >
+                <div className="relative mb-4">
                   <div className="absolute -inset-3 bg-[#137fec]/20 rounded-full blur-xl" />
-                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-[#137fec] to-blue-600 flex items-center justify-center shadow-lg shadow-[#137fec]/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
+                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-[#137fec] to-cyan-500 flex items-center justify-center shadow-lg shadow-[#137fec]/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <Clipboard className="w-8 h-8 text-white" />
                   </div>
                   <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#137fec] flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     1
                   </div>
-                </motion.div>
-                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Read Case</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Review patient presentation</p>
+                </div>
+                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Meet Patient</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Review initial presentation</p>
               </motion.div>
 
-              {/* Node 2 - Ask Questions */}
+              {/* Node 2 - Investigate */}
               <motion.div 
                 className="flex flex-col items-center"
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  delay: 0.5,
-                  duration: 0.5,
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 15
-                }}
+                initial={{ y: 0 }}
+                whileInView={{ y: [0, -20, 0] }}
+                transition={{ delay: 0.15, duration: 0.5, ease: "easeOut" }}
                 viewport={{ once: false, amount: 0.5 }}
               >
-                <motion.div 
-                  className="relative mb-4"
-                  initial={{ y: 0 }}
-                  whileInView={{ y: [0, -15, 0] }}
-                  transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
-                  viewport={{ once: false, amount: 0.5 }}
-                >
-                  <div className="absolute -inset-3 bg-purple-500/20 rounded-full blur-xl" />
-                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
+                <div className="relative mb-4">
+                  <div className="absolute -inset-3 bg-teal-500/20 rounded-full blur-xl" />
+                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <MessageCircle className="w-8 h-8 text-white" />
                   </div>
-                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-purple-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
+                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-teal-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     2
                   </div>
-                </motion.div>
-                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Ask Questions</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Chat with AI patient</p>
+                </div>
+                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Investigate</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Ask patient questions</p>
               </motion.div>
 
-              {/* Node 3 - Diagnose */}
+              {/* Node 3 - Decide */}
               <motion.div 
                 className="flex flex-col items-center"
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  delay: 1.0,
-                  duration: 0.5,
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 15
-                }}
+                initial={{ y: 0 }}
+                whileInView={{ y: [0, -20, 0] }}
+                transition={{ delay: 0.3, duration: 0.5, ease: "easeOut" }}
                 viewport={{ once: false, amount: 0.5 }}
               >
-                <motion.div 
-                  className="relative mb-4"
-                  initial={{ y: 0 }}
-                  whileInView={{ y: [0, -15, 0] }}
-                  transition={{ delay: 1.3, duration: 0.6, ease: "easeOut" }}
-                  viewport={{ once: false, amount: 0.5 }}
-                >
-                  <div className="absolute -inset-3 bg-pink-500/20 rounded-full blur-xl" />
-                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
+                <div className="relative mb-4">
+                  <div className="absolute -inset-3 bg-sky-500/20 rounded-full blur-xl" />
+                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <Target className="w-8 h-8 text-white" />
                   </div>
-                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-pink-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
+                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-sky-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     3
                   </div>
-                </motion.div>
-                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Diagnose</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Submit your answer</p>
+                </div>
+                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Decide</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Submit your diagnosis</p>
               </motion.div>
 
-              {/* Node 4 - Learn */}
+              {/* Node 4 - Improve */}
               <motion.div 
                 className="flex flex-col items-center"
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  delay: 1.5,
-                  duration: 0.5,
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 15
-                }}
+                initial={{ y: 0 }}
+                whileInView={{ y: [0, -20, 0] }}
+                transition={{ delay: 0.45, duration: 0.5, ease: "easeOut" }}
                 viewport={{ once: false, amount: 0.5 }}
               >
-                <motion.div 
-                  className="relative mb-4"
-                  initial={{ y: 0 }}
-                  whileInView={{ y: [0, -15, 0] }}
-                  transition={{ delay: 1.8, duration: 0.6, ease: "easeOut" }}
-                  viewport={{ once: false, amount: 0.5 }}
-                >
-                  <div className="absolute -inset-3 bg-green-500/20 rounded-full blur-xl" />
-                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
+                <div className="relative mb-4">
+                  <div className="absolute -inset-3 bg-emerald-500/20 rounded-full blur-xl" />
+                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <GraduationCap className="w-8 h-8 text-white" />
                   </div>
-                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-green-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
+                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     4
                   </div>
-                </motion.div>
-                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Learn</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Review feedback</p>
+                </div>
+                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Improve</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Learn from feedback</p>
               </motion.div>
             </div>
           </div>
@@ -326,12 +278,12 @@ export default function Home() {
               
               {/* Doctor Question */}
               <div className="flex gap-3 justify-end">
-                <div className="bg-gradient-to-r from-[#137fec] to-purple-500 rounded-2xl rounded-tr-sm p-4 max-w-md">
+                <div className="bg-gradient-to-r from-[#137fec] to-teal-500 rounded-2xl rounded-tr-sm p-4 max-w-md">
                   <p className="text-sm text-white">
                     Do you notice any sensitivity to light or sound during these headaches?
                   </p>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#137fec] to-cyan-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#137fec] to-teal-500 flex items-center justify-center flex-shrink-0">
                   <Stethoscope className="w-4 h-4 text-white" />
                 </div>
               </div>
@@ -354,14 +306,14 @@ export default function Home() {
 
       {/* CTA */}
       <section className="max-w-[1200px] mx-auto px-6 py-20">
-        <div className={`bg-gradient-to-r ${isDarkMode ? 'from-[#137fec]/20 via-purple-500/20 to-pink-500/20' : 'from-blue-100 via-purple-100 to-pink-100'} rounded-3xl p-12 text-center border ${isDarkMode ? 'border-[#283039]' : 'border-slate-200'} relative overflow-hidden`}>
+        <div className={`bg-gradient-to-r ${isDarkMode ? 'from-[#137fec]/20 via-teal-500/20 to-cyan-500/20' : 'from-blue-100 via-teal-50 to-cyan-50'} rounded-3xl p-12 text-center border ${isDarkMode ? 'border-[#283039]' : 'border-slate-200'} relative overflow-hidden`}>
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#137fec]/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl" />
           
           <div className="relative z-10">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#137fec]/20 to-purple-500/20 flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#137fec]/20 to-teal-500/20 flex items-center justify-center">
               <Stethoscope className="w-8 h-8 text-[#137fec]" />
             </div>
             <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Ready to Start Practicing?</h2>
@@ -369,7 +321,7 @@ export default function Home() {
               Begin diagnosing patients and sharpen your clinical reasoning skills today.
             </p>
             <Link href="/quiz">
-              <Button className="bg-gradient-to-r from-[#137fec] via-purple-500 to-pink-500 text-white px-8 py-4 h-auto rounded-xl text-base font-bold hover:opacity-90" data-testid="button-start-quiz">
+              <Button className="bg-gradient-to-r from-[#137fec] via-teal-500 to-cyan-500 text-white px-8 py-4 h-auto rounded-xl text-base font-bold hover:opacity-90" data-testid="button-start-quiz">
                 Start Quiz Now
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
@@ -382,7 +334,7 @@ export default function Home() {
       <footer className={`py-8 border-t ${isDarkMode ? 'border-white/5 bg-[#0d0d10]' : 'border-slate-100 bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="bg-gradient-to-br from-[#137fec]/10 to-purple-500/10 p-2 rounded-xl">
+            <div className="bg-gradient-to-br from-[#137fec]/10 to-teal-500/10 p-2 rounded-xl">
               <Stethoscope className="w-5 h-5 text-[#137fec]" />
             </div>
             <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>MediTutor AI</span>
