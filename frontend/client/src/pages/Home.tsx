@@ -4,7 +4,8 @@ import { Link } from "wouter";
 import { 
   Stethoscope, Brain, Target, Award, ArrowRight, Activity, Zap,
   Heart, Pill, Microscope, Thermometer, Clipboard, GraduationCap, ChevronRight,
-  Star, Trophy, Sparkles, BookOpen, Globe, Palette, Calculator, FlaskConical
+  Star, Trophy, Sparkles, BookOpen, Globe, Palette, Calculator, FlaskConical,
+  Sun, Moon, MessageCircle, User, Wind, Bone
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -27,22 +28,28 @@ function AnimatedCounter({ end, duration = 2000 }: { end: number; duration?: num
 }
 
 export default function Home() {
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   
   return (
-    <div className="min-h-screen bg-[#0a0a0c] text-white selection:bg-primary/30">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-[#0a0a0c] text-white' : 'bg-gradient-to-br from-slate-50 to-blue-50 text-slate-900'} selection:bg-primary/30 transition-colors duration-300`}>
       {/* Navigation */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#283039] bg-[#0a0a0c]/80 backdrop-blur-md">
+      <header className={`sticky top-0 z-50 w-full border-b ${isDarkMode ? 'border-[#283039] bg-[#0a0a0c]/80' : 'border-slate-200 bg-white/80'} backdrop-blur-md`}>
         <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="size-8 bg-[#137fec] rounded flex items-center justify-center text-white">
+            <div className="size-8 bg-gradient-to-br from-[#137fec] to-purple-600 rounded flex items-center justify-center text-white">
               <Stethoscope className="w-5 h-5" />
             </div>
             <h2 className="text-xl font-bold tracking-tight">MediTutor AI</h2>
           </div>
           <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-white/10' : 'hover:bg-slate-100'}`}
+            >
+              {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
+            </button>
             <Link href="/quiz">
-              <Button className="bg-[#137fec] hover:bg-[#137fec]/90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105" data-testid="button-get-started">
+              <Button className="bg-gradient-to-r from-[#137fec] to-purple-600 hover:opacity-90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105" data-testid="button-get-started">
                 Start Quiz
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -55,8 +62,10 @@ export default function Home() {
       <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
         {/* Background Gradients */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
-          <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] opacity-50 mix-blend-screen" />
+          <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-[#137fec]/20 rounded-full blur-[120px] opacity-50 mix-blend-screen" />
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px] opacity-30 mix-blend-screen" />
+          <div className="absolute top-1/2 left-1/3 w-[300px] h-[300px] bg-pink-500/15 rounded-full blur-[100px] opacity-40 mix-blend-screen" />
+          <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[100px] opacity-30 mix-blend-screen" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -64,10 +73,10 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8"
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white border border-slate-200 shadow-sm'} mb-8`}
           >
-            <Zap className="w-4 h-4 text-[#137fec]" />
-            <span className="text-sm font-medium text-white/80">AI-Powered Medical Training</span>
+            <Zap className="w-4 h-4 text-orange-500" />
+            <span className={`text-sm font-medium ${isDarkMode ? 'text-white/80' : 'text-slate-600'}`}>AI-Simulated Patient Conversations</span>
           </motion.div>
 
           <motion.h1 
@@ -77,16 +86,16 @@ export default function Home() {
             className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
           >
             Master the Art of <br />
-            <span className="text-gradient">Clinical Diagnosis</span>
+            <span className="bg-gradient-to-r from-[#137fec] via-purple-500 to-pink-500 bg-clip-text text-transparent">Clinical Diagnosis</span>
           </motion.h1>
 
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10"
+            className={`text-lg ${isDarkMode ? 'text-slate-400' : 'text-slate-600'} max-w-2xl mx-auto mb-10`}
           >
-            Chat with our AI tutor to learn disease diagnosis. Get symptoms, use hints, and build your clinical reasoning skills.
+            Practice diagnosing real patient cases through interactive conversations with AI-simulated patients. Ask questions, gather symptoms, and make your diagnosis.
           </motion.p>
 
           <motion.div 
@@ -95,7 +104,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Link href="/quiz">
-              <Button size="lg" className="h-14 px-10 text-lg rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25" data-testid="button-start-learning">
+              <Button size="lg" className="h-14 px-10 text-lg rounded-2xl bg-gradient-to-r from-[#137fec] via-purple-500 to-pink-500 hover:opacity-90 shadow-lg shadow-purple-500/25" data-testid="button-start-learning">
                 Start Learning Now
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
@@ -110,74 +119,80 @@ export default function Home() {
             className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
           >
             <div className="text-center">
-              <p className="text-3xl font-bold text-[#137fec]">50+</p>
-              <p className="text-sm text-muted-foreground">Diseases</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-[#137fec] to-cyan-400 bg-clip-text text-transparent"><AnimatedCounter end={62} />+</p>
+              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Patient Cases</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-[#137fec]">200+</p>
-              <p className="text-sm text-muted-foreground">Symptoms</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent"><AnimatedCounter end={40} />+</p>
+              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Conditions</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-[#137fec]">5</p>
-              <p className="text-sm text-muted-foreground">Specialties</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent"><AnimatedCounter end={5} /></p>
+              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Categories</p>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Medical Specialties - Clickable */}
-      <section className="py-16 border-y border-[#283039]">
+      {/* Medical Categories Covered - Non-clickable */}
+      <section className={`py-16 border-y ${isDarkMode ? 'border-[#283039]' : 'border-slate-200'}`}>
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold mb-2">Medical Specialties Covered</h2>
-            <p className="text-muted-foreground">Click on a specialty to explore what's covered</p>
+            <h2 className="text-2xl font-bold mb-2">Conditions Covered</h2>
+            <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Practice diagnosing common GP-level conditions</p>
           </div>
-          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
-            <SpecialtyLink icon={Heart} label="Cardiology" color="red" href="/specialty/cardiology" />
-            <SpecialtyLink icon={Brain} label="Neurology" color="purple" href="/specialty/neurology" />
-            <SpecialtyLink icon={Activity} label="Pulmonology" color="cyan" href="/specialty/pulmonology" />
-            <SpecialtyLink icon={Pill} label="Gastroenterology" color="green" href="/specialty/gastroenterology" />
-            <SpecialtyLink icon={Thermometer} label="Endocrinology" color="orange" href="/specialty/endocrinology" />
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6">
+            <CategoryBadge icon={Heart} label="Cardiovascular" color="red" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Wind} label="Respiratory" color="cyan" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Brain} label="Neurological" color="purple" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Pill} label="Gastrointestinal" color="green" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Bone} label="Musculoskeletal" color="orange" isDarkMode={isDarkMode} />
           </div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 bg-[#0d0d10]">
+      <section className={`py-20 ${isDarkMode ? 'bg-[#0d0d10]' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-[700px] mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-            <p className="text-muted-foreground">Learn clinical diagnosis through interactive AI conversations</p>
+            <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Practice clinical diagnosis through realistic patient simulations</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard 
-              icon={Stethoscope}
-              title="AI Presents Symptoms"
-              desc="Our AI tutor presents you with realistic patient symptoms to analyze."
+              icon={MessageCircle}
+              title="Chat with AI Patient"
+              desc="Ask questions to gather symptoms, medical history, and vital signs from an AI-simulated patient."
               step="1"
+              color="blue"
+              isDarkMode={isDarkMode}
             />
             <FeatureCard 
               icon={Target}
               title="Make Your Diagnosis"
-              desc="Use your knowledge to identify the disease. Request hints if needed."
+              desc="Analyze the information you've gathered and submit your diagnosis when ready."
               step="2"
+              color="purple"
+              isDarkMode={isDarkMode}
             />
             <FeatureCard 
               icon={Award}
-              title="Learn & Progress"
-              desc="Get instant feedback and track your improvement over time."
+              title="Get Instant Feedback"
+              desc="Receive immediate feedback on your diagnosis with detailed explanations of the correct answer."
               step="3"
+              color="green"
+              isDarkMode={isDarkMode}
             />
           </div>
         </div>
       </section>
 
       {/* Learning Journey Map */}
-      <section className="py-20 border-t border-white/5 overflow-hidden">
+      <section className={`py-20 border-t ${isDarkMode ? 'border-white/5' : 'border-slate-100'} overflow-hidden`}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">The Learning Journey</h2>
-            <p className="text-muted-foreground">Follow the path to diagnostic mastery</p>
+            <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Follow the path to diagnostic mastery</p>
           </div>
           
           {/* Map Container */}
@@ -188,7 +203,7 @@ export default function Home() {
                 <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#137fec" />
                   <stop offset="33%" stopColor="#a855f7" />
-                  <stop offset="66%" stopColor="#06b6d4" />
+                  <stop offset="66%" stopColor="#ec4899" />
                   <stop offset="100%" stopColor="#22c55e" />
                 </linearGradient>
               </defs>
@@ -205,15 +220,11 @@ export default function Home() {
                 transition={{ duration: 2, ease: "easeInOut" }}
                 viewport={{ once: true }}
               />
-              {/* Animated dots along path */}
-              <motion.circle
-                r="6"
-                fill="#137fec"
-                initial={{ offsetDistance: "0%" }}
-                animate={{ offsetDistance: "100%" }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                style={{ offsetPath: "path('M 100 80 C 150 80 200 140 300 160 C 400 180 450 280 500 300 C 550 320 650 180 700 140')" }}
-              />
+              {/* Static dots at node positions */}
+              <circle cx="100" cy="80" r="8" fill="#137fec" opacity="0.8" />
+              <circle cx="300" cy="160" r="8" fill="#a855f7" opacity="0.8" />
+              <circle cx="500" cy="300" r="8" fill="#ec4899" opacity="0.8" />
+              <circle cx="700" cy="140" r="8" fill="#22c55e" opacity="0.8" />
             </svg>
             
             {/* Map Nodes */}
@@ -228,15 +239,15 @@ export default function Home() {
               >
                 <div className="relative mb-4">
                   <div className="absolute -inset-3 bg-[#137fec]/20 rounded-full blur-xl" />
-                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#137fec] to-blue-600 flex items-center justify-center shadow-lg shadow-[#137fec]/30 border-4 border-[#0a0a0c]">
+                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-[#137fec] to-blue-600 flex items-center justify-center shadow-lg shadow-[#137fec]/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <Clipboard className="w-8 h-8 text-white" />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#137fec] flex items-center justify-center text-sm font-bold border-2 border-[#0a0a0c]">
+                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#137fec] flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     1
                   </div>
                 </div>
                 <h3 className="font-bold text-lg mb-1">Read Case</h3>
-                <p className="text-sm text-muted-foreground text-center">Review patient symptoms</p>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Review patient presentation</p>
               </motion.div>
 
               {/* Node 2 - Top Right */}
@@ -249,15 +260,15 @@ export default function Home() {
               >
                 <div className="relative mb-4">
                   <div className="absolute -inset-3 bg-purple-500/20 rounded-full blur-xl" />
-                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-lg shadow-purple-500/30 border-4 border-[#0a0a0c]">
-                    <Brain className="w-8 h-8 text-white" />
+                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
+                    <MessageCircle className="w-8 h-8 text-white" />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-purple-500 flex items-center justify-center text-sm font-bold border-2 border-[#0a0a0c]">
+                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-purple-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     2
                   </div>
                 </div>
-                <h3 className="font-bold text-lg mb-1">Analyze</h3>
-                <p className="text-sm text-muted-foreground text-center">Use clinical reasoning</p>
+                <h3 className="font-bold text-lg mb-1">Ask Questions</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Chat with AI patient</p>
               </motion.div>
 
               {/* Node 3 - Bottom Left */}
@@ -269,16 +280,16 @@ export default function Home() {
                 viewport={{ once: true }}
               >
                 <div className="relative mb-4">
-                  <div className="absolute -inset-3 bg-cyan-500/20 rounded-full blur-xl" />
-                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500 to-cyan-700 flex items-center justify-center shadow-lg shadow-cyan-500/30 border-4 border-[#0a0a0c]">
-                    <Microscope className="w-8 h-8 text-white" />
+                  <div className="absolute -inset-3 bg-pink-500/20 rounded-full blur-xl" />
+                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
+                    <Target className="w-8 h-8 text-white" />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-cyan-500 flex items-center justify-center text-sm font-bold border-2 border-[#0a0a0c]">
+                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-pink-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     3
                   </div>
                 </div>
                 <h3 className="font-bold text-lg mb-1">Diagnose</h3>
-                <p className="text-sm text-muted-foreground text-center">Submit your answer</p>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Submit your answer</p>
               </motion.div>
 
               {/* Node 4 - Bottom Right */}
@@ -291,75 +302,70 @@ export default function Home() {
               >
                 <div className="relative mb-4">
                   <div className="absolute -inset-3 bg-green-500/20 rounded-full blur-xl" />
-                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg shadow-green-500/30 border-4 border-[#0a0a0c]">
+                  <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <GraduationCap className="w-8 h-8 text-white" />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-green-500 flex items-center justify-center text-sm font-bold border-2 border-[#0a0a0c]">
+                  <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-green-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     4
                   </div>
                 </div>
                 <h3 className="font-bold text-lg mb-1">Learn</h3>
-                <p className="text-sm text-muted-foreground text-center">Review feedback</p>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Review feedback</p>
               </motion.div>
             </div>
-
-            {/* Decorative elements */}
-            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-[#137fec] rounded-full animate-pulse" />
-            <div className="absolute top-1/2 right-1/3 w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: "0.5s" }} />
-            <div className="absolute bottom-1/4 left-1/2 w-2 h-2 bg-cyan-500 rounded-full animate-pulse" style={{ animationDelay: "1s" }} />
           </div>
         </div>
       </section>
 
       {/* Chat Preview */}
-      <section className="py-20 bg-[#0d0d10] border-t border-white/5">
+      <section className={`py-20 ${isDarkMode ? 'bg-[#0d0d10]' : 'bg-slate-50'} border-t ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Interactive AI Chat</h2>
-            <p className="text-muted-foreground">Learn through natural conversation with our AI tutor</p>
+            <h2 className="text-3xl font-bold mb-4">Interactive Patient Chat</h2>
+            <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Ask questions and gather information like a real consultation</p>
           </div>
           
           {/* Mock Chat Preview */}
-          <div className="bg-[#161618] rounded-2xl border border-[#283039] overflow-hidden">
-            <div className="p-4 border-b border-[#283039] flex items-center gap-3">
+          <div className={`${isDarkMode ? 'bg-[#161618] border-[#283039]' : 'bg-white border-slate-200'} rounded-2xl border overflow-hidden shadow-xl`}>
+            <div className={`p-4 border-b ${isDarkMode ? 'border-[#283039]' : 'border-slate-200'} flex items-center gap-3`}>
               <div className="w-3 h-3 rounded-full bg-red-500" />
               <div className="w-3 h-3 rounded-full bg-yellow-500" />
               <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span className="ml-4 text-sm text-muted-foreground">MediTutor Chat</span>
+              <span className={`ml-4 text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Patient Consultation</span>
             </div>
             <div className="p-6 space-y-4">
-              {/* AI Message */}
+              {/* Patient Message */}
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#137fec] flex items-center justify-center flex-shrink-0">
-                  <Brain className="w-4 h-4 text-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center flex-shrink-0">
+                  <User className="w-4 h-4 text-white" />
                 </div>
-                <div className="bg-[#0a0a0c] rounded-2xl rounded-tl-sm p-4 max-w-md">
-                  <p className="text-sm text-slate-300">
-                    A 55-year-old male presents with severe chest pain radiating to the left arm, shortness of breath, and cold sweats. What is your diagnosis?
+                <div className={`${isDarkMode ? 'bg-[#0a0a0c]' : 'bg-slate-100'} rounded-2xl rounded-tl-sm p-4 max-w-md`}>
+                  <p className={`text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                    Doctor, I've been having terrible headaches for the past week. They're mostly on one side and I feel nauseous too.
                   </p>
                 </div>
               </div>
               
-              {/* User Message */}
+              {/* Doctor Question */}
               <div className="flex gap-3 justify-end">
-                <div className="bg-[#137fec] rounded-2xl rounded-tr-sm p-4 max-w-md">
+                <div className="bg-gradient-to-r from-[#137fec] to-purple-500 rounded-2xl rounded-tr-sm p-4 max-w-md">
                   <p className="text-sm text-white">
-                    Myocardial Infarction
+                    Do you notice any sensitivity to light or sound during these headaches?
                   </p>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xs font-bold">You</span>
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#137fec] to-cyan-500 flex items-center justify-center flex-shrink-0">
+                  <Stethoscope className="w-4 h-4 text-white" />
                 </div>
               </div>
               
-              {/* AI Response */}
+              {/* Patient Response */}
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
-                  <Award className="w-4 h-4 text-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center flex-shrink-0">
+                  <User className="w-4 h-4 text-white" />
                 </div>
-                <div className="bg-green-500/10 border border-green-500/30 rounded-2xl rounded-tl-sm p-4 max-w-md">
-                  <p className="text-sm text-green-400">
-                    Correct! The symptoms strongly suggest an acute myocardial infarction. +10 points earned!
+                <div className={`${isDarkMode ? 'bg-[#0a0a0c]' : 'bg-slate-100'} rounded-2xl rounded-tl-sm p-4 max-w-md`}>
+                  <p className={`text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                    Yes! Bright lights make it much worse, and I have to lie down in a dark room.
                   </p>
                 </div>
               </div>
@@ -370,21 +376,22 @@ export default function Home() {
 
       {/* CTA */}
       <section className="max-w-[1200px] mx-auto px-6 py-20">
-        <div className="bg-gradient-to-r from-[#137fec]/20 to-indigo-500/20 rounded-3xl p-12 text-center border border-[#283039] relative overflow-hidden">
+        <div className={`bg-gradient-to-r ${isDarkMode ? 'from-[#137fec]/20 via-purple-500/20 to-pink-500/20' : 'from-blue-100 via-purple-100 to-pink-100'} rounded-3xl p-12 text-center border ${isDarkMode ? 'border-[#283039]' : 'border-slate-200'} relative overflow-hidden`}>
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#137fec]/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl" />
           
           <div className="relative z-10">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-[#137fec]/20 flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#137fec]/20 to-purple-500/20 flex items-center justify-center">
               <Stethoscope className="w-8 h-8 text-[#137fec]" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Start Learning?</h2>
-            <p className="text-muted-foreground mb-8 max-w-[500px] mx-auto">
-              Begin your journey to becoming a better diagnostician with AI-powered training.
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Start Practicing?</h2>
+            <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'} mb-8 max-w-[500px] mx-auto`}>
+              Begin diagnosing patients and sharpen your clinical reasoning skills today.
             </p>
             <Link href="/quiz">
-              <Button className="bg-[#137fec] text-white px-8 py-4 h-auto rounded-xl text-base font-bold" data-testid="button-start-quiz">
+              <Button className="bg-gradient-to-r from-[#137fec] via-purple-500 to-pink-500 text-white px-8 py-4 h-auto rounded-xl text-base font-bold hover:opacity-90" data-testid="button-start-quiz">
                 Start Quiz Now
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
@@ -394,56 +401,69 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-white/5 bg-[#0d0d10]">
+      <footer className={`py-8 border-t ${isDarkMode ? 'border-white/5 bg-[#0d0d10]' : 'border-slate-100 bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="bg-primary/10 p-2 rounded-xl">
-              <Stethoscope className="w-5 h-5 text-primary" />
+            <div className="bg-gradient-to-br from-[#137fec]/10 to-purple-500/10 p-2 rounded-xl">
+              <Stethoscope className="w-5 h-5 text-[#137fec]" />
             </div>
             <span className="text-lg font-bold">MediTutor AI</span>
           </div>
-          <p className="text-sm text-muted-foreground">© 2024 MediTutor AI. Educational purposes only.</p>
+          <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>© 2024 MediTutor AI. Educational purposes only.</p>
         </div>
       </footer>
     </div>
   );
 }
 
-function SpecialtyLink({ icon: Icon, label, color, href }: { icon: any, label: string, color: string, href: string }) {
+function CategoryBadge({ icon: Icon, label, color, isDarkMode }: { icon: any, label: string, color: string, isDarkMode: boolean }) {
   const colors: Record<string, string> = {
-    red: "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 hover:shadow-lg hover:shadow-red-500/20",
-    purple: "bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/20",
-    cyan: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20 hover:bg-cyan-500/20 hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/20",
-    green: "bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500/20 hover:border-green-500/40 hover:shadow-lg hover:shadow-green-500/20",
-    orange: "bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20 hover:border-orange-500/40 hover:shadow-lg hover:shadow-orange-500/20",
+    red: `${isDarkMode ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-red-50 text-red-600 border-red-200'}`,
+    purple: `${isDarkMode ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-purple-50 text-purple-600 border-purple-200'}`,
+    cyan: `${isDarkMode ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' : 'bg-cyan-50 text-cyan-600 border-cyan-200'}`,
+    green: `${isDarkMode ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-green-50 text-green-600 border-green-200'}`,
+    orange: `${isDarkMode ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 'bg-orange-50 text-orange-600 border-orange-200'}`,
   };
   
   return (
-    <Link href={href}>
-      <div 
-        className={`flex items-center gap-3 px-5 py-3 rounded-xl border cursor-pointer transition-all duration-300 hover:scale-105 hover:-translate-y-1 ${colors[color]}`}
-        data-testid={`link-specialty-${label.toLowerCase()}`}
-      >
-        <Icon className="w-5 h-5" />
-        <span className="font-semibold">{label}</span>
-        <ChevronRight className="w-4 h-4 opacity-50" />
-      </div>
-    </Link>
-  );
-}
-
-function FeatureCard({ icon: Icon, title, desc, step }: { icon: any, title: string, desc: string, step: string }) {
-  return (
-    <div className="relative p-8 rounded-3xl bg-[#161618] border border-white/5 hover:border-[#137fec]/30 transition-colors group">
-      <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-[#137fec] flex items-center justify-center font-bold text-white shadow-lg shadow-[#137fec]/30">
-        {step}
-      </div>
-      <div className="w-14 h-14 rounded-2xl bg-[#137fec]/10 flex items-center justify-center mb-6 group-hover:bg-[#137fec]/20 transition-colors">
-        <Icon className="w-7 h-7 text-[#137fec]" />
-      </div>
-      <h3 className="text-xl font-bold mb-3">{title}</h3>
-      <p className="text-muted-foreground leading-relaxed">{desc}</p>
+    <div 
+      className={`flex items-center gap-3 px-5 py-3 rounded-xl border ${colors[color]}`}
+    >
+      <Icon className="w-5 h-5" />
+      <span className="font-semibold">{label}</span>
     </div>
   );
 }
 
+function FeatureCard({ icon: Icon, title, desc, step, color, isDarkMode }: { icon: any, title: string, desc: string, step: string, color: string, isDarkMode: boolean }) {
+  const gradients: Record<string, string> = {
+    blue: "from-[#137fec] to-cyan-500",
+    purple: "from-purple-500 to-pink-500",
+    green: "from-green-500 to-emerald-500",
+  };
+  
+  const bgColors: Record<string, string> = {
+    blue: isDarkMode ? "bg-[#137fec]/10 group-hover:bg-[#137fec]/20" : "bg-blue-50 group-hover:bg-blue-100",
+    purple: isDarkMode ? "bg-purple-500/10 group-hover:bg-purple-500/20" : "bg-purple-50 group-hover:bg-purple-100",
+    green: isDarkMode ? "bg-green-500/10 group-hover:bg-green-500/20" : "bg-green-50 group-hover:bg-green-100",
+  };
+  
+  const iconColors: Record<string, string> = {
+    blue: "text-[#137fec]",
+    purple: "text-purple-500",
+    green: "text-green-500",
+  };
+  
+  return (
+    <div className={`relative p-8 rounded-3xl ${isDarkMode ? 'bg-[#161618] border-white/5 hover:border-purple-500/30' : 'bg-white border-slate-200 hover:border-purple-300'} border transition-colors group shadow-lg`}>
+      <div className={`absolute -top-4 -left-4 w-10 h-10 rounded-full bg-gradient-to-r ${gradients[color]} flex items-center justify-center font-bold text-white shadow-lg`}>
+        {step}
+      </div>
+      <div className={`w-14 h-14 rounded-2xl ${bgColors[color]} flex items-center justify-center mb-6 transition-colors`}>
+        <Icon className={`w-7 h-7 ${iconColors[color]}`} />
+      </div>
+      <h3 className="text-xl font-bold mb-3">{title}</h3>
+      <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'} leading-relaxed`}>{desc}</p>
+    </div>
+  );
+}
