@@ -147,4 +147,6 @@ All case data is licensed under CC BY-SA 4.0.
 
 ## License
 
-This project is for educational purposes. See LICENSE for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Note: The clinical case data is derived from datasets licensed under CC BY-SA 4.0.
