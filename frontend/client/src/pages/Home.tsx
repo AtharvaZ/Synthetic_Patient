@@ -193,18 +193,18 @@ export default function Home() {
           
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {[
-              { icon: Heart, label: "Cardio", color: "rose" },
-              { icon: Wind, label: "Respiratory", color: "cyan" },
-              { icon: Brain, label: "Neuro", color: "violet" },
-              { icon: Pill, label: "GI", color: "emerald" },
-              { icon: Bone, label: "Ortho", color: "orange" },
-              { icon: Droplets, label: "Derm", color: "pink" },
-              { icon: Ear, label: "ENT", color: "teal" },
-              { icon: Activity, label: "Urology", color: "blue" },
-              { icon: Gauge, label: "Endocrine", color: "amber" },
-              { icon: Smile, label: "Psych", color: "indigo" },
-              { icon: Bug, label: "Infectious", color: "lime" },
-              { icon: Eye, label: "Ophthal", color: "sky" },
+              { icon: Heart, label: "Cardio", bg: "bg-rose-500/15", text: "text-rose-400" },
+              { icon: Wind, label: "Respiratory", bg: "bg-cyan-500/15", text: "text-cyan-400" },
+              { icon: Brain, label: "Neuro", bg: "bg-violet-500/15", text: "text-violet-400" },
+              { icon: Pill, label: "GI", bg: "bg-emerald-500/15", text: "text-emerald-400" },
+              { icon: Bone, label: "Ortho", bg: "bg-orange-500/15", text: "text-orange-400" },
+              { icon: Droplets, label: "Derm", bg: "bg-pink-500/15", text: "text-pink-400" },
+              { icon: Ear, label: "ENT", bg: "bg-teal-500/15", text: "text-teal-400" },
+              { icon: Activity, label: "Urology", bg: "bg-blue-500/15", text: "text-blue-400" },
+              { icon: Gauge, label: "Endocrine", bg: "bg-amber-500/15", text: "text-amber-400" },
+              { icon: Smile, label: "Psych", bg: "bg-indigo-500/15", text: "text-indigo-400" },
+              { icon: Bug, label: "Infectious", bg: "bg-lime-500/15", text: "text-lime-400" },
+              { icon: Eye, label: "Ophthal", bg: "bg-sky-500/15", text: "text-sky-400" },
             ].map((cat, i) => (
               <motion.div
                 key={cat.label}
@@ -214,10 +214,10 @@ export default function Home() {
                 viewport={{ once: true }}
                 className={`flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200 ${isDarkMode ? "hover:bg-white/[0.04]" : "hover:bg-slate-50"}`}
               >
-                <div className={`p-2.5 rounded-xl ${isDarkMode ? "bg-white/[0.06]" : "bg-slate-100"}`}>
-                  <cat.icon className={`w-5 h-5 ${isDarkMode ? "text-slate-300" : "text-slate-600"}`} />
+                <div className={`p-2.5 rounded-xl ${cat.bg}`}>
+                  <cat.icon className={`w-5 h-5 ${cat.text}`} />
                 </div>
-                <span className={`text-xs font-medium ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+                <span className={`text-xs font-medium ${cat.text}`}>
                   {cat.label}
                 </span>
               </motion.div>
