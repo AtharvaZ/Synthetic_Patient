@@ -161,9 +161,9 @@ export default function Feedback() {
 
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-teal-500/8" : "bg-teal-500/6"}`} />
-        <div className={`absolute top-1/2 left-1/3 w-[350px] h-[350px] rounded-full blur-[100px] ${isDarkMode ? "bg-emerald-500/6" : "bg-emerald-500/5"}`} />
-        <div className={`absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/6" : "bg-amber-500/5"}`} />
+        <div className={`absolute -top-20 right-1/4 w-[600px] h-[600px] rounded-full blur-[80px] ${isDarkMode ? "bg-teal-500/25" : "bg-teal-500/15"}`} />
+        <div className={`absolute top-1/2 -left-20 w-[450px] h-[450px] rounded-full blur-[80px] ${isDarkMode ? "bg-emerald-500/20" : "bg-emerald-500/12"}`} />
+        <div className={`absolute bottom-0 right-1/3 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/20" : "bg-amber-500/12"}`} />
       </div>
 
       {/* Header */}

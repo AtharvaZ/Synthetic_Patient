@@ -55,9 +55,9 @@ export default function Home() {
       
       {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-[120px] ${isDarkMode ? "bg-teal-500/10" : "bg-teal-500/8"}`} />
-        <div className={`absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-emerald-500/8" : "bg-emerald-500/6"}`} />
-        <div className={`absolute bottom-1/4 right-1/3 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/8" : "bg-amber-500/6"}`} />
+        <div className={`absolute -top-20 left-1/4 w-[700px] h-[700px] rounded-full blur-[100px] ${isDarkMode ? "bg-teal-500/25" : "bg-teal-500/15"}`} />
+        <div className={`absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full blur-[80px] ${isDarkMode ? "bg-emerald-500/20" : "bg-emerald-500/12"}`} />
+        <div className={`absolute bottom-0 left-1/3 w-[600px] h-[600px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/20" : "bg-amber-500/12"}`} />
       </div>
 
       {/* Navigation */}
