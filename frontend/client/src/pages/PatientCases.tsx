@@ -7,7 +7,7 @@ import {
   Sun, Moon, Home, Shuffle, Play
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 type Difficulty = "Beginner" | "Intermediate" | "Advanced";
 
@@ -40,15 +40,36 @@ export default function PatientCases() {
   const { isDarkMode, toggleTheme } = useTheme();
   const [location, navigate] = useLocation();
   const { data: cases, isLoading } = useCases();
-
-  const searchParams = new URLSearchParams(location.split("?")[1] || "");
-  const selectedDifficulty = (searchParams.get("difficulty") as Difficulty) || "Beginner";
+  
+  const getDifficultyFromUrl = (): Difficulty => {
+    const params = new URLSearchParams(window.location.search);
+    const diff = params.get("difficulty");
+    if (diff === "Beginner" || diff === "Intermediate" || diff === "Advanced") {
+      return diff;
+    }
+    return "Beginner";
+  };
+  
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>(getDifficultyFromUrl);
+  
+  useEffect(() => {
+    setSelectedDifficulty(getDifficultyFromUrl());
+  }, [location]);
+  
+  useEffect(() => {
+    const handlePopState = () => {
+      setSelectedDifficulty(getDifficultyFromUrl());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const filteredCases = useMemo(() => {
     return cases?.filter(c => c.difficulty === selectedDifficulty) || [];
   }, [cases, selectedDifficulty]);
 
   const handleDifficultyChange = (difficulty: Difficulty) => {
+    setSelectedDifficulty(difficulty);
     navigate(`/cases?difficulty=${difficulty}`);
   };
 
