@@ -17,6 +17,7 @@ import {
   Sun,
   Moon,
   User,
+  Lightbulb,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -24,7 +25,7 @@ import { addCompletedCase, getCompletedCaseIds } from "@/lib/localStorage";
 
 interface Message {
   id: number;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "hint";
   content: string;
 }
 
@@ -71,6 +72,8 @@ export default function Chat() {
   const [diagnosisResult, setDiagnosisResult] = useState<DiagnosisResult>(null);
   const [feedbackData, setFeedbackData] = useState<FeedbackData | null>(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState(0);
+  const [isLoadingHint, setIsLoadingHint] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const completedCaseIds = getCompletedCaseIds();
@@ -212,6 +215,7 @@ export default function Chat() {
           case_id: caseId,
           conversation,
           diagnosis: diagnosisInput,
+          hints_used: hintsUsed,
         }),
       });
 
@@ -234,6 +238,57 @@ export default function Chat() {
       console.error(error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleHint = async () => {
+    if (isLoadingHint || !caseData) return;
+    setIsLoadingHint(true);
+
+    try {
+      const conversation = messages
+        .filter((m) => m.role !== "hint")
+        .map((m) => ({
+          role: m.role === "user" ? "user" : "assistant",
+          content: m.content,
+        }));
+
+      const res = await fetch("/api/hint", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          case_id: caseId,
+          conversation,
+          hints_used: hintsUsed,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to get hint");
+      const data = await res.json();
+
+      const hintMessage: Message = {
+        id: messages.length + 1,
+        role: "hint",
+        content: data.hint,
+      };
+      setMessages((prev) => [...prev, hintMessage]);
+      setHintsUsed(data.hintNumber);
+    } catch (error) {
+      console.error(error);
+      const fallbackHints = [
+        "Consider asking about the timeline and how symptoms have progressed.",
+        "Think about what associated symptoms might help narrow down the diagnosis.",
+        "Have you explored the patient's relevant medical history?",
+      ];
+      const hintMessage: Message = {
+        id: messages.length + 1,
+        role: "hint",
+        content: fallbackHints[Math.min(hintsUsed, fallbackHints.length - 1)],
+      };
+      setMessages((prev) => [...prev, hintMessage]);
+      setHintsUsed((prev) => prev + 1);
+    } finally {
+      setIsLoadingHint(false);
     }
   };
 
@@ -411,24 +466,37 @@ export default function Chat() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i === messages.length - 1 ? 0.1 : 0 }}
-                className={`flex items-end gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex items-end gap-2 ${msg.role === "user" ? "justify-end" : msg.role === "hint" ? "justify-center" : "justify-start"}`}
               >
                 {msg.role === "assistant" && (
                   <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center flex-shrink-0 mb-0.5">
                     <User className="w-3.5 h-3.5 text-white" />
                   </div>
                 )}
-                <div
-                  className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed ${
-                    msg.role === "user"
-                      ? "bg-gradient-to-br from-teal-500 to-emerald-500 text-white rounded-2xl rounded-br-md"
-                      : isDarkMode
-                      ? "bg-white/[0.04] border border-white/[0.06] text-slate-200 rounded-2xl rounded-bl-md"
-                      : "bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-bl-md shadow-sm"
-                  }`}
-                >
-                  <p className={msg.role === "user" ? "font-medium" : ""}>{msg.content}</p>
-                </div>
+                {msg.role === "hint" ? (
+                  <div className={`max-w-[85%] px-4 py-3 text-sm leading-relaxed rounded-xl ${
+                    isDarkMode 
+                      ? "bg-amber-500/10 border border-amber-500/20 text-amber-300" 
+                      : "bg-amber-50 border border-amber-200 text-amber-700"
+                  }`}>
+                    <div className="flex items-start gap-2">
+                      <Lightbulb className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                      <p>{msg.content}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed ${
+                      msg.role === "user"
+                        ? "bg-gradient-to-br from-teal-500 to-emerald-500 text-white rounded-2xl rounded-br-md"
+                        : isDarkMode
+                        ? "bg-white/[0.04] border border-white/[0.06] text-slate-200 rounded-2xl rounded-bl-md"
+                        : "bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-bl-md shadow-sm"
+                    }`}
+                  >
+                    <p className={msg.role === "user" ? "font-medium" : ""}>{msg.content}</p>
+                  </div>
+                )}
                 {msg.role === "user" && (
                   <div className="w-7 h-7 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center flex-shrink-0 mb-0.5">
                     <Stethoscope className="w-3.5 h-3.5 text-white" />
@@ -462,6 +530,35 @@ export default function Chat() {
       {/* Input */}
       <div className={`relative z-10 p-4 border-t backdrop-blur-xl ${isDarkMode ? "border-white/[0.06] bg-[hsl(180,8%,8%)]/90" : "border-slate-200/80 bg-white/90"}`}>
         <div className="max-w-3xl mx-auto">
+          {/* Hint button row */}
+          <div className="flex justify-end mb-2">
+            <motion.button
+              type="button"
+              onClick={handleHint}
+              disabled={isLoadingHint || isSending}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                isDarkMode
+                  ? "bg-amber-500/10 border border-amber-500/20 text-amber-300 hover:bg-amber-500/20 disabled:opacity-50"
+                  : "bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 disabled:opacity-50"
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {isLoadingHint ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Lightbulb className="w-3.5 h-3.5" />
+              )}
+              Get Hint
+              {hintsUsed > 0 && (
+                <span className={`ml-1 px-1.5 py-0.5 rounded text-[10px] ${
+                  isDarkMode ? "bg-amber-500/20" : "bg-amber-200"
+                }`}>
+                  -{hintsUsed * 3}pts
+                </span>
+              )}
+            </motion.button>
+          </div>
           <form onSubmit={handleSend} className="relative">
             <input
               value={input}

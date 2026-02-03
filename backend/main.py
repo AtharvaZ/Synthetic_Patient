@@ -355,11 +355,15 @@ async def submit_diagnosis(data: DiagnosisRequest, db: Session = Depends(get_db)
             time_spent_seconds=None
         )
         fb = await generate_feedback(request)
+        hint_penalty = data.hints_used * 3
+        adjusted_score = max(0, fb.score - hint_penalty)
         return {
             "result": result,
             "correctDiagnosis": case.diagnosis,
             "feedback": {
-                "score": fb.score,
+                "score": adjusted_score,
+                "hintsUsed": data.hints_used,
+                "hintPenalty": hint_penalty,
                 "breakdown": {
                     "correctDiagnosis": fb.breakdown.correct_diagnosis,
                     "keyQuestions": fb.breakdown.key_questions,
@@ -374,10 +378,10 @@ async def submit_diagnosis(data: DiagnosisRequest, db: Session = Depends(get_db)
         }
     except Exception as e:
         print(f"AI feedback error: {e}")
-        return generate_fallback_response(case, data.conversation, data.diagnosis, result)
+        return generate_fallback_response(case, data.conversation, data.diagnosis, result, data.hints_used)
 
 
-def generate_fallback_response(case, conversation, user_diagnosis, result):
+def generate_fallback_response(case, conversation, user_diagnosis, result, hints_used=0):
     n = len([m for m in conversation if m.role == "user"])
     is_correct = result == "correct"
     is_partial = result == "partial"
@@ -387,6 +391,7 @@ def generate_fallback_response(case, conversation, user_diagnosis, result):
     test_pts = 20 if is_correct else (10 if is_partial else 5)
     time_pts = 10 if n <= 8 else (7 if n <= 12 else 3)
     diff_pts = 10 if is_correct else (5 if is_partial else 2)
+    hint_penalty = hints_used * 3
     
     if is_correct:
         strengths = [
@@ -419,11 +424,14 @@ def generate_fallback_response(case, conversation, user_diagnosis, result):
             "Consider exploring associated symptoms systematically"
         ]
     
+    total_score = max(0, diag_pts + q_pts + test_pts + time_pts + diff_pts - hint_penalty)
     return {
         "result": result,
         "correctDiagnosis": case.diagnosis,
         "feedback": {
-            "score": diag_pts + q_pts + test_pts + time_pts + diff_pts,
+            "score": total_score,
+            "hintsUsed": hints_used,
+            "hintPenalty": hint_penalty,
             "breakdown": {"correctDiagnosis": diag_pts, "keyQuestions": q_pts, "rightTests": test_pts, "timeEfficiency": time_pts, "ruledOutDifferentials": diff_pts},
             "decisionTree": {"id": "root", "label": case.chief_complaint or case.diagnosis, "correct": None, "children": [{"id": "diag", "label": case.diagnosis.upper(), "correct": is_correct or is_partial, "children": []}]},
             "clues": [
