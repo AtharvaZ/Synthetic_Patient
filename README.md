@@ -2,13 +2,11 @@
 
 **Learn to diagnose like a doctor - before you see real patients.**
 
----
 
 ## What is ClinIQ?
 
 ClinIQ lets medical students practice clinical diagnosis through conversations with AI patients trained on real medical cases.
 
----
 
 ## What Makes ClinIQ Different?
 
