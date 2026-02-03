@@ -102,13 +102,13 @@ export default function Dashboard() {
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
-          className={`absolute -top-20 left-1/4 w-[700px] h-[700px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/30" : "bg-amber-500/20"}`}
+          className={`absolute -top-20 left-1/4 w-[700px] h-[700px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/20" : "bg-amber-500/12"}`}
         />
         <div
-          className={`absolute top-1/3 -right-20 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-teal-500/20" : "bg-teal-500/18"}`}
+          className={`absolute top-1/3 -right-20 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-teal-500/15" : "bg-teal-500/10"}`}
         />
         <div
-          className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-purple-500/20" : "bg-purple-500/15"}`}
+          className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-purple-500/12" : "bg-purple-500/8"}`}
         />
       </div>
 
