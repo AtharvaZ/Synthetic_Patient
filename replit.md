@@ -6,43 +6,42 @@ CaseLab is a medical education platform that helps medical students practice cli
 
 ## Architecture
 
-**Frontend (Port 5000)**: React + Express.js serving the UI and proxying AI requests
-**Backend API (Port 8000)**: FastAPI providing case data and AI endpoints
+**Frontend (Port 5000)**: React + Express.js serving the UI, proxying all API calls to backend
+**Backend API (Port 8000)**: FastAPI providing case data, chat management, AI integration, and all business logic
 
 ## Recent Changes (Feb 2026)
 
+### Backend Consolidation
+- All data now stored in PostgreSQL database
+- New tables: users, chats, messages, completions
+- Removed unnecessary CRUD endpoints (symptoms, case mutations)
+- Cases are read-only from the 62 validated training cases
+- Frontend now proxies to backend instead of using in-memory storage
+
 ### AI Integration
-- Added Gemini AI integration for realistic patient simulation
-- Extensive patient simulation prompt with:
-  - Symptom disclosure rules (only reveal when asked)
-  - Ambiguity guidelines (vague initial responses, require follow-up)
-  - Consistency requirements (no contradictions)
-  - Exam findings revealed only when student examines
+- Gemini AI integration for realistic patient simulation
+- Patient simulation prompt with ambiguity rules, symptom disclosure, consistency
 - AI-generated feedback with structured scoring and personalized insights
 - Automatic symptom extraction from case descriptions
 
 ### Feedback System
 - Visual Feedback page with 5 core components:
-  - Animated Score Ring (green 80+, yellow 60-79, red <60) with point breakdown
-  - Diagnostic Decision Tree showing conversation path to diagnosis
-  - Missed Clues Checklist with critical/helpful/minor importance levels
-  - Similar Cases Carousel for related practice cases
-  - AI Personalized Insight with strengths, improvements, and tips
-
-### Completion Logic
-- Only correct/partial diagnoses mark cases as completed
-- Accuracy calculated as weighted average (correct=100, partial=50, wrong=0)
+  - Animated Score Ring (green 80+, yellow 60-79, red <60)
+  - Diagnostic Decision Tree showing conversation path
+  - Missed Clues Checklist with importance levels
+  - Similar Cases Carousel
+  - AI Personalized Insight
 
 ## Project Structure
 
 ```
 ├── backend/                    # FastAPI Backend (Port 8000)
 │   ├── main.py                 # FastAPI app with all endpoints
-│   ├── models.py               # SQLAlchemy models
-│   ├── crud.py                 # CRUD operations
-│   ├── schemas.py              # Pydantic schemas for cases
-│   ├── ai_schemas.py           # Pydantic schemas for AI endpoints
-│   ├── ai_service.py           # Gemini AI integration + prompts
+│   ├── models.py               # SQLAlchemy models (Case, User, Chat, Message, Completion)
+│   ├── crud.py                 # CRUD operations for cases
+│   ├── schemas.py              # Pydantic schemas
+│   ├── ai_schemas.py           # AI request/response schemas
+│   ├── ai_service.py           # Gemini AI integration
 │   ├── seed_data.py            # Database seeding script
 │   └── training_cases.json     # 62 validated medical cases
 │
@@ -56,8 +55,7 @@ CaseLab is a medical education platform that helps medical students practice cli
 │   │   └── index.html
 │   ├── server/                 # Express backend
 │   │   ├── index.ts
-│   │   ├── routes.ts           # API routes (calls backend AI)
-│   │   └── storage.ts          # In-memory storage
+│   │   └── routes.ts           # Proxy routes to backend
 │   └── shared/                 # Shared types/schema
 │
 └── package.json
@@ -66,19 +64,39 @@ CaseLab is a medical education platform that helps medical students practice cli
 ## API Endpoints
 
 ### Backend API (FastAPI - Port 8000)
-- `POST /api/ai/patient-response` - Generate AI patient response
-- `POST /api/ai/generate-feedback` - Generate AI feedback for completed case
-- `GET /api/cases` - All cases with symptoms
-- `GET /api/cases/{id}` - Single case detail
-- `GET /api/stats` - Database statistics
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | API info |
+| GET | `/api/health` | Health check |
+| GET | `/api/stats` | Database statistics |
+| GET | `/api/cases` | List all cases |
+| GET | `/api/cases/{id}` | Get single case |
+| GET | `/api/cases/difficulty/{level}` | Cases by difficulty |
+| POST | `/api/chats` | Create chat session |
+| GET | `/api/chats/{id}` | Get chat with messages |
+| POST | `/api/chats/{id}/messages` | Send message (triggers AI response) |
+| DELETE | `/api/chats/{id}/messages/last` | Delete last user message |
+| POST | `/api/completions` | Submit diagnosis |
+| DELETE | `/api/completions/retry/{chatId}` | Retry diagnosis |
+| GET | `/api/user/stats` | User progress stats |
+| GET | `/api/completions/completed` | Completed case IDs |
+| GET | `/api/feedback/{chatId}` | AI-generated feedback |
 
 ### Frontend API (Express - Port 5000)
-- `GET /api/cases` - List all cases
-- `POST /api/chats` - Create new chat session
-- `POST /api/chats/:id/messages` - Send message (triggers AI response)
-- `POST /api/completions` - Submit diagnosis
-- `GET /api/feedback/:chatId` - Get AI-generated feedback
-- `GET /api/user/stats` - User progress stats
+All endpoints proxy to the backend with camelCase transformation.
+
+## Database Schema
+
+```sql
+-- Existing tables
+cases, symptoms, case_symptoms
+
+-- New tables
+users (id, username, name, avatar_url, specialty, created_at)
+chats (id, user_id, case_id, created_at)
+messages (id, chat_id, sender, content, created_at)
+completions (id, user_id, case_id, chat_id, diagnosis, result, created_at)
+```
 
 ## Environment Variables
 
@@ -119,18 +137,3 @@ cd backend && python seed_data.py
 - FastAPI + SQLAlchemy
 - Google Gemini AI (gemini-2.5-flash)
 - PostgreSQL
-
-## AI Prompt Design
-
-### Patient Simulation
-- Only reveals symptoms when directly/indirectly asked
-- Uses vague, patient-like language initially
-- Denies absent symptoms clearly
-- Reveals exam findings only when student examines
-- Never reveals the diagnosis
-
-### Feedback Generation
-- Scores across 5 categories (diagnosis, questions, tests, efficiency, differentials)
-- Builds decision tree from actual conversation
-- Identifies missed clues with importance levels
-- Provides personalized strengths, improvements, and tips
