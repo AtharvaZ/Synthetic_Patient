@@ -48,6 +48,9 @@ export default function Home() {
             >
               {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
             </button>
+            <Link href="/dashboard">
+              <span className={`text-sm font-medium ${isDarkMode ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition-colors cursor-pointer`}>Dashboard</span>
+            </Link>
             <Link href="/quiz">
               <Button className="bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105" data-testid="button-get-started">
                 Start Quiz
@@ -95,7 +98,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className={`text-lg ${isDarkMode ? 'text-slate-400' : 'text-slate-600'} max-w-2xl mx-auto mb-10`}
           >
-            Practice diagnosing real patient cases through interactive conversations with AI-simulated patients. Ask questions, gather symptoms, and make your diagnosis.
+            Train with real-world clinical cases. Chat with AI patients and sharpen your diagnostic skills.
           </motion.p>
 
           <motion.div 
@@ -300,32 +303,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="max-w-[1200px] mx-auto px-6 py-20">
-        <div className={`bg-gradient-to-r ${isDarkMode ? 'from-[#137fec]/20 via-teal-500/20 to-cyan-500/20' : 'from-blue-100 via-teal-50 to-cyan-50'} rounded-3xl p-12 text-center border ${isDarkMode ? 'border-[#283039]' : 'border-slate-200'} relative overflow-hidden`}>
-          {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#137fec]/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl" />
-          
-          <div className="relative z-10">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#137fec]/20 to-teal-500/20 flex items-center justify-center">
-              <Stethoscope className="w-8 h-8 text-[#137fec]" />
-            </div>
-            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Ready to Start Practicing?</h2>
-            <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'} mb-8 max-w-[500px] mx-auto`}>
-              Begin diagnosing patients and sharpen your clinical reasoning skills today.
-            </p>
-            <Link href="/quiz">
-              <Button className="bg-gradient-to-r from-[#137fec] via-teal-500 to-cyan-500 text-white px-8 py-4 h-auto rounded-xl text-base font-bold hover:opacity-90" data-testid="button-start-quiz">
-                Start Quiz Now
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
