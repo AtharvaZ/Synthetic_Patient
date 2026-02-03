@@ -61,4 +61,6 @@ externalPort = 8000
 BACKEND_URL = "http://localhost:8000"
 
 [deployment]
-deploymentTarget = "cloudrun"
+deploymentTarget = "vm"
+run = ["bash", "-c", "cd backend && python main.py & npm run start"]
+build = ["npm", "run", "build"]
