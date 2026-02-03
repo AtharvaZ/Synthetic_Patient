@@ -161,8 +161,8 @@ export default function Feedback() {
 
       {/* Background glow - amber centered for feedback page */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
-        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[150px] ${isDarkMode ? "bg-amber-500/25" : "bg-amber-500/15"}`} />
-        <div className={`absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-600/20" : "bg-amber-500/12"}`} />
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-[140px] ${isDarkMode ? "bg-amber-500/18" : "bg-amber-500/12"}`} />
+        <div className={`absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full blur-[110px] ${isDarkMode ? "bg-amber-600/14" : "bg-amber-500/10"}`} />
       </div>
 
       {/* Header */}
