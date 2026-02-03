@@ -68,6 +68,15 @@ export default function PatientCases() {
     return cases?.filter(c => c.difficulty === selectedDifficulty) || [];
   }, [cases, selectedDifficulty]);
 
+  const statusCounts = useMemo(() => {
+    const counts = { correct: 0, partial: 0, wrong: 0, undiscovered: 0 };
+    filteredCases.forEach(c => {
+      const status = getCaseStatus(c.id);
+      counts[status]++;
+    });
+    return counts;
+  }, [filteredCases]);
+
   const handleDifficultyChange = (difficulty: Difficulty) => {
     setSelectedDifficulty(difficulty);
     navigate(`/cases?difficulty=${difficulty}`);
@@ -228,18 +237,22 @@ export default function PatientCases() {
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-emerald-500" />
               <span className={isDarkMode ? "text-slate-400" : "text-slate-500"}>Correct</span>
+              <span className={`font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>({statusCounts.correct})</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-amber-500" />
               <span className={isDarkMode ? "text-slate-400" : "text-slate-500"}>Partial</span>
+              <span className={`font-semibold ${isDarkMode ? "text-amber-400" : "text-amber-600"}`}>({statusCounts.partial})</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500" />
               <span className={isDarkMode ? "text-slate-400" : "text-slate-500"}>Wrong</span>
+              <span className={`font-semibold ${isDarkMode ? "text-red-400" : "text-red-600"}`}>({statusCounts.wrong})</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-slate-500/50" />
               <span className={isDarkMode ? "text-slate-400" : "text-slate-500"}>Not Attempted</span>
+              <span className={`font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>({statusCounts.undiscovered})</span>
             </div>
           </div>
         </div>
