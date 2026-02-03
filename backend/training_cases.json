@@ -1051,7 +1051,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Symptoms May Vary Symptoms may differ depending on age, gender, and catheter use",
+        "chief_complaint": "It burns when I pee and I feel like I have to go all the time, but only a little comes out",
         "history": "Most urinary tract infections, or UTIs, are caused by bacteria that enter the urethra and then the bladder. A type of bacteria that normally lives in the bowel (called E. coli) causes most UTIs. UTIs can also be caused by fungus (another type of germ). Who Gets UTIs? Although everyone has some risk ",
         "duration": "As described",
         "severity": "Variable",
@@ -1080,7 +1080,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Acute Bronchitis Acute bronchitis caused by an infection usually develops after you already have a cold or the flu",
+        "chief_complaint": "I've had this terrible cough for a week now that won't go away, and I'm bringing up thick mucus",
         "history": "Acute Bronchitis\n                \nInfections or lung irritants cause acute bronchitis. The same viruses that cause colds and the flu are the most common cause of acute bronchitis. Sometimes bacteria can cause the condition.\n                \nCertain substances can irritate your lungs and airways and ",
         "duration": "As described",
         "severity": "Variable",
@@ -1112,7 +1112,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Some viruses cause symptoms that last longer",
+        "chief_complaint": "I've been vomiting and having watery diarrhea since yesterday, and I feel awful",
         "history": "Four types of viruses cause most cases of viral gastroenteritis.\n                \nRotavirus\n                \nRotavirus is the leading cause of gastroenteritis among infants and young children. Rotavirus infections are most common in infants 3 to 15 months old. Symptoms usually appear 1 to 3 days aft",
         "duration": "As described",
         "severity": "Variable",
@@ -1139,7 +1139,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "What are the signs and symptoms of Asthma? The Human Phenotype Ontology provides the following list of signs and symptoms for Asthma",
+        "chief_complaint": "I'm having trouble breathing and my chest feels tight, especially at night and when I exercise",
         "history": "The exact cause of asthma isn't known. Researchers think some genetic and environmental factors interact to cause asthma, most often early in life. These factors include:\n                \nAn inherited tendency to develop allergies, called atopy (AT-o-pe)\n                \nParents who have asthma\n    ",
         "duration": "As described",
         "severity": "Variable",
@@ -1165,7 +1165,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Most people with indigestion experience more than one of the following symptoms: - Fullness during a meal",
+        "chief_complaint": "I feel uncomfortably full and bloated after eating, with a burning feeling in my upper stomach",
         "history": "Indigestion can be caused by a condition in the digestive tract such as gastroesophageal reflux disease (GERD), peptic ulcer disease, cancer, or abnormality of the pancreas or bile ducts. If the condition improves or resolves, the symptoms of indigestion usually improve.\n                \nSometimes a",
         "duration": "As described",
         "severity": "Variable",
@@ -1193,7 +1193,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Diarrhea may be accompanied by cramping, abdominal pain, nausea, an urgent need to use the bathroom, or loss of bowel control",
+        "chief_complaint": "I've had loose, watery stools several times today with stomach cramps and I feel nauseous",
         "history": "Acute diarrhea is usually caused by a bacterial, viral, or parasitic infection. Chronic diarrhea is usually related to a functional disorder such as irritable bowel syndrome or an intestinal disease such as Crohns disease.\n                \nThe most common causes of diarrhea include the following:\n  ",
         "duration": "As described",
         "severity": "Variable",
@@ -1224,7 +1224,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "When you cough, mucus (a slimy substance) may come up",
+        "chief_complaint": "I can't stop coughing and I'm bringing up a lot of phlegm, it's been going on for days",
         "history": "Coughing occurs when the nerve endings in your airways become irritated. Certain irritants and allergens, medical conditions, and medicines can irritate these nerve endings.\n                \nIrritants and Allergens\n                \nAn irritant is something you're sensitive to. For example, smoking o",
         "duration": "As described",
         "severity": "Variable",
@@ -1250,7 +1250,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "The main symptom of insomnia is trouble falling or staying asleep, which leads to lack of sleep",
+        "chief_complaint": "I can't fall asleep at night and when I do, I keep waking up. I'm exhausted during the day",
         "history": "Secondary Insomnia\n                \nSecondary insomnia is the symptom or side effect of another problem. This type of insomnia often is a symptom of an emotional, neurological, or other medical or sleep disorder.\n                \nEmotional disorders that can cause insomnia include depression, anxiet",
         "duration": "As described",
         "severity": "Variable",
@@ -1277,7 +1277,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "High blood pressure is often called the \"silent killer\" because you can have it for years without knowing it",
+        "chief_complaint": "My doctor said my blood pressure is high. I've been having headaches and sometimes feel dizzy",
         "history": "Changes in Body Functions Researchers continue to study how various changes in normal body functions cause high blood pressure. The key functions affected in high blood pressure include -  kidney fluid and salt balances  -  the renin-angiotensin-aldosterone system   - the sympathetic nervous system ",
         "duration": "As described",
         "severity": "Variable",
@@ -1305,7 +1305,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "The most common symptom of anemia is fatigue (feeling tired or weak)",
+        "chief_complaint": "I'm constantly tired and weak, even after sleeping well. I also get short of breath easily",
         "history": "The three main causes of anemia are:\n                \nBlood loss\n                \nLack of red blood cell production\n                \nHigh rates of red blood cell destruction\n                \nFor some people, the condition is caused by more than one of these factors.\n                \nBlood Loss\n     ",
         "duration": "As described",
         "severity": "Variable",
@@ -1338,7 +1338,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "The signs and symptoms of iron-deficiency anemia depend on its severity",
+        "chief_complaint": "I'm always tired and my skin looks pale. I also get dizzy when I stand up too fast",
         "history": "Not having enough iron in your body causes iron-deficiency anemia. Lack of iron usually is due to blood loss, poor diet, or an inability to absorb enough iron from food.\n                \nBlood Loss\n                \nWhen you lose blood, you lose iron. If you don't have enough iron stored in your body",
         "duration": "As described",
         "severity": "Variable",
@@ -1367,7 +1367,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Attacks Usually Start at Night Gout is a form of arthritis that causes sudden onset of intense pain and swelling in the joints, which also may be warm and red",
+        "chief_complaint": "I woke up in the middle of the night with terrible pain in my big toe. It's swollen and red",
         "history": "A Buildup of Uric Acid Most people with gout have too much uric acid in their blood, a condition called hyperuricemia. Uric acid is a substance that results from the breakdown of purines which are a part of all human tissue and found in many foods. Needle-like crystals of uric acid can build up in t",
         "duration": "As described",
         "severity": "Variable",
@@ -1458,7 +1458,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Excessive, Irrational Fear Each anxiety disorder has different symptoms, but all the symptoms cluster around excessive, irrational fear and dread. Unlike the relatively mild, brief anxiety caused by a",
+        "chief_complaint": "I feel constantly worried and on edge. My heart races and I can't relax, even when nothing is wrong",
         "history": "Generalized anxiety disorder (GAD) affects about 6.8 million American adults, including twice as many women as men. The disorder develops gradually and can begin at any point in the life cycle, although the years of highest risk are between childhood and middle age. The average age of onset is 31 ye",
         "duration": "As described",
         "severity": "Variable",
@@ -1486,7 +1486,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "If you've ever groaned, \"Oh, my aching back!\", you are not alone. Back pain is one of the most common medical problems, affecting 8 out of 10 people at some point during their lives. Back pain can ran",
+        "chief_complaint": "My lower back has been hurting for days. It gets worse when I bend over or sit for too long",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1513,7 +1513,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "What are the signs and symptoms of Benign paroxysmal positional vertigo? The Human Phenotype Ontology provides the following list of signs and symptoms for Benign paroxysmal positional vertigo. If the",
+        "chief_complaint": "When I roll over in bed or tilt my head back, the room starts spinning. It only lasts a minute but it's scary",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1539,7 +1539,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Cold sores are caused by a contagious virus called herpes simplex virus (HSV). There are two types of HSV. Type 1 usually causes oral herpes, or cold sores. Type 1 herpes virus infects more than half ",
+        "chief_complaint": "I have a painful blister on my lip that started tingling yesterday. It keeps oozing and crusting over",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1566,7 +1566,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Constipation means that a person has three or fewer bowel movements in a week. The stool can be hard and dry. Sometimes it is painful to pass. At one time or another, almost everyone gets constipated.",
+        "chief_complaint": "I haven't been able to go to the bathroom for several days. When I try, it's hard and painful",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1592,7 +1592,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Common Symptoms There are many symptoms associated with depression, and some will vary depending on the individual. However, some of the most common symptoms are listed below. If you have several of t",
+        "chief_complaint": "I've been feeling sad and hopeless for weeks. I don't enjoy anything anymore and I'm so tired all the time",
         "history": "Several lines of research have shown that depressive illnesses are disorders of the brain. But the exact causes for these illnesses are not yet clear and are still being studied. Changes in the Brain Imaging technologies show that the brains of people with depression look different or are working di",
         "duration": "As described",
         "severity": "Variable",
@@ -1618,7 +1618,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Ear infections are the most common reason parents bring their child to a doctor. Three out of four children will have at least one ear infection by their third birthday. Adults can also get ear infect",
+        "chief_complaint": "My child has been tugging at their ear and crying. They have a fever and haven't been sleeping well",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1644,7 +1644,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Eczema is a term for several different types of skin swelling. Eczema is also called dermatitis. Most types cause dry, itchy skin and rashes on the face, inside the elbows and behind the knees, and on",
+        "chief_complaint": "I have these dry, itchy patches of skin that keep coming back, especially in the creases of my elbows and knees",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1672,7 +1672,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Flu is a respiratory infection caused by a number of viruses. The viruses pass through the air and enter your body through your nose or mouth. Between 5% and 20% of people in the U.S. get the flu each",
+        "chief_complaint": "I suddenly got really sick with high fever, body aches all over, and I can barely get out of bed",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1700,7 +1700,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Almost everyone has had a headache. Headache is the most common form of pain. It's a major reason people miss days at work or school or visit the doctor.    The most common type of headache is a tensi",
+        "chief_complaint": "I've been getting headaches almost every day. It feels like a tight band squeezing around my head",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1728,7 +1728,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Heartburn is a painful burning feeling in your chest or throat. It happens when stomach acid backs up into your esophagus, the tube that carries food from your mouth to your stomach.    If you have he",
+        "chief_complaint": "I get a burning pain in my chest that goes up to my throat, especially after eating or when I lie down",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1755,7 +1755,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Hives are red and sometimes itchy bumps on your skin. An allergic reaction to a drug or food usually causes them. Allergic reactions cause your body to release chemicals that can make your skin swell ",
+        "chief_complaint": "I woke up with these raised, itchy red welts all over my body. They keep appearing and disappearing",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1782,7 +1782,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Each spring, summer, and fall, trees, weeds, and grasses release tiny pollen grains into the air. Some of the pollen ends up in your nose and throat. This can trigger a type of allergy called hay feve",
+        "chief_complaint": "Every spring my nose runs constantly, my eyes itch and water, and I can't stop sneezing",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1810,7 +1810,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Nausea is an uneasy or unsettled feeling in the stomach together with an urge to vomit. Nausea and vomiting, or throwing up, are not diseases. They can be symptoms of many different conditions. These ",
+        "chief_complaint": "I've been feeling queasy all day and I've thrown up twice. I can't keep anything down",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1839,7 +1839,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Scabies is an itchy skin condition caused by the microscopic mite Sarcoptes scabei. It is common all over the world, and can affect anyone. Scabies spreads quickly in crowded conditions where there is",
+        "chief_complaint": "I have intense itching that's worse at night, with little bumps between my fingers and on my wrists",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1866,7 +1866,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Sinusitis means your sinuses are inflamed. The cause can be an infection or another problem. Your sinuses are hollow air spaces within the bones surrounding the nose. They produce mucus, which drains ",
+        "chief_complaint": "My face hurts around my cheeks and forehead, I'm congested, and I have thick yellow-green drainage",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1892,7 +1892,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx.    You can have a sore throat f",
+        "chief_complaint": "My throat is really sore and it hurts to swallow. I've also been feeling feverish",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1918,7 +1918,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "A sprain is a stretched or torn ligament. Ligaments are tissues that connect bones at a joint. Falling, twisting, or getting hit can all cause a sprain. Ankle and wrist sprains are common. Symptoms in",
+        "chief_complaint": "I twisted my ankle playing sports and now it's swollen and hurts to walk on",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1947,7 +1947,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Strep is short for Streptococcus, a type of bacteria. There are two types: group A and group B.    Group A strep causes       - Strep throat - a sore, red throat, sometimes with white spots on the ton",
+        "chief_complaint": "My throat is extremely sore with white patches, I have a fever, and my neck glands are swollen",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -1975,7 +1975,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Tendons are flexible bands of tissue that connect muscles to bones. They help your muscles move your bones. Tendinitis is the severe swelling of a tendon.    Tendinitis usually happens after repeated ",
+        "chief_complaint": "I have pain and tenderness in my elbow that gets worse when I grip things or twist my arm",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -2001,7 +2001,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Warts are growths on your skin caused by an infection with humanpapilloma virus, or HPV. Types of warts include        - Common warts, which often appear on your fingers     - Plantar warts, which sho",
+        "chief_complaint": "I have these rough, hard bumps on my hands that keep spreading. They're embarrassing",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -2027,7 +2027,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Candida is the scientific name for yeast. It is a fungus that lives almost everywhere, including in your body. Usually, your immune system keeps yeast under control. If you are sick or taking antibiot",
+        "chief_complaint": "I have itching and a thick white discharge down there. It's uncomfortable and burns a little",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -2053,7 +2053,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Atopic dermatitis (also known as atopic eczema) is a disorder characterized by inflammation of the skin (dermatitis). The condition usually begins in early infancy, and it often disappears before adol",
+        "chief_complaint": "My baby has red, scaly patches on their cheeks and arms that seem really itchy. It comes and goes",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
@@ -2080,7 +2080,7 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "A rash is an area of irritated or swollen skin. Many rashes are itchy, red, painful, and irritated. Some rashes can also lead to blisters or patches of raw skin. Rashes are a symptom of many different",
+        "chief_complaint": "I developed a red, itchy rash on my arms and legs that appeared suddenly. I'm not sure what caused it",
         "history": "Not specified",
         "duration": "As described",
         "severity": "Variable",
