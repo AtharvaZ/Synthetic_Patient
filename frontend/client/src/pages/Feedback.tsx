@@ -159,11 +159,10 @@ export default function Feedback() {
       {/* Noise overlay */}
       <div className="noise-overlay" />
 
-      {/* Background glow - amber only for feedback page */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-1/4 right-0 w-[600px] h-[600px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-500/15" : "bg-amber-500/10"}`} />
-        <div className={`absolute top-0 left-1/3 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-600/12" : "bg-amber-500/8"}`} />
-        <div className={`absolute bottom-0 left-0 w-[600px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-500/12" : "bg-amber-500/8"}`} />
+      {/* Background glow - amber centered for feedback page */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[150px] ${isDarkMode ? "bg-amber-500/25" : "bg-amber-500/15"}`} />
+        <div className={`absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-600/20" : "bg-amber-500/12"}`} />
       </div>
 
       {/* Header */}
