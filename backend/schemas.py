@@ -103,3 +103,102 @@ class StatsResponse(BaseModel):
     presenting_count: int
     absent_count: int
     exam_finding_count: int
+
+
+class UserCreate(BaseModel):
+    username: str
+    name: Optional[str] = None
+    avatar_url: Optional[str] = None
+    specialty: Optional[str] = None
+
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    name: Optional[str] = None
+    avatar_url: Optional[str] = None
+    specialty: Optional[str] = None
+    created_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+class ChatCreate(BaseModel):
+    case_id: int
+
+
+class MessageCreate(BaseModel):
+    content: str
+    sender: str = "user"
+
+
+class MessageResponse(BaseModel):
+    id: int
+    chat_id: int
+    sender: str
+    content: str
+    created_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+class ChatResponse(BaseModel):
+    id: int
+    user_id: int
+    case_id: int
+    created_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+class ChatDetailResponse(ChatResponse):
+    messages: list[MessageResponse] = []
+
+
+class CompletionCreate(BaseModel):
+    case_id: int
+    chat_id: int
+    diagnosis: str
+
+
+class CompletionResponse(BaseModel):
+    id: int
+    user_id: int
+    case_id: int
+    chat_id: int
+    diagnosis: str
+    result: str
+    created_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+class CompletionResultResponse(BaseModel):
+    completion: CompletionResponse
+    result: str
+
+
+class UserStatsResponse(BaseModel):
+    streak: int
+    cases_solved: int
+    accuracy: float
+    completed_case_ids: list[int]
+
+
+class FrontendCaseResponse(BaseModel):
+    id: int
+    title: str
+    description: str
+    specialty: str
+    difficulty: str
+    expected_diagnosis: str
+    acceptable_diagnoses: str
+    image_url: Optional[str] = None
+    status: str = "available"
+    
+    class Config:
+        from_attributes = True
