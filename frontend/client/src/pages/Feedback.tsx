@@ -11,6 +11,7 @@ import {
   CheckCircle,
   AlertCircle,
   XCircle,
+  BookOpen,
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import ScoreRing from "@/components/feedback/ScoreRing";
@@ -199,7 +200,7 @@ export default function Feedback() {
           transition={{ duration: 0.5 }}
         >
           {/* Title */}
-          <div className="mb-8">
+          <div className="mb-6">
             <h1 className={`text-2xl font-bold mb-2 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
               Case Feedback
             </h1>
@@ -209,6 +210,28 @@ export default function Feedback() {
               </p>
             )}
           </div>
+
+          {/* About This Condition */}
+          {caseData?.description && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className={`mb-6 rounded-2xl p-6 ${isDarkMode ? "bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/20" : "bg-gradient-to-br from-primary/5 to-purple-500/5 border border-primary/20"}`}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <div className={`p-1.5 rounded-lg ${isDarkMode ? "bg-primary/20" : "bg-primary/10"}`}>
+                  <BookOpen className="w-4 h-4 text-primary" />
+                </div>
+                <h3 className={`text-base font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                  About {feedbackData.correctDiagnosis}
+                </h3>
+              </div>
+              <p className={`text-sm leading-relaxed ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
+                {caseData.description}
+              </p>
+            </motion.div>
+          )}
 
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Left Column */}
