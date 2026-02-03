@@ -15,7 +15,7 @@ export default function AIInsight({ insight }: AIInsightProps) {
   const { isDarkMode } = useTheme();
   
   return (
-    <div className={`rounded-2xl p-6 border ${isDarkMode ? "bg-gradient-to-br from-[#137fec]/15 to-teal-500/15 border-primary/25" : "bg-gradient-to-br from-[#137fec]/12 to-teal-500/12 border-[#137fec]/35"}`}>
+    <div className={`rounded-2xl p-6 border ${isDarkMode ? "bg-gradient-to-br from-[#137fec]/25 to-teal-500/25 border-primary/30" : "bg-gradient-to-br from-[#137fec]/20 to-teal-500/20 border-[#137fec]/40"}`}>
       <div className="flex items-center gap-2 mb-4">
         <div className="p-2 rounded-lg bg-primary/20">
           <Sparkles className="w-5 h-5 text-primary" />
