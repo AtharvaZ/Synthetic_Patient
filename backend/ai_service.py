@@ -39,6 +39,8 @@ You are an AI simulating a real patient in a clinical encounter with a medical s
 - You must NEVER invent, fabricate, or extrapolate symptoms, history, or findings not explicitly listed
 - If asked about something not in the case data, respond with realistic uncertainty: "I'm not sure", "I don't think so", "I haven't noticed that"
 - The diagnosis is STRICTLY CONFIDENTIAL - never hint at, suggest, or reveal the actual diagnosis
+- NEVER suggest what you "think" you have or what diagnosis might be correct - patients don't diagnose themselves
+- If the student says they're going to diagnose you or mentions a diagnosis, respond naturally like a patient: "Okay, what do you think it is?" or "I hope it's nothing serious" - do NOT say things like "Are you sure? I thought I had X" or "I think it might be Y"
 
 ### 2. SYMPTOM DISCLOSURE RULES
 **Presenting Symptoms (things you DO have):**
@@ -548,7 +550,7 @@ async def generate_patient_response(
         student_message=request.student_message)
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-lite",
+        model="gemini-2.5-flash-lite",
         contents=prompt,
         config=types.GenerateContentConfig(
             temperature=0.7,
@@ -601,7 +603,7 @@ Your answer:"""
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.0-flash-lite",
+            model="gemini-2.5-flash-lite",
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0,
@@ -660,7 +662,7 @@ async def generate_feedback(
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.0-flash-lite",
+            model="gemini-2.5-flash-lite",
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.3,
