@@ -157,36 +157,6 @@ export default function Home() {
           
           {/* Map Container */}
           <div className="relative">
-            {/* SVG Path connecting all nodes */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
-              <defs>
-                <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#137fec" />
-                  <stop offset="33%" stopColor="#a855f7" />
-                  <stop offset="66%" stopColor="#ec4899" />
-                  <stop offset="100%" stopColor="#22c55e" />
-                </linearGradient>
-              </defs>
-              {/* Curved path connecting all 4 nodes */}
-              <motion.path
-                d="M 100 80 C 150 80 200 140 300 160 C 400 180 450 280 500 300 C 550 320 650 180 700 140"
-                fill="none"
-                stroke="url(#pathGradient)"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeDasharray="10 5"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 0.6 }}
-                transition={{ duration: 2, ease: "easeInOut" }}
-                viewport={{ once: true }}
-              />
-              {/* Static dots at node positions */}
-              <circle cx="100" cy="80" r="8" fill="#137fec" opacity="0.8" />
-              <circle cx="300" cy="160" r="8" fill="#a855f7" opacity="0.8" />
-              <circle cx="500" cy="300" r="8" fill="#ec4899" opacity="0.8" />
-              <circle cx="700" cy="140" r="8" fill="#22c55e" opacity="0.8" />
-            </svg>
-            
             {/* Map Nodes */}
             <div className="relative grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
               {/* Node 1 - Read Case */}
