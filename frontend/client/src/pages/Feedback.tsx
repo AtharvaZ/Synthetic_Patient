@@ -159,11 +159,11 @@ export default function Feedback() {
       {/* Noise overlay */}
       <div className="noise-overlay" />
 
-      {/* Background glow - amber centered for feedback page (same intensity as dashboard) */}
+      {/* Background glow - subtle amber for feedback page */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute -top-20 left-1/4 w-[700px] h-[700px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/25" : "bg-amber-500/15"}`} />
-        <div className={`absolute top-1/3 -right-20 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-600/20" : "bg-amber-500/12"}`} />
-        <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/18" : "bg-amber-500/10"}`} />
+        <div className={`absolute -top-20 left-1/4 w-[700px] h-[700px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-500/12" : "bg-amber-500/8"}`} />
+        <div className={`absolute top-1/3 -right-20 w-[500px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-600/10" : "bg-amber-500/6"}`} />
+        <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-500/8" : "bg-amber-500/5"}`} />
       </div>
 
       {/* Header */}

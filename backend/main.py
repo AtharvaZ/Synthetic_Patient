@@ -187,8 +187,8 @@ def cases_by_difficulty(difficulty: str, db: Session = Depends(get_db)):
 
 
 @app.get("/api/cases/{case_id}/similar", response_model=list[schemas.FrontendCaseResponse])
-def get_similar_cases(case_id: int, limit: int = 5, db: Session = Depends(get_db)):
-    """Get similar cases based on shared symptoms (at least 2 overlapping) or same specialty"""
+def get_similar_cases(case_id: int, db: Session = Depends(get_db)):
+    """Get similar cases that match BOTH category (specialty) AND have overlapping symptoms"""
     from models import CaseSymptom, Symptom
     from sqlalchemy import func
     
@@ -196,44 +196,31 @@ def get_similar_cases(case_id: int, limit: int = 5, db: Session = Depends(get_db
     if not target_case:
         raise HTTPException(status_code=404, detail="Case not found")
     
+    target_specialty = get_specialty(target_case.description or "", target_case.diagnosis)
+    
     target_symptom_ids = db.query(CaseSymptom.symptom_id).filter(
         CaseSymptom.case_id == case_id,
         CaseSymptom.symptom_type == 'presenting'
     ).subquery()
     
-    similar_cases = db.query(
-        Case,
-        func.count(CaseSymptom.symptom_id).label('shared_count')
-    ).join(
-        CaseSymptom, Case.id == CaseSymptom.case_id
-    ).filter(
-        Case.id != case_id,
-        CaseSymptom.symptom_type == 'presenting',
-        CaseSymptom.symptom_id.in_(target_symptom_ids)
-    ).group_by(
-        Case.id
-    ).having(
-        func.count(CaseSymptom.symptom_id) >= 2
-    ).order_by(
-        func.count(CaseSymptom.symptom_id).desc()
-    ).limit(limit).all()
+    all_cases = db.query(Case).filter(Case.id != case_id).all()
     
-    if len(similar_cases) < limit:
-        target_specialty = get_specialty(target_case.description or "", target_case.diagnosis)
-        existing_ids = [c.id for c, _ in similar_cases]
-        specialty_cases = db.query(Case).filter(
-            Case.id != case_id,
-            Case.id.notin_(existing_ids) if existing_ids else True
-        ).all()
-        specialty_matches = [
-            (c, 0) for c in specialty_cases 
-            if get_specialty(c.description or "", c.diagnosis) == target_specialty
-        ][:limit - len(similar_cases)]
-        similar_cases.extend(specialty_matches)
+    similar_cases = []
+    for c in all_cases:
+        case_specialty = get_specialty(c.description or "", c.diagnosis)
+        if case_specialty != target_specialty:
+            continue
+        
+        shared_count = db.query(func.count(CaseSymptom.symptom_id)).filter(
+            CaseSymptom.case_id == c.id,
+            CaseSymptom.symptom_type == 'presenting',
+            CaseSymptom.symptom_id.in_(target_symptom_ids)
+        ).scalar() or 0
+        
+        if shared_count >= 1:
+            similar_cases.append((c, shared_count))
     
-    if not similar_cases:
-        fallback_cases = db.query(Case).filter(Case.id != case_id).limit(limit).all()
-        similar_cases = [(c, 0) for c in fallback_cases]
+    similar_cases.sort(key=lambda x: x[1], reverse=True)
     
     return [schemas.FrontendCaseResponse(
         id=c.id,
@@ -245,7 +232,7 @@ def get_similar_cases(case_id: int, limit: int = 5, db: Session = Depends(get_db
         acceptable_diagnoses="",
         image_url=None,
         status="available"
-    ) for c, _ in similar_cases[:limit]]
+    ) for c, _ in similar_cases]
 
 
 @app.post("/api/patient-message")
