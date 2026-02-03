@@ -129,5 +129,54 @@ export async function registerRoutes(
     }
   });
 
+  // Get cases by difficulty
+  app.get(api.cases.byDifficulty.path, async (req, res) => {
+    const difficulty = req.params.difficulty;
+    const casesByDifficulty = await storage.getCasesByDifficulty(difficulty);
+    res.json(casesByDifficulty);
+  });
+
+  // Delete last user message (for retry)
+  app.delete(api.messages.deleteLastUser.path, async (req, res) => {
+    const chatId = Number(req.params.id);
+    await storage.deleteLastUserMessage(chatId);
+    res.json({ success: true });
+  });
+
+  // Complete a case with diagnosis result
+  app.post(api.completions.create.path, async (req, res) => {
+    try {
+      const input = api.completions.create.input.parse(req.body);
+      const completion = await storage.completeCase({
+        userId: defaultUser!.id,
+        caseId: input.caseId,
+        chatId: input.chatId,
+        result: input.result,
+        diagnosis: input.diagnosis,
+      });
+      res.status(201).json(completion);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({
+          message: err.errors[0].message,
+          field: err.errors[0].path.join('.')
+        });
+      }
+      throw err;
+    }
+  });
+
+  // Get user stats
+  app.get(api.completions.userStats.path, async (req, res) => {
+    const stats = await storage.getUserStats(defaultUser!.id);
+    res.json(stats);
+  });
+
+  // Get completed case IDs
+  app.get(api.completions.completedCases.path, async (req, res) => {
+    const completedIds = await storage.getCompletedCaseIds(defaultUser!.id);
+    res.json(completedIds);
+  });
+
   return httpServer;
 }

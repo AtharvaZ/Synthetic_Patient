@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertMessageSchema, insertUserSchema, cases, chats, messages } from './schema';
+import { insertMessageSchema, insertUserSchema, cases, chats, messages, caseCompletions } from './schema';
 
 export const errorSchemas = {
   validation: z.object({
@@ -19,6 +19,13 @@ export const api = {
     list: {
       method: 'GET' as const,
       path: '/api/cases',
+      responses: {
+        200: z.array(z.custom<typeof cases.$inferSelect>()),
+      },
+    },
+    byDifficulty: {
+      method: 'GET' as const,
+      path: '/api/cases/difficulty/:difficulty',
       responses: {
         200: z.array(z.custom<typeof cases.$inferSelect>()),
       },
@@ -59,6 +66,47 @@ export const api = {
       responses: {
         201: z.custom<typeof messages.$inferSelect>(),
         400: errorSchemas.validation,
+      },
+    },
+    deleteLastUser: {
+      method: 'DELETE' as const,
+      path: '/api/chats/:id/messages/last-user',
+      responses: {
+        200: z.object({ success: z.boolean() }),
+      },
+    },
+  },
+  completions: {
+    create: {
+      method: 'POST' as const,
+      path: '/api/completions',
+      input: z.object({
+        caseId: z.number(),
+        chatId: z.number(),
+        result: z.enum(["correct", "partial", "wrong"]),
+        diagnosis: z.string(),
+      }),
+      responses: {
+        201: z.custom<typeof caseCompletions.$inferSelect>(),
+        400: errorSchemas.validation,
+      },
+    },
+    userStats: {
+      method: 'GET' as const,
+      path: '/api/user/stats',
+      responses: {
+        200: z.object({
+          streak: z.number(),
+          casesSolved: z.number(),
+          accuracy: z.number(),
+        }),
+      },
+    },
+    completedCases: {
+      method: 'GET' as const,
+      path: '/api/user/completed-cases',
+      responses: {
+        200: z.array(z.number()),
       },
     },
   },

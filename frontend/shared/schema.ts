@@ -41,21 +41,36 @@ export const messages = pgTable("messages", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// User Case Completions - tracks which cases a user has completed and their diagnosis result
+export const caseCompletions = pgTable("case_completions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  caseId: integer("case_id").notNull(),
+  chatId: integer("chat_id").notNull(),
+  result: text("result").notNull(), // "correct", "partial", "wrong"
+  diagnosis: text("diagnosis").notNull(), // what the student diagnosed
+  completedAt: timestamp("completed_at").defaultNow(),
+});
+
 // === SCHEMAS ===
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertCaseSchema = createInsertSchema(cases).omit({ id: true });
 export const insertChatSchema = createInsertSchema(chats).omit({ id: true, createdAt: true });
 export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, createdAt: true });
+export const insertCaseCompletionSchema = createInsertSchema(caseCompletions).omit({ id: true, completedAt: true });
 
 // === EXPLICIT API TYPES ===
 export type User = typeof users.$inferSelect;
 export type Case = typeof cases.$inferSelect;
 export type Chat = typeof chats.$inferSelect;
 export type Message = typeof messages.$inferSelect;
+export type CaseCompletion = typeof caseCompletions.$inferSelect;
 
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type InsertCaseCompletion = z.infer<typeof insertCaseCompletionSchema>;
 
 // API Response Types
 export type CaseResponse = Case;
 export type ChatResponse = Chat & { messages?: Message[] };
 export type CreateChatRequest = { caseId: number };
+export type DiagnosisResult = "correct" | "partial" | "wrong";
