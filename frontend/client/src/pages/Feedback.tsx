@@ -201,7 +201,7 @@ export default function Feedback() {
                 className={`${isDarkMode ? "bg-[#161618] border-white/5" : "bg-white border-slate-200"} border rounded-2xl p-6`}
               >
                 <h3 className="text-lg font-semibold mb-4">Your Score</h3>
-                <ScoreRing score={feedbackData.score} />
+                <ScoreRing score={feedbackData.score} breakdown={feedbackData.breakdown} />
                 <div className="mt-6 space-y-3">
                   {Object.entries(feedbackData.breakdown).map(
                     ([key, value]) => (
@@ -252,7 +252,11 @@ export default function Feedback() {
                 className={`${isDarkMode ? "bg-[#161618] border-white/5" : "bg-white border-slate-200"} border rounded-2xl p-6`}
               >
                 <h3 className="text-lg font-semibold mb-4">Decision Path</h3>
-                <DecisionTree data={feedbackData.decisionTree} />
+                <DecisionTree 
+                  tree={feedbackData.decisionTree as TreeNode} 
+                  userDiagnosis={feedbackData.userDiagnosis}
+                  correctDiagnosis={feedbackData.correctDiagnosis}
+                />
               </div>
 
               <div
@@ -269,7 +273,11 @@ export default function Feedback() {
                   className={`${isDarkMode ? "bg-[#161618] border-white/5" : "bg-white border-slate-200"} border rounded-2xl p-6`}
                 >
                   <h3 className="text-lg font-semibold mb-4">Similar Cases</h3>
-                  <SimilarCases cases={similarCases} />
+                  <SimilarCases 
+                    cases={allCases?.filter(c => similarCases.some(sc => sc.id === c.id)) || []} 
+                    completedCaseIds={Array.from(completedSet)}
+                    onSelectCase={(id) => navigate(`/chat/${id}`)}
+                  />
                 </div>
               )}
             </div>
