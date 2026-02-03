@@ -116,19 +116,15 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
+            className="mt-16 grid grid-cols-2 gap-12 max-w-md mx-auto"
           >
             <div className="text-center">
               <p className="text-3xl font-bold bg-gradient-to-r from-[#137fec] to-cyan-400 bg-clip-text text-transparent"><AnimatedCounter end={62} />+</p>
               <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Patient Cases</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent"><AnimatedCounter end={40} />+</p>
-              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Conditions</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent"><AnimatedCounter end={5} /></p>
-              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Categories</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent"><AnimatedCounter end={150} />+</p>
+              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Symptoms</p>
             </div>
           </motion.div>
         </div>
@@ -147,42 +143,6 @@ export default function Home() {
             <CategoryBadge icon={Brain} label="Neurological" color="purple" isDarkMode={isDarkMode} />
             <CategoryBadge icon={Pill} label="Gastrointestinal" color="green" isDarkMode={isDarkMode} />
             <CategoryBadge icon={Bone} label="Musculoskeletal" color="orange" isDarkMode={isDarkMode} />
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className={`py-20 ${isDarkMode ? 'bg-[#0d0d10]' : 'bg-white'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-[700px] mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-            <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Practice clinical diagnosis through realistic patient simulations</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <FeatureCard 
-              icon={MessageCircle}
-              title="Chat with AI Patient"
-              desc="Ask questions to gather symptoms, medical history, and vital signs from an AI-simulated patient."
-              step="1"
-              color="blue"
-              isDarkMode={isDarkMode}
-            />
-            <FeatureCard 
-              icon={Target}
-              title="Make Your Diagnosis"
-              desc="Analyze the information you've gathered and submit your diagnosis when ready."
-              step="2"
-              color="purple"
-              isDarkMode={isDarkMode}
-            />
-            <FeatureCard 
-              icon={Award}
-              title="Get Instant Feedback"
-              desc="Receive immediate feedback on your diagnosis with detailed explanations of the correct answer."
-              step="3"
-              color="green"
-              isDarkMode={isDarkMode}
-            />
           </div>
         </div>
       </section>
@@ -229,15 +189,27 @@ export default function Home() {
             
             {/* Map Nodes */}
             <div className="relative grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
-              {/* Node 1 - Top Left */}
+              {/* Node 1 - Read Case */}
               <motion.div 
                 className="flex flex-col items-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  delay: 0,
+                  duration: 0.5,
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 15
+                }}
                 viewport={{ once: true }}
               >
-                <div className="relative mb-4">
+                <motion.div 
+                  className="relative mb-4"
+                  initial={{ y: 0 }}
+                  whileInView={{ y: [0, -15, 0] }}
+                  transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+                  viewport={{ once: true }}
+                >
                   <div className="absolute -inset-3 bg-[#137fec]/20 rounded-full blur-xl" />
                   <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-[#137fec] to-blue-600 flex items-center justify-center shadow-lg shadow-[#137fec]/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <Clipboard className="w-8 h-8 text-white" />
@@ -245,20 +217,32 @@ export default function Home() {
                   <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#137fec] flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     1
                   </div>
-                </div>
+                </motion.div>
                 <h3 className="font-bold text-lg mb-1">Read Case</h3>
                 <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Review patient presentation</p>
               </motion.div>
 
-              {/* Node 2 - Top Right */}
+              {/* Node 2 - Ask Questions */}
               <motion.div 
                 className="flex flex-col items-center md:mt-16"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  delay: 0.5,
+                  duration: 0.5,
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 15
+                }}
                 viewport={{ once: true }}
               >
-                <div className="relative mb-4">
+                <motion.div 
+                  className="relative mb-4"
+                  initial={{ y: 0 }}
+                  whileInView={{ y: [0, -15, 0] }}
+                  transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
+                  viewport={{ once: true }}
+                >
                   <div className="absolute -inset-3 bg-purple-500/20 rounded-full blur-xl" />
                   <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <MessageCircle className="w-8 h-8 text-white" />
@@ -266,20 +250,32 @@ export default function Home() {
                   <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-purple-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     2
                   </div>
-                </div>
+                </motion.div>
                 <h3 className="font-bold text-lg mb-1">Ask Questions</h3>
                 <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Chat with AI patient</p>
               </motion.div>
 
-              {/* Node 3 - Bottom Left */}
+              {/* Node 3 - Diagnose */}
               <motion.div 
                 className="flex flex-col items-center md:mt-24"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  delay: 1.0,
+                  duration: 0.5,
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 15
+                }}
                 viewport={{ once: true }}
               >
-                <div className="relative mb-4">
+                <motion.div 
+                  className="relative mb-4"
+                  initial={{ y: 0 }}
+                  whileInView={{ y: [0, -15, 0] }}
+                  transition={{ delay: 1.3, duration: 0.6, ease: "easeOut" }}
+                  viewport={{ once: true }}
+                >
                   <div className="absolute -inset-3 bg-pink-500/20 rounded-full blur-xl" />
                   <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <Target className="w-8 h-8 text-white" />
@@ -287,20 +283,32 @@ export default function Home() {
                   <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-pink-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     3
                   </div>
-                </div>
+                </motion.div>
                 <h3 className="font-bold text-lg mb-1">Diagnose</h3>
                 <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Submit your answer</p>
               </motion.div>
 
-              {/* Node 4 - Bottom Right */}
+              {/* Node 4 - Learn */}
               <motion.div 
                 className="flex flex-col items-center md:mt-8"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  delay: 1.5,
+                  duration: 0.5,
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 15
+                }}
                 viewport={{ once: true }}
               >
-                <div className="relative mb-4">
+                <motion.div 
+                  className="relative mb-4"
+                  initial={{ y: 0 }}
+                  whileInView={{ y: [0, -15, 0] }}
+                  transition={{ delay: 1.8, duration: 0.6, ease: "easeOut" }}
+                  viewport={{ once: true }}
+                >
                   <div className="absolute -inset-3 bg-green-500/20 rounded-full blur-xl" />
                   <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
                     <GraduationCap className="w-8 h-8 text-white" />
@@ -308,7 +316,7 @@ export default function Home() {
                   <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full bg-green-500 flex items-center justify-center text-sm font-bold border-2 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'} text-white`}>
                     4
                   </div>
-                </div>
+                </motion.div>
                 <h3 className="font-bold text-lg mb-1">Learn</h3>
                 <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Review feedback</p>
               </motion.div>
@@ -431,39 +439,6 @@ function CategoryBadge({ icon: Icon, label, color, isDarkMode }: { icon: any, la
     >
       <Icon className="w-5 h-5" />
       <span className="font-semibold">{label}</span>
-    </div>
-  );
-}
-
-function FeatureCard({ icon: Icon, title, desc, step, color, isDarkMode }: { icon: any, title: string, desc: string, step: string, color: string, isDarkMode: boolean }) {
-  const gradients: Record<string, string> = {
-    blue: "from-[#137fec] to-cyan-500",
-    purple: "from-purple-500 to-pink-500",
-    green: "from-green-500 to-emerald-500",
-  };
-  
-  const bgColors: Record<string, string> = {
-    blue: isDarkMode ? "bg-[#137fec]/10 group-hover:bg-[#137fec]/20" : "bg-blue-50 group-hover:bg-blue-100",
-    purple: isDarkMode ? "bg-purple-500/10 group-hover:bg-purple-500/20" : "bg-purple-50 group-hover:bg-purple-100",
-    green: isDarkMode ? "bg-green-500/10 group-hover:bg-green-500/20" : "bg-green-50 group-hover:bg-green-100",
-  };
-  
-  const iconColors: Record<string, string> = {
-    blue: "text-[#137fec]",
-    purple: "text-purple-500",
-    green: "text-green-500",
-  };
-  
-  return (
-    <div className={`relative p-8 rounded-3xl ${isDarkMode ? 'bg-[#161618] border-white/5 hover:border-purple-500/30' : 'bg-white border-slate-200 hover:border-purple-300'} border transition-colors group shadow-lg`}>
-      <div className={`absolute -top-4 -left-4 w-10 h-10 rounded-full bg-gradient-to-r ${gradients[color]} flex items-center justify-center font-bold text-white shadow-lg`}>
-        {step}
-      </div>
-      <div className={`w-14 h-14 rounded-2xl ${bgColors[color]} flex items-center justify-center mb-6 transition-colors`}>
-        <Icon className={`w-7 h-7 ${iconColors[color]}`} />
-      </div>
-      <h3 className="text-xl font-bold mb-3">{title}</h3>
-      <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'} leading-relaxed`}>{desc}</p>
     </div>
   );
 }
