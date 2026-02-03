@@ -631,12 +631,15 @@ async def generate_patient_response(
                                              internal_notes=None)
         except Exception as e:
             error_str = str(e)
+            print(f"AI attempt {attempt + 1} failed: {error_str[:200]}")
             if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
                 if attempt < max_retries - 1:
                     # Wait and retry
+                    print(f"Rate limited, retrying in 5s...")
                     await asyncio.sleep(5)
                     continue
             # For other errors or final attempt, use fallback
+            print(f"Using fallback response")
             break
     
     # Use rule-based fallback when AI is unavailable
