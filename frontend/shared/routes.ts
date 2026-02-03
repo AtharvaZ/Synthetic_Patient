@@ -83,12 +83,21 @@ export const api = {
       input: z.object({
         caseId: z.number(),
         chatId: z.number(),
-        result: z.enum(["correct", "partial", "wrong"]),
         diagnosis: z.string(),
       }),
       responses: {
-        201: z.custom<typeof caseCompletions.$inferSelect>(),
+        201: z.object({
+          completion: z.custom<typeof caseCompletions.$inferSelect>(),
+          result: z.enum(["correct", "partial", "wrong"]),
+        }),
         400: errorSchemas.validation,
+      },
+    },
+    retry: {
+      method: 'DELETE' as const,
+      path: '/api/completions/retry/:chatId',
+      responses: {
+        200: z.object({ success: z.boolean() }),
       },
     },
     userStats: {

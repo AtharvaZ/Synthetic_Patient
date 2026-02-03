@@ -21,6 +21,8 @@ export interface IStorage {
 
   // Case Completions
   completeCase(data: InsertCaseCompletion): Promise<CaseCompletion>;
+  deleteCompletion(id: number): Promise<void>;
+  getLastCompletionForChat(chatId: number): Promise<CaseCompletion | undefined>;
   getUserCompletions(userId: number): Promise<CaseCompletion[]>;
   getUserStats(userId: number): Promise<{ streak: number; casesSolved: number; accuracy: number }>;
   getCompletedCaseIds(userId: number): Promise<number[]>;
@@ -136,6 +138,17 @@ export class MemStorage implements IStorage {
     };
     this.completions.set(id, completion);
     return completion;
+  }
+
+  async deleteCompletion(id: number): Promise<void> {
+    this.completions.delete(id);
+  }
+
+  async getLastCompletionForChat(chatId: number): Promise<CaseCompletion | undefined> {
+    const completions = Array.from(this.completions.values())
+      .filter(c => c.chatId === chatId)
+      .sort((a, b) => (b.completedAt?.getTime() || 0) - (a.completedAt?.getTime() || 0));
+    return completions[0];
   }
 
   async getUserCompletions(userId: number): Promise<CaseCompletion[]> {

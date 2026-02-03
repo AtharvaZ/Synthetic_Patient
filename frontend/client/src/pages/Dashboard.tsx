@@ -1,22 +1,43 @@
-import { Link } from "wouter";
-import { useCases } from "@/hooks/use-cases";
+import { Link, useLocation } from "wouter";
+import { useCases, useUserStats, useCompletedCases } from "@/hooks/use-cases";
 import { 
   Flame, Trophy, Target, Stethoscope, ArrowRight, 
-  GraduationCap, BookOpen, ChevronRight, Home
+  GraduationCap, BookOpen, ChevronRight, Home, Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
+  const [, navigate] = useLocation();
   const { data: cases, isLoading } = useCases();
+  const { data: stats } = useUserStats();
+  const { data: completedCases } = useCompletedCases();
+
+  const completedSet = new Set(completedCases || []);
 
   const beginnerCases = cases?.filter(c => c.difficulty === "Beginner") || [];
   const intermediateCases = cases?.filter(c => c.difficulty === "Intermediate") || [];
   const advancedCases = cases?.filter(c => c.difficulty === "Advanced") || [];
 
-  const stats = {
-    streak: 5,
-    casesSolved: 12,
-    accuracy: 78,
+  const beginnerCompleted = beginnerCases.filter(c => completedSet.has(c.id)).length;
+  const intermediateCompleted = intermediateCases.filter(c => completedSet.has(c.id)).length;
+  const advancedCompleted = advancedCases.filter(c => completedSet.has(c.id)).length;
+
+  const userStats = stats || { streak: 0, casesSolved: 0, accuracy: 0 };
+
+  const handleStartCase = async (difficulty: string) => {
+    const casesByDiff = cases?.filter(c => c.difficulty === difficulty) || [];
+    const unsolvedCase = casesByDiff.find(c => !completedSet.has(c.id)) || casesByDiff[0];
+    
+    if (unsolvedCase) {
+      const res = await fetch("/api/chats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ caseId: unsolvedCase.id }),
+      });
+      const chat = await res.json();
+      navigate(`/chat/${chat.id}`);
+    }
   };
 
   return (
@@ -36,12 +57,6 @@ export default function Dashboard() {
                 Home
               </span>
             </Link>
-            <Link href="/quiz">
-              <Button className="bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90 text-white px-5 py-2 rounded-lg text-sm font-bold">
-                Start Quiz
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
           </div>
         </div>
       </header>
@@ -60,7 +75,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <p className="text-sm text-slate-400">Day Streak</p>
-                <p className="text-3xl font-bold text-orange-400">{stats.streak}</p>
+                <p className="text-3xl font-bold text-orange-400">{userStats.streak}</p>
               </div>
             </div>
             <p className="text-sm text-slate-500">Keep practicing daily!</p>
@@ -73,7 +88,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <p className="text-sm text-slate-400">Cases Solved</p>
-                <p className="text-3xl font-bold text-emerald-400">{stats.casesSolved}</p>
+                <p className="text-3xl font-bold text-emerald-400">{userStats.casesSolved}</p>
               </div>
             </div>
             <p className="text-sm text-slate-500">Great progress!</p>
@@ -86,7 +101,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <p className="text-sm text-slate-400">Accuracy</p>
-                <p className="text-3xl font-bold text-[#137fec]">{stats.accuracy}%</p>
+                <p className="text-3xl font-bold text-[#137fec]">{userStats.accuracy}%</p>
               </div>
             </div>
             <p className="text-sm text-slate-500">Diagnostic accuracy</p>
@@ -101,74 +116,98 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="grid md:grid-cols-3 gap-6">
-            <Link href="/quiz?difficulty=Beginner">
-              <div className="group bg-[#161618] hover:bg-[#1a1a1d] rounded-2xl p-6 border border-[#283039] hover:border-green-500/30 transition-all cursor-pointer">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                      <BookOpen className="w-5 h-5 text-green-500" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg">Beginner</h3>
-                      <p className="text-sm text-slate-400">{beginnerCases.length} cases</p>
-                    </div>
+            <div 
+              onClick={() => handleStartCase("Beginner")}
+              className="group bg-[#161618] hover:bg-[#1a1a1d] rounded-2xl p-6 border border-[#283039] hover:border-green-500/30 transition-all cursor-pointer"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-green-500" />
                   </div>
+                  <div>
+                    <h3 className="font-bold text-lg">Beginner</h3>
+                    <p className="text-sm text-slate-400">{beginnerCases.length} cases</p>
+                  </div>
+                </div>
+                {beginnerCompleted === beginnerCases.length && beginnerCases.length > 0 ? (
+                  <Check className="w-5 h-5 text-green-500" />
+                ) : (
                   <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-green-500 transition-colors" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-2 flex-1 bg-[#283039] rounded-full overflow-hidden">
-                    <div className="h-full w-1/4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" />
-                  </div>
-                  <span className="text-xs text-slate-500">0/{beginnerCases.length}</span>
-                </div>
+                )}
               </div>
-            </Link>
+              <div className="flex items-center gap-2">
+                <div className="h-2 flex-1 bg-[#283039] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-500" 
+                    style={{ width: beginnerCases.length > 0 ? `${(beginnerCompleted / beginnerCases.length) * 100}%` : '0%' }}
+                  />
+                </div>
+                <span className="text-xs text-slate-500">{beginnerCompleted}/{beginnerCases.length}</span>
+              </div>
+            </div>
 
-            <Link href="/quiz?difficulty=Intermediate">
-              <div className="group bg-[#161618] hover:bg-[#1a1a1d] rounded-2xl p-6 border border-[#283039] hover:border-yellow-500/30 transition-all cursor-pointer">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
-                      <GraduationCap className="w-5 h-5 text-yellow-500" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg">Intermediate</h3>
-                      <p className="text-sm text-slate-400">{intermediateCases.length} cases</p>
-                    </div>
+            <div 
+              onClick={() => handleStartCase("Intermediate")}
+              className="group bg-[#161618] hover:bg-[#1a1a1d] rounded-2xl p-6 border border-[#283039] hover:border-yellow-500/30 transition-all cursor-pointer"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                    <GraduationCap className="w-5 h-5 text-yellow-500" />
                   </div>
+                  <div>
+                    <h3 className="font-bold text-lg">Intermediate</h3>
+                    <p className="text-sm text-slate-400">{intermediateCases.length} cases</p>
+                  </div>
+                </div>
+                {intermediateCompleted === intermediateCases.length && intermediateCases.length > 0 ? (
+                  <Check className="w-5 h-5 text-yellow-500" />
+                ) : (
                   <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-yellow-500 transition-colors" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-2 flex-1 bg-[#283039] rounded-full overflow-hidden">
-                    <div className="h-full w-0 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full" />
-                  </div>
-                  <span className="text-xs text-slate-500">0/{intermediateCases.length}</span>
-                </div>
+                )}
               </div>
-            </Link>
+              <div className="flex items-center gap-2">
+                <div className="h-2 flex-1 bg-[#283039] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full transition-all duration-500" 
+                    style={{ width: intermediateCases.length > 0 ? `${(intermediateCompleted / intermediateCases.length) * 100}%` : '0%' }}
+                  />
+                </div>
+                <span className="text-xs text-slate-500">{intermediateCompleted}/{intermediateCases.length}</span>
+              </div>
+            </div>
 
-            <Link href="/quiz?difficulty=Advanced">
-              <div className="group bg-[#161618] hover:bg-[#1a1a1d] rounded-2xl p-6 border border-[#283039] hover:border-red-500/30 transition-all cursor-pointer">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
-                      <Target className="w-5 h-5 text-red-500" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg">Advanced</h3>
-                      <p className="text-sm text-slate-400">{advancedCases.length} cases</p>
-                    </div>
+            <div 
+              onClick={() => handleStartCase("Advanced")}
+              className="group bg-[#161618] hover:bg-[#1a1a1d] rounded-2xl p-6 border border-[#283039] hover:border-red-500/30 transition-all cursor-pointer"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+                    <Target className="w-5 h-5 text-red-500" />
                   </div>
+                  <div>
+                    <h3 className="font-bold text-lg">Advanced</h3>
+                    <p className="text-sm text-slate-400">{advancedCases.length} cases</p>
+                  </div>
+                </div>
+                {advancedCompleted === advancedCases.length && advancedCases.length > 0 ? (
+                  <Check className="w-5 h-5 text-red-500" />
+                ) : (
                   <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-red-500 transition-colors" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-2 flex-1 bg-[#283039] rounded-full overflow-hidden">
-                    <div className="h-full w-0 bg-gradient-to-r from-red-500 to-pink-500 rounded-full" />
-                  </div>
-                  <span className="text-xs text-slate-500">0/{advancedCases.length}</span>
-                </div>
+                )}
               </div>
-            </Link>
+              <div className="flex items-center gap-2">
+                <div className="h-2 flex-1 bg-[#283039] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-red-500 to-pink-500 rounded-full transition-all duration-500" 
+                    style={{ width: advancedCases.length > 0 ? `${(advancedCompleted / advancedCases.length) * 100}%` : '0%' }}
+                  />
+                </div>
+                <span className="text-xs text-slate-500">{advancedCompleted}/{advancedCases.length}</span>
+              </div>
+            </div>
           </div>
         )}
 
@@ -181,12 +220,13 @@ export default function Dashboard() {
               <h3 className="font-bold text-lg">Real-World Clinical Data</h3>
               <p className="text-sm text-slate-400">All cases are based on validated medical scenarios used in clinical training</p>
             </div>
-            <Link href="/quiz">
-              <Button className="bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90">
-                Continue Learning
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
+            <Button 
+              onClick={() => handleStartCase("Beginner")}
+              className="bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90"
+            >
+              Continue Learning
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           </div>
         </div>
       </main>

@@ -19,6 +19,8 @@ export const cases = pgTable("cases", {
   description: text("description").notNull(),
   specialty: text("specialty").notNull(), // Cardiology, Neurology, Pediatrics
   difficulty: text("difficulty").notNull(), // Beginner, Intermediate, Advanced
+  expectedDiagnosis: text("expected_diagnosis").notNull().default(""), // correct diagnosis for evaluation
+  acceptableDiagnoses: text("acceptable_diagnoses").default(""), // comma-separated partial matches
   imageUrl: text("image_url"),
   status: text("status").default("available"), // available, in_progress, completed
 });

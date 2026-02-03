@@ -16,6 +16,8 @@ export async function registerRoutes(
       description: "A 55-year-old male presents with sudden onset substernal chest pain radiating to the left arm.",
       specialty: "Cardiology",
       difficulty: "Intermediate",
+      expectedDiagnosis: "myocardial infarction",
+      acceptableDiagnoses: "heart attack,mi,stemi,nstemi,acute coronary syndrome,cardiac,angina",
       imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=2070",
       status: "available"
     });
@@ -24,6 +26,8 @@ export async function registerRoutes(
       description: "A 4-year-old female brought in by parents with high grade fever and maculopapular rash.",
       specialty: "Pediatrics",
       difficulty: "Beginner",
+      expectedDiagnosis: "measles",
+      acceptableDiagnoses: "viral exanthem,rubeola,morbilli,viral rash",
       imageUrl: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&q=80&w=2070",
       status: "available"
     });
@@ -32,6 +36,8 @@ export async function registerRoutes(
       description: "A 68-year-old female with sudden right-sided hemiparesis and aphasia.",
       specialty: "Neurology",
       difficulty: "Advanced",
+      expectedDiagnosis: "stroke",
+      acceptableDiagnoses: "cerebrovascular accident,cva,ischemic stroke,brain attack,tia",
       imageUrl: "https://images.unsplash.com/photo-1559757175-7b2713a6b63d?auto=format&fit=crop&q=80&w=2069",
       status: "available"
     });
@@ -131,7 +137,7 @@ export async function registerRoutes(
 
   // Get cases by difficulty
   app.get(api.cases.byDifficulty.path, async (req, res) => {
-    const difficulty = req.params.difficulty;
+    const difficulty = req.params.difficulty as string;
     const casesByDifficulty = await storage.getCasesByDifficulty(difficulty);
     res.json(casesByDifficulty);
   });
@@ -143,18 +149,37 @@ export async function registerRoutes(
     res.json({ success: true });
   });
 
-  // Complete a case with diagnosis result
+  // Complete a case with diagnosis result - evaluate server-side
   app.post(api.completions.create.path, async (req, res) => {
     try {
       const input = api.completions.create.input.parse(req.body);
+      const caseData = await storage.getCase(input.caseId);
+      
+      if (!caseData) {
+        return res.status(404).json({ message: "Case not found" });
+      }
+
+      const diagLower = input.diagnosis.toLowerCase().trim();
+      const expectedLower = (caseData.expectedDiagnosis || "").toLowerCase();
+      const acceptableList = (caseData.acceptableDiagnoses || "").toLowerCase().split(",").map(s => s.trim()).filter(Boolean);
+      
+      let result: "correct" | "partial" | "wrong" = "wrong";
+      
+      if (diagLower.includes(expectedLower) || expectedLower.includes(diagLower)) {
+        result = "correct";
+      } else if (acceptableList.some(a => diagLower.includes(a) || a.includes(diagLower))) {
+        result = "partial";
+      }
+
       const completion = await storage.completeCase({
         userId: defaultUser!.id,
         caseId: input.caseId,
         chatId: input.chatId,
-        result: input.result,
+        result,
         diagnosis: input.diagnosis,
       });
-      res.status(201).json(completion);
+      
+      res.status(201).json({ completion, result });
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({
@@ -164,6 +189,16 @@ export async function registerRoutes(
       }
       throw err;
     }
+  });
+
+  // Retry - delete last completion for this chat
+  app.delete("/api/completions/retry/:chatId", async (req, res) => {
+    const chatId = Number(req.params.chatId);
+    const lastCompletion = await storage.getLastCompletionForChat(chatId);
+    if (lastCompletion) {
+      await storage.deleteCompletion(lastCompletion.id);
+    }
+    res.json({ success: true });
   });
 
   // Get user stats
