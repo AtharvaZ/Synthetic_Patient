@@ -49,6 +49,14 @@ ClinIQ is a medical education platform that helps medical students practice clin
 - Automatic symptom extraction from case descriptions
 - Smart fallback system when AI is unavailable
 
+### Progressive Hint System
+- "Get Hint" button in chat interface (above input box, right-aligned)
+- AI-generated progressive hints that guide questioning without revealing diagnosis
+- Hints displayed as amber-styled centered messages in chat
+- Each hint costs 3 points from final score
+- Point penalty shown on button after first hint (-3pts, -6pts, etc.)
+- Backend endpoint `/api/hint` with fallback hints when AI unavailable
+
 ### Feedback System
 - Visual Feedback page with 5 core components:
   - Animated Score Ring (green 80+, yellow 60-79, red <60)
@@ -101,6 +109,7 @@ ClinIQ is a medical education platform that helps medical students practice clin
 | GET | `/api/chats/{id}` | Get chat with messages |
 | POST | `/api/chats/{id}/messages` | Send message (triggers AI response) |
 | DELETE | `/api/chats/{id}/messages/last-user` | Delete last user message |
+| POST | `/api/hint` | Get progressive hint for current case |
 | POST | `/api/completions` | Submit diagnosis |
 | DELETE | `/api/completions/retry/{chatId}` | Retry diagnosis |
 | GET | `/api/user/stats` | User progress stats |
