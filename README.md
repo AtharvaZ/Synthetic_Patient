@@ -1,11 +1,24 @@
 # ClinIQ - Medical Diagnostic Training Platform
 
-Practice clinical diagnosis through interactive AI-simulated patient conversations.
+Learn to diagnose like a doctor - before you see real patients.
 
 ## What is ClinIQ?
 
-ClinIQ is a medical education platform designed for medical students to practice diagnostic skills in a safe, risk-free environment. Instead of waiting for clinical rotations, students can interview AI-powered virtual patients based on real clinical cases.
+ClinIQ lets medical students practice clinical diagnosis through conversations with AI patients trained on real medical cases.
 
+### What Makes ClinIQ Different?
+#### 🎯 Real Cases, Real Learning
+Built on 62 validated clinical cases from real medical datasets - not fictional scenarios.
+#### 💬 Natural Conversations
+Interview AI patients like you would in clinic. They reveal symptoms gradually, just like real patients don't dump all info at once.
+#### 🧠 Learn How to Think, Not Just Memorize
+See your diagnostic reasoning visualized as a decision tree. Understand WHY you reached your conclusion.
+#### 📊 Similar Cases AI
+After each case, discover similar patients from our dataset. Learn pattern recognition across hundreds of real scenarios.
+#### 🎮 Gamified Progress
+Track streaks, accuracy scores, and level up through Easy → Medium → Hard cases across 12 specialties.
+#### 💡 Smart Hints That Teach
+Stuck? Get progressive hints that guide your clinical reasoning without spoiling the diagnosis.
 ### How It Works
 
 1. **Choose a Case** - Select from 62 validated GP-level clinical scenarios across different difficulty levels
