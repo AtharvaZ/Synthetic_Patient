@@ -67,7 +67,7 @@ export default function Dashboard() {
             <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
               <Stethoscope className="w-5 h-5" />
             </div>
-            <h2 className="text-xl font-bold tracking-tight">Examen</h2>
+            <h2 className="text-xl font-bold tracking-tight">ClinIQ</h2>
           </div>
           <div className="flex items-center gap-4">
             <button

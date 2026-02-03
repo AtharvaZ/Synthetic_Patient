@@ -154,7 +154,9 @@ export default function Feedback() {
 
   if (chatLoading || caseLoading || feedbackLoading) {
     return (
-      <div className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex items-center justify-center`}>
+      <div
+        className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex items-center justify-center`}
+      >
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
@@ -164,14 +166,18 @@ export default function Feedback() {
     const isIncomplete = (feedbackError as any)?.status === "incomplete";
 
     return (
-      <div className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col items-center justify-center gap-4 p-4`}>
+      <div
+        className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col items-center justify-center gap-4 p-4`}
+      >
         <div className="text-center max-w-md">
           <h2 className="text-xl font-semibold mb-2">
             {isIncomplete
               ? "Complete the Case First"
               : "Feedback Not Available"}
           </h2>
-          <p className={`${isDarkMode ? "text-muted-foreground" : "text-slate-500"} mb-6`}>
+          <p
+            className={`${isDarkMode ? "text-muted-foreground" : "text-slate-500"} mb-6`}
+          >
             {isIncomplete
               ? "You need to submit a diagnosis before viewing feedback."
               : "Unable to load feedback for this case."}
@@ -186,7 +192,10 @@ export default function Feedback() {
               </Button>
             )}
             <Link href="/dashboard">
-              <Button variant="outline" className={isDarkMode ? "border-white/10 text-white" : ""}>
+              <Button
+                variant="outline"
+                className={isDarkMode ? "border-white/10 text-white" : ""}
+              >
                 Dashboard
               </Button>
             </Link>
@@ -201,8 +210,12 @@ export default function Feedback() {
   }
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} transition-colors duration-300`}>
-      <header className={`border-b ${isDarkMode ? "border-white/5 bg-[#161618]" : "border-slate-200 bg-white"} sticky top-0 z-10`}>
+    <div
+      className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} transition-colors duration-300`}
+    >
+      <header
+        className={`border-b ${isDarkMode ? "border-white/5 bg-[#161618]" : "border-slate-200 bg-white"} sticky top-0 z-10`}
+      >
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
@@ -226,7 +239,7 @@ export default function Feedback() {
               <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
                 <Stethoscope className="w-4 h-4" />
               </div>
-              <span className="font-semibold">Examen</span>
+              <span className="font-semibold">ClinIQ</span>
             </div>
           </div>
         </div>

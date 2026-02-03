@@ -80,7 +80,7 @@ export default function Home() {
             <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
               <Stethoscope className="w-5 h-5" />
             </div>
-            <h2 className="text-xl font-bold tracking-tight">ExamenAI</h2>
+            <h2 className="text-xl font-bold tracking-tight">ClinIQ</h2>
           </div>
           <div className="flex items-center gap-4">
             <button
@@ -559,13 +559,13 @@ export default function Home() {
             <span
               className={`text-lg font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}
             >
-              Examen
+              ClinIQ
             </span>
           </div>
           <p
             className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}
           >
-            © 2026 Examen. Educational purposes only.
+            © 2026 ClinIQ. Educational purposes only.
           </p>
         </div>
       </footer>

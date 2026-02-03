@@ -142,7 +142,9 @@ export default function Chat() {
 
   if (chatLoading || caseLoading) {
     return (
-      <div className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex items-center justify-center`}>
+      <div
+        className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex items-center justify-center`}
+      >
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
@@ -150,7 +152,9 @@ export default function Chat() {
 
   if (!chat || !caseData) {
     return (
-      <div className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col items-center justify-center gap-4`}>
+      <div
+        className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col items-center justify-center gap-4`}
+      >
         <h2 className="text-xl font-semibold">Chat not found</h2>
         <Link href="/dashboard">
           <Button>Return to Dashboard</Button>
@@ -160,8 +164,12 @@ export default function Chat() {
   }
 
   return (
-    <div className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col overflow-hidden transition-colors duration-300`}>
-      <header className={`border-b ${isDarkMode ? "border-white/5 bg-[#161618]" : "border-slate-200 bg-white"}`}>
+    <div
+      className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col overflow-hidden transition-colors duration-300`}
+    >
+      <header
+        className={`border-b ${isDarkMode ? "border-white/5 bg-[#161618]" : "border-slate-200 bg-white"}`}
+      >
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-3">
             <Link
@@ -185,7 +193,7 @@ export default function Chat() {
               <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
                 <Stethoscope className="w-4 h-4" />
               </div>
-              <span className="font-semibold">Examen</span>
+              <span className="font-semibold">ClinIQ</span>
             </div>
           </div>
 
