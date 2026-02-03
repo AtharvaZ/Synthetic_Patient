@@ -12,6 +12,8 @@ import {
   AlertCircle,
   XCircle,
   BookOpen,
+  Sparkles,
+  Cpu,
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import ScoreRing from "@/components/feedback/ScoreRing";
@@ -50,6 +52,10 @@ interface FeedbackData {
   correctDiagnosis: string;
   result: "correct" | "partial" | "wrong";
   caseId: number;
+  source?: {
+    isAiGenerated: boolean;
+    reason?: string;
+  };
 }
 
 export default function Feedback() {
@@ -82,6 +88,7 @@ export default function Feedback() {
             correctDiagnosis: parsed.correctDiagnosis,
             result: parsed.result,
             caseId: parsed.caseId,
+            source: parsed.feedback.source,
           });
         }
       } catch (e) {
@@ -201,9 +208,30 @@ export default function Feedback() {
         >
           {/* Title */}
           <div className="mb-6">
-            <h1 className={`text-2xl font-bold mb-2 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-              Case Feedback
-            </h1>
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                Case Feedback
+              </h1>
+              {feedbackData.source && (
+                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+                  feedbackData.source.isAiGenerated 
+                    ? isDarkMode ? "bg-purple-500/20 text-purple-300 border border-purple-500/30" : "bg-purple-100 text-purple-700 border border-purple-200"
+                    : isDarkMode ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" : "bg-amber-100 text-amber-700 border border-amber-200"
+                }`}>
+                  {feedbackData.source.isAiGenerated ? (
+                    <>
+                      <Sparkles className="w-3 h-3" />
+                      AI Analysis
+                    </>
+                  ) : (
+                    <>
+                      <Cpu className="w-3 h-3" />
+                      Auto Analysis
+                    </>
+                  )}
+                </span>
+              )}
+            </div>
             {caseData && (
               <p className={isDarkMode ? "text-slate-500" : "text-slate-500"}>
                 {caseData.title} · {caseData.specialty}

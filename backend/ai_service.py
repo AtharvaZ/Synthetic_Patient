@@ -17,6 +17,7 @@ from ai_schemas import (
     DecisionTreeNode,
     MissedClue,
     AIInsight,
+    FeedbackSource,
 )
 
 # Configure Gemini client
@@ -671,7 +672,7 @@ async def generate_feedback(
         
     except (json.JSONDecodeError, Exception) as e:
         print(f"AI feedback error: {e}")
-        return create_fallback_feedback(request)
+        return create_fallback_feedback(request, reason=str(e))
 
     try:
         # Safely extract with defaults
@@ -719,11 +720,12 @@ async def generate_feedback(
             insight=insight,
             user_diagnosis=feedback_data.get("user_diagnosis", request.student_diagnosis),
             correct_diagnosis=feedback_data.get("correct_diagnosis", request.case.expected_diagnosis),
-            result=feedback_data.get("result", request.diagnosis_result))
+            result=feedback_data.get("result", request.diagnosis_result),
+            source=FeedbackSource(is_ai_generated=True, reason=None))
 
     except Exception as e:
         print(f"AI feedback parsing error: {e}")
-        return create_fallback_feedback(request)
+        return create_fallback_feedback(request, reason=str(e))
 
 
 def analyze_conversation_for_clues(request: FeedbackGenerationRequest) -> tuple[list[MissedClue], list[str], list[str]]:
@@ -896,7 +898,7 @@ def build_decision_tree_from_conversation(request: FeedbackGenerationRequest) ->
 
 
 def create_fallback_feedback(
-        request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
+        request: FeedbackGenerationRequest, reason: str = "AI response parsing failed") -> FeedbackGenerationResponse:
     """Create case-specific fallback feedback if AI parsing fails"""
     
     case = request.case
@@ -953,4 +955,5 @@ def create_fallback_feedback(
         ),
         user_diagnosis=request.student_diagnosis,
         correct_diagnosis=case.expected_diagnosis,
-        result=request.diagnosis_result)
+        result=request.diagnosis_result,
+        source=FeedbackSource(is_ai_generated=False, reason=reason))

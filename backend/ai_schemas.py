@@ -106,6 +106,12 @@ class DecisionTreeNode(BaseModel):
     children: list["DecisionTreeNode"] = Field(default_factory=list)
 
 
+class FeedbackSource(BaseModel):
+    """Indicates whether feedback was AI-generated or fallback"""
+    is_ai_generated: bool = Field(description="True if feedback came from AI, False if fallback was used")
+    reason: Optional[str] = Field(default=None, description="Reason for fallback if applicable")
+
+
 class MissedClue(BaseModel):
     """A symptom or finding the student may have missed"""
     id: str
@@ -132,6 +138,7 @@ class FeedbackGenerationResponse(BaseModel):
     user_diagnosis: str
     correct_diagnosis: str
     result: str  # "correct", "partial", "wrong"
+    source: FeedbackSource = Field(description="Indicates if feedback is AI-generated or fallback")
 
 
 # Required for self-referencing model
