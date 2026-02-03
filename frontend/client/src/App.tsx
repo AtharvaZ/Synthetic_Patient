@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
 import Chat from "@/pages/Chat";
+import Feedback from "@/pages/Feedback";
 
 function Router() {
   return (
@@ -13,6 +14,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/chat/:id" component={Chat} />
+      <Route path="/feedback/:chatId" component={Feedback} />
       <Route>
         <div className="h-screen bg-[#0a0a0c] flex items-center justify-center text-white">
           <div className="text-center">

@@ -351,12 +351,14 @@ export default function Chat() {
               )}
               
               <div className="flex flex-col gap-3">
-                <Link href="/feedback">
-                  <Button variant="outline" className="w-full border-white/10 text-white hover:bg-white/5">
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    View Feedback
-                  </Button>
-                </Link>
+                <Button 
+                  onClick={() => navigate(`/feedback/${chatId}`)}
+                  variant="outline" 
+                  className="w-full border-white/10 text-white hover:bg-white/5"
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  View Feedback
+                </Button>
                 <Button 
                   onClick={handleRetry}
                   variant="outline" 
