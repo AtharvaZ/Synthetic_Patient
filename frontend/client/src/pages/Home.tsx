@@ -194,18 +194,18 @@ export default function Home() {
           
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {[
-              { icon: Heart, label: "Cardio", bg: "bg-rose-500/15", text: "text-rose-400" },
-              { icon: Wind, label: "Respiratory", bg: "bg-cyan-500/15", text: "text-cyan-400" },
-              { icon: Brain, label: "Neuro", bg: "bg-violet-500/15", text: "text-violet-400" },
-              { icon: Pill, label: "GI", bg: "bg-emerald-500/15", text: "text-emerald-400" },
-              { icon: Bone, label: "Ortho", bg: "bg-orange-500/15", text: "text-orange-400" },
-              { icon: Droplets, label: "Derm", bg: "bg-pink-500/15", text: "text-pink-400" },
-              { icon: Ear, label: "ENT", bg: "bg-teal-500/15", text: "text-teal-400" },
-              { icon: Activity, label: "Urology", bg: "bg-blue-500/15", text: "text-blue-400" },
-              { icon: Gauge, label: "Endocrine", bg: "bg-amber-500/15", text: "text-amber-400" },
-              { icon: Smile, label: "Psych", bg: "bg-indigo-500/15", text: "text-indigo-400" },
-              { icon: Bug, label: "Infectious", bg: "bg-lime-500/15", text: "text-lime-400" },
-              { icon: Eye, label: "Ophthal", bg: "bg-sky-500/15", text: "text-sky-400" },
+              { icon: Heart, label: "Cardio", bg: "bg-rose-500/15", textDark: "text-rose-400", textLight: "text-rose-600" },
+              { icon: Wind, label: "Respiratory", bg: "bg-cyan-500/15", textDark: "text-cyan-400", textLight: "text-cyan-600" },
+              { icon: Brain, label: "Neuro", bg: "bg-violet-500/15", textDark: "text-violet-400", textLight: "text-violet-600" },
+              { icon: Pill, label: "GI", bg: "bg-emerald-500/15", textDark: "text-emerald-400", textLight: "text-emerald-600" },
+              { icon: Bone, label: "Ortho", bg: "bg-orange-500/15", textDark: "text-orange-400", textLight: "text-orange-600" },
+              { icon: Droplets, label: "Derm", bg: "bg-pink-500/15", textDark: "text-pink-400", textLight: "text-pink-600" },
+              { icon: Ear, label: "ENT", bg: "bg-teal-500/15", textDark: "text-teal-400", textLight: "text-teal-600" },
+              { icon: Activity, label: "Urology", bg: "bg-blue-500/15", textDark: "text-blue-400", textLight: "text-blue-600" },
+              { icon: Gauge, label: "Endocrine", bg: "bg-amber-500/15", textDark: "text-amber-400", textLight: "text-amber-600" },
+              { icon: Smile, label: "Psych", bg: "bg-indigo-500/15", textDark: "text-indigo-400", textLight: "text-indigo-600" },
+              { icon: Bug, label: "Infectious", bg: "bg-lime-500/15", textDark: "text-lime-400", textLight: "text-lime-600" },
+              { icon: Eye, label: "Ophthal", bg: "bg-sky-500/15", textDark: "text-sky-400", textLight: "text-sky-600" },
             ].map((cat, i) => (
               <motion.div
                 key={cat.label}
@@ -216,9 +216,9 @@ export default function Home() {
                 className={`flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200 ${isDarkMode ? "hover:bg-white/[0.04]" : "hover:bg-slate-50"}`}
               >
                 <div className={`p-2.5 rounded-xl ${cat.bg}`}>
-                  <cat.icon className={`w-5 h-5 ${cat.text}`} />
+                  <cat.icon className={`w-5 h-5 ${isDarkMode ? cat.textDark : cat.textLight}`} />
                 </div>
-                <span className={`text-xs font-medium ${cat.text}`}>
+                <span className={`text-xs font-medium ${isDarkMode ? cat.textDark : cat.textLight}`}>
                   {cat.label}
                 </span>
               </motion.div>
