@@ -47,7 +47,7 @@ Stuck? Get progressive hints that guide your clinical reasoning without spoiling
 ### Step 1: Clone and Install
 
 ```bash
-git clone [<repository-url>](https://github.com/AtharvaZ/Synthetic_Patient.git)
+git clone https://github.com/AtharvaZ/Synthetic_Patient.git
 cd ClinIQ
 
 # Install frontend dependencies (from project root)
