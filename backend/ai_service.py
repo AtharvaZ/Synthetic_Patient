@@ -1,11 +1,10 @@
 """
-AI Service for patient simulation and feedback generation using Gemini
+AI Service for patient simulation and feedback generation using Claude
 """
 
 import os
 import json
-from google import genai
-from google.genai import types
+import anthropic
 from typing import Optional
 
 from ai_schemas import (
@@ -20,8 +19,11 @@ from ai_schemas import (
     FeedbackSource,
 )
 
-# Configure Gemini client
-client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY", ""))
+# Configure Anthropic client
+client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
+
+# Model to use - claude-3-5-haiku is fast and cost-effective
+CLAUDE_MODEL = "claude-3-5-haiku-20241022"
 
 # ============================================
 # PATIENT SIMULATION PROMPT
@@ -618,21 +620,21 @@ async def generate_patient_response(
     max_retries = 2
     for attempt in range(max_retries):
         try:
-            response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    temperature=0.7,
-                    max_output_tokens=500,
-                ))
-            patient_response = response.text.strip()
+            response = client.messages.create(
+                model=CLAUDE_MODEL,
+                max_tokens=500,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ]
+            )
+            patient_response = response.content[0].text.strip()
             return PatientSimulationResponse(patient_response=patient_response,
                                              revealed_symptoms=[],
                                              internal_notes=None)
         except Exception as e:
             error_str = str(e)
             print(f"AI attempt {attempt + 1} failed: {error_str[:200]}")
-            if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
+            if "429" in error_str or "rate" in error_str.lower():
                 if attempt < max_retries - 1:
                     # Wait and retry
                     print(f"Rate limited, retrying in 5s...")
@@ -687,15 +689,15 @@ Respond with ONLY one word:
 Your answer:"""
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                temperature=0,
-                max_output_tokens=10,
-            ))
+        response = client.messages.create(
+            model=CLAUDE_MODEL,
+            max_tokens=10,
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
         
-        result = response.text.strip().lower()
+        result = response.content[0].text.strip().lower()
         if "correct" in result:
             return "correct"
         elif "partial" in result:
@@ -746,15 +748,15 @@ async def generate_feedback(
         diagnosis_result=request.diagnosis_result)
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                temperature=0.3,
-                max_output_tokens=2500,
-            ))
+        response = client.messages.create(
+            model=CLAUDE_MODEL,
+            max_tokens=2500,
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
         
-        response_text = extract_json_from_response(response.text)
+        response_text = extract_json_from_response(response.content[0].text)
         feedback_data = json.loads(response_text)
         
     except (json.JSONDecodeError, Exception) as e:
