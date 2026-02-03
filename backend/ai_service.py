@@ -540,26 +540,108 @@ def format_conversation_for_feedback(
     return "\n".join(formatted)
 
 
+def generate_fallback_patient_response(request: PatientSimulationRequest) -> str:
+    """Generate a simple rule-based patient response when AI is unavailable"""
+    case = request.case
+    message = request.student_message.lower()
+    presenting = case.presenting_symptoms or []
+    absent = case.absent_symptoms or []
+    exam_findings = case.exam_findings or []
+    
+    # Check for symptom questions
+    symptom_keywords = {
+        "pain": ["pain", "hurt", "ache", "sore"],
+        "fever": ["fever", "temperature", "hot", "chills"],
+        "cough": ["cough", "coughing"],
+        "nausea": ["nausea", "nauseous", "sick to stomach"],
+        "vomiting": ["vomit", "throw up", "throwing up"],
+        "diarrhea": ["diarrhea", "loose stool", "bowel"],
+        "headache": ["headache", "head hurt", "head pain"],
+        "tired": ["tired", "fatigue", "exhausted", "energy"],
+        "dizzy": ["dizzy", "dizziness", "lightheaded"],
+        "rash": ["rash", "skin", "bumps", "itchy"],
+    }
+    
+    # Check if asking about specific symptoms
+    for symptom_name, keywords in symptom_keywords.items():
+        if any(kw in message for kw in keywords):
+            # Check if this symptom is in presenting symptoms
+            for ps in presenting:
+                if symptom_name in ps.lower() or any(kw in ps.lower() for kw in keywords):
+                    return f"Yes, I've been having that. {ps}"
+            # Check if this symptom is absent
+            for ab in absent:
+                if symptom_name in ab.lower() or any(kw in ab.lower() for kw in keywords):
+                    return "No, I haven't had that."
+            return "I'm not sure about that. I haven't really noticed."
+    
+    # Check for examination requests
+    if any(word in message for word in ["examine", "check", "look at", "feel", "listen", "blood pressure", "temperature"]):
+        if exam_findings:
+            return f"Okay, go ahead. *The examination shows: {exam_findings[0]}*"
+        return "Okay, go ahead doctor."
+    
+    # Check for duration/timing questions
+    if any(word in message for word in ["how long", "when did", "started", "begin", "days", "hours"]):
+        if case.duration:
+            return f"It's been about {case.duration}."
+        return "It started a few days ago, I think."
+    
+    # Check for severity questions
+    if any(word in message for word in ["how bad", "scale", "severe", "worse", "better"]):
+        if case.severity:
+            return f"I'd say it's {case.severity}."
+        return "It's pretty uncomfortable. Maybe a 5 or 6 out of 10?"
+    
+    # Check for diagnosis statements
+    if any(word in message for word in ["diagnose", "diagnosis", "think it", "believe it"]):
+        return "Okay doctor, what do you think it is? I hope it's nothing serious."
+    
+    # Default: describe chief complaint
+    if case.chief_complaint:
+        return f"Well, {case.chief_complaint.lower()}. It's been really bothering me."
+    
+    return "I'm not feeling well, doctor. Can you ask me more specific questions?"
+
+
 async def generate_patient_response(
         request: PatientSimulationRequest) -> PatientSimulationResponse:
-    """Generate a patient response using Gemini"""
-
+    """Generate a patient response using Gemini with fallback"""
+    import asyncio
+    
     prompt = PATIENT_SIMULATION_PROMPT.format(
         case_data=format_case_data_for_patient(request),
         conversation_history=format_conversation_history(request),
         student_message=request.student_message)
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            temperature=0.7,
-            max_output_tokens=500,
-        ))
-
-    patient_response = response.text.strip()
-
-    return PatientSimulationResponse(patient_response=patient_response,
+    # Try with retry for rate limits
+    max_retries = 2
+    for attempt in range(max_retries):
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.7,
+                    max_output_tokens=500,
+                ))
+            patient_response = response.text.strip()
+            return PatientSimulationResponse(patient_response=patient_response,
+                                             revealed_symptoms=[],
+                                             internal_notes=None)
+        except Exception as e:
+            error_str = str(e)
+            if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
+                if attempt < max_retries - 1:
+                    # Wait and retry
+                    await asyncio.sleep(5)
+                    continue
+            # For other errors or final attempt, use fallback
+            break
+    
+    # Use rule-based fallback when AI is unavailable
+    fallback_response = generate_fallback_patient_response(request)
+    return PatientSimulationResponse(patient_response=fallback_response,
                                      revealed_symptoms=[],
                                      internal_notes=None)
 
