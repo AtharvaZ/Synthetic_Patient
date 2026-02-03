@@ -143,3 +143,35 @@ class FeedbackGenerationResponse(BaseModel):
 
 # Required for self-referencing model
 DecisionTreeNode.model_rebuild()
+
+
+# ============================================
+# HINT GENERATION MODELS
+# ============================================
+
+class HintCaseContext(BaseModel):
+    """Case context for hint generation"""
+    case_id: str
+    presenting_symptoms: list[str] = Field(default_factory=list)
+    absent_symptoms: list[str] = Field(default_factory=list)
+    exam_findings: list[str] = Field(default_factory=list)
+    expected_diagnosis: str
+
+
+class HintConversationMessage(BaseModel):
+    """Message in conversation for hint context"""
+    role: str  # "user" (student) or "assistant" (patient)
+    content: str
+
+
+class HintGenerationRequest(BaseModel):
+    """Request model for generating a hint"""
+    case: HintCaseContext
+    conversation: list[HintConversationMessage] = Field(default_factory=list)
+    hints_used: int = Field(default=0, description="Number of hints already used")
+
+
+class HintGenerationResponse(BaseModel):
+    """Response model for hint"""
+    hint: str = Field(description="The progressive hint for the student")
+    hint_number: int = Field(description="Which hint this is (1, 2, 3, etc.)")

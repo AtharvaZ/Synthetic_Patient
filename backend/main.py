@@ -26,7 +26,8 @@ from ai_schemas import (
     FeedbackCaseContext,
     FeedbackConversationMessage,
 )
-from ai_service import generate_patient_response, generate_feedback, compare_diagnoses
+from ai_service import generate_patient_response, generate_feedback, compare_diagnoses, generate_hint
+from ai_schemas import HintGenerationRequest, HintCaseContext, HintConversationMessage
 
 app = FastAPI(
     title="Medical Case Training API",
@@ -56,6 +57,13 @@ class DiagnosisRequest(BaseModel):
     case_id: int
     conversation: List[MessageInput]
     diagnosis: str
+    hints_used: int = 0
+
+
+class HintRequest(BaseModel):
+    case_id: int
+    conversation: List[MessageInput]
+    hints_used: int = 0
 
 
 def extract_symptoms_from_description(description: str) -> dict:
@@ -278,6 +286,43 @@ async def patient_message(data: PatientMessageRequest, db: Session = Depends(get
         print(f"AI error: {e}")
         print(f"Traceback: {traceback.format_exc()}")
         return {"response": "I'm here, doctor. What would you like to know about how I'm feeling?"}
+
+
+@app.post("/api/hint")
+async def get_hint(data: HintRequest, db: Session = Depends(get_db)):
+    """Get a progressive hint for the current case"""
+    case = db.query(Case).filter(Case.id == data.case_id).first()
+    if not case:
+        raise HTTPException(status_code=404, detail="Case not found")
+    
+    extracted = extract_symptoms_from_description(case.description or "")
+    history = [HintConversationMessage(role=m.role, content=m.content) for m in data.conversation]
+    
+    try:
+        request = HintGenerationRequest(
+            case=HintCaseContext(
+                case_id=f"case_{case.id}",
+                presenting_symptoms=extracted["presenting"],
+                absent_symptoms=extracted["absent"],
+                exam_findings=extracted["exam_findings"],
+                expected_diagnosis=case.diagnosis
+            ),
+            conversation=history,
+            hints_used=data.hints_used
+        )
+        response = await generate_hint(request)
+        return {"hint": response.hint, "hintNumber": response.hint_number}
+    except Exception as e:
+        import traceback
+        print(f"Hint error: {e}")
+        print(f"Traceback: {traceback.format_exc()}")
+        fallback_hints = [
+            "Consider asking about the timeline and how the symptoms have progressed.",
+            "Think about what associated symptoms might help narrow down the diagnosis.",
+            "Have you explored the patient's relevant medical history?",
+        ]
+        hint_index = min(data.hints_used, len(fallback_hints) - 1)
+        return {"hint": fallback_hints[hint_index], "hintNumber": data.hints_used + 1}
 
 
 @app.post("/api/submit-diagnosis")

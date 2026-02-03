@@ -17,6 +17,8 @@ from ai_schemas import (
     MissedClue,
     AIInsight,
     FeedbackSource,
+    HintGenerationRequest,
+    HintGenerationResponse,
 )
 
 # Configure Anthropic client
@@ -1136,3 +1138,113 @@ def create_fallback_feedback(
         correct_diagnosis=case.expected_diagnosis,
         result=request.diagnosis_result,
         source=FeedbackSource(is_ai_generated=False, reason=reason))
+
+
+# ============================================
+# HINT GENERATION
+# ============================================
+
+HINT_GENERATION_PROMPT = """
+# ROLE: CLINICAL EDUCATION HINT PROVIDER
+
+You are an expert medical educator helping a medical student practice diagnostic interviewing. Your purpose is to provide progressive hints that guide the student toward asking better questions, WITHOUT revealing the diagnosis directly.
+
+## CRITICAL RULES
+
+1. NEVER reveal the diagnosis - Your hints should guide questioning, not give answers
+2. Be progressive - Each subsequent hint should be slightly more specific
+3. Focus on question guidance - Suggest what TYPE of questions to ask, not the answers
+4. Reference symptoms - Point toward unexplored symptoms without naming the diagnosis
+5. Keep it short - One to two sentences maximum
+
+## HINT PROGRESSION STRATEGY
+
+**Hint 1 (Very General)**: Suggest a broad category of questions or a general approach
+Example: "Consider asking about the timeline and progression of symptoms."
+
+**Hint 2 (More Specific)**: Point toward a specific symptom area not yet explored
+Example: "The patient mentioned pain - have you asked about any associated symptoms like fever or fatigue?"
+
+**Hint 3 (Fairly Direct)**: Suggest a specific type of examination or question
+Example: "A physical examination of the affected area might reveal important findings."
+
+**Hint 4+ (Increasingly Helpful)**: Get more specific about what to explore
+Example: "Ask the patient about recent changes in their daily activities or any environmental exposures."
+
+## CASE DATA
+
+Symptoms the patient HAS (presenting):
+{presenting_symptoms}
+
+Symptoms the patient does NOT have (to rule out):
+{absent_symptoms}
+
+Examination findings (if examined):
+{exam_findings}
+
+Correct Diagnosis (NEVER reveal this): {diagnosis}
+
+## CONVERSATION SO FAR
+
+{conversation}
+
+## HINT NUMBER
+
+This is hint #{hint_number}. Make your hint appropriately specific for this progression level.
+
+## YOUR TASK
+
+Analyze what questions the student has already asked. Identify important symptoms or areas they haven't explored yet. Provide a helpful hint that guides them toward asking better questions WITHOUT revealing the diagnosis.
+
+Respond with ONLY the hint text - no explanations, no meta-commentary, no prefixes. Just the hint itself in 1-2 sentences.
+"""
+
+
+def format_conversation_for_hint(request: HintGenerationRequest) -> str:
+    """Format conversation history for hint generation"""
+    if not request.conversation:
+        return "No conversation yet - the student hasn't asked any questions."
+    
+    formatted = []
+    for msg in request.conversation:
+        role = "Student" if msg.role == "user" else "Patient"
+        formatted.append(f"{role}: {msg.content}")
+    
+    return "\n".join(formatted)
+
+
+async def generate_hint(request: HintGenerationRequest) -> HintGenerationResponse:
+    """Generate a progressive hint for the student"""
+    hint_number = request.hints_used + 1
+    
+    prompt = HINT_GENERATION_PROMPT.format(
+        presenting_symptoms="\n".join(f"- {s}" for s in request.case.presenting_symptoms) if request.case.presenting_symptoms else "- None specified",
+        absent_symptoms="\n".join(f"- {s}" for s in request.case.absent_symptoms) if request.case.absent_symptoms else "- None specified",
+        exam_findings="\n".join(f"- {s}" for s in request.case.exam_findings) if request.case.exam_findings else "- None specified",
+        diagnosis=request.case.expected_diagnosis,
+        conversation=format_conversation_for_hint(request),
+        hint_number=hint_number
+    )
+    
+    try:
+        response = client.messages.create(
+            model=CLAUDE_MODEL,
+            max_tokens=150,
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
+        hint_text = response.content[0].text.strip()
+        return HintGenerationResponse(hint=hint_text, hint_number=hint_number)
+    except Exception as e:
+        print(f"Hint generation error: {str(e)[:200]}")
+        # Fallback hints
+        fallback_hints = [
+            "Consider asking about the timeline and how the symptoms have progressed.",
+            "Think about what associated symptoms might help narrow down the diagnosis.",
+            "Have you explored the patient's relevant medical history for this type of complaint?",
+            "A focused physical examination might reveal helpful findings.",
+            "Ask about any factors that make the symptoms better or worse.",
+        ]
+        hint_index = min(hint_number - 1, len(fallback_hints) - 1)
+        return HintGenerationResponse(hint=fallback_hints[hint_index], hint_number=hint_number)
