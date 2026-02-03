@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, Link, useLocation } from "wouter";
 import { useCase, useCases } from "@/hooks/use-cases";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Send,
   Loader2,
@@ -17,8 +16,8 @@ import {
   MessageSquare,
   Sun,
   Moon,
+  User,
 } from "lucide-react";
-import { clsx } from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import { addCompletedCase, getCompletedCaseIds } from "@/lib/localStorage";
@@ -222,7 +221,6 @@ export default function Chat() {
       setFeedbackData(data);
       addCompletedCase(caseId, diagnosisInput, data.result as "correct" | "partial" | "wrong");
       
-      // Store feedback in sessionStorage for the feedback page
       sessionStorage.setItem("lastFeedback", JSON.stringify({
         ...data,
         userDiagnosis: diagnosisInput,
@@ -284,165 +282,220 @@ export default function Chat() {
 
   if (caseLoading) {
     return (
-      <div
-        className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex items-center justify-center`}
-      >
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      <div className={`h-screen flex items-center justify-center ${isDarkMode ? "bg-[hsl(220,15%,5%)]" : "bg-[hsl(220,20%,97%)]"}`}>
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 text-[hsl(168,84%,45%)] animate-spin" />
+          <p className={`text-sm ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Loading case...</p>
+        </div>
       </div>
     );
   }
 
   if (!caseData) {
     return (
-      <div
-        className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col items-center justify-center gap-4`}
-      >
+      <div className={`h-screen flex flex-col items-center justify-center gap-4 ${isDarkMode ? "bg-[hsl(220,15%,5%)] text-white" : "bg-[hsl(220,20%,97%)] text-slate-900"}`}>
         <h2 className="text-xl font-semibold">Case not found</h2>
         <Link href="/dashboard">
-          <Button>Return to Dashboard</Button>
+          <button className="btn-primary">Return to Dashboard</button>
         </Link>
       </div>
     );
   }
 
   return (
-    <div
-      className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col overflow-hidden transition-colors duration-300`}
-    >
-      <header
-        className={`border-b ${isDarkMode ? "border-white/5 bg-[#161618]" : "border-slate-200 bg-white"}`}
-      >
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <Link
-              href="/dashboard"
-              className={`inline-flex items-center text-sm ${isDarkMode ? "text-muted-foreground hover:text-white" : "text-slate-500 hover:text-slate-900"} transition-colors`}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
+    <div className={`h-screen flex flex-col overflow-hidden transition-colors duration-300 ${isDarkMode ? "bg-[hsl(220,15%,5%)]" : "bg-[hsl(220,20%,97%)]"}`}>
+      {/* Noise overlay */}
+      <div className="noise-overlay" />
+
+      {/* Header */}
+      <header className={`relative z-10 border-b backdrop-blur-xl ${isDarkMode ? "border-white/[0.06] bg-[hsl(220,12%,8%)]/90" : "border-slate-200/80 bg-white/90"}`}>
+        <div className="max-w-3xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <Link href="/dashboard">
+              <motion.span
+                className={`inline-flex items-center text-sm font-medium transition-colors cursor-pointer ${isDarkMode ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}
+                whileHover={{ x: -2 }}
+              >
+                <ArrowLeft className="w-4 h-4 mr-1.5" />
+                Back to Dashboard
+              </motion.span>
             </Link>
-            <div className="flex items-center gap-3">
-              <button
+            <div className="flex items-center gap-2">
+              <motion.button
                 onClick={toggleTheme}
-                className={`p-2 rounded-lg transition-colors ${isDarkMode ? "hover:bg-white/10" : "hover:bg-slate-100"}`}
+                className={`p-2 rounded-lg transition-colors ${isDarkMode ? "hover:bg-white/[0.06]" : "hover:bg-slate-100"}`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 {isDarkMode ? (
-                  <Sun className="w-5 h-5 text-yellow-400" />
+                  <Sun className="w-4 h-4 text-amber-400" />
                 ) : (
-                  <Moon className="w-5 h-5 text-slate-600" />
+                  <Moon className="w-4 h-4 text-slate-600" />
                 )}
-              </button>
-              <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
-                <Stethoscope className="w-4 h-4" />
+              </motion.button>
+              <div className="flex items-center gap-2">
+                <div className="size-7 bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] rounded-lg flex items-center justify-center">
+                  <Stethoscope className="w-3.5 h-3.5 text-[hsl(220,15%,5%)]" />
+                </div>
+                <span className={`font-semibold text-sm ${isDarkMode ? "text-white" : "text-slate-900"}`}>ClinIQ</span>
               </div>
-              <span className="font-semibold">ClinIQ</span>
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-bold">{caseData.title}</h2>
-              <span className="text-xs font-medium text-primary px-2 py-0.5 rounded-full bg-primary/10">
-                {caseData.specialty} · {caseData.difficulty}
-              </span>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <h2 className={`text-base font-semibold truncate mb-1.5 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                {caseData.chiefComplaint}
+              </h2>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isDarkMode ? "bg-white/[0.06] text-slate-300" : "bg-slate-100 text-slate-600"}`}>
+                  {caseData.specialty}
+                </span>
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                  caseData.difficulty === "Beginner" 
+                    ? "bg-emerald-500/10 text-emerald-400" 
+                    : caseData.difficulty === "Intermediate"
+                    ? "bg-amber-500/10 text-amber-400"
+                    : "bg-rose-500/10 text-rose-400"
+                }`}>
+                  {caseData.difficulty}
+                </span>
+              </div>
             </div>
-            <Button
+            <motion.button
               onClick={() => setShowDiagnoseInput(true)}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 text-white"
+              className="btn-primary flex items-center gap-2 text-sm whitespace-nowrap"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Stethoscope className="w-4 h-4 mr-2" />
+              <Stethoscope className="w-4 h-4" />
               Make Diagnosis
-            </Button>
+            </motion.button>
           </div>
 
+          {/* Progress bar */}
           <div className="mt-4">
-            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-              <span>Diagnosis Progress</span>
-              <span>{Math.round(progressPercent)}%</span>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className={isDarkMode ? "text-slate-500" : "text-slate-400"}>Diagnosis Progress</span>
+              <span className={`font-medium ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{Math.round(progressPercent)}%</span>
             </div>
-            <div className={`h-2 ${isDarkMode ? "bg-[#283039]" : "bg-slate-200"} rounded-full overflow-hidden`}>
+            <div className={`h-1.5 rounded-full overflow-hidden ${isDarkMode ? "bg-white/[0.06]" : "bg-slate-200"}`}>
               <motion.div
-                className="h-full bg-gradient-to-r from-[#137fec] to-teal-500 rounded-full"
+                className="h-full rounded-full bg-gradient-to-r from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
               />
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className={`text-xs mt-1.5 ${isDarkMode ? "text-slate-600" : "text-slate-400"}`}>
               Interview the patient to gather more information
             </p>
           </div>
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-6 scroll-smooth" ref={scrollRef}>
-        <div className="max-w-3xl mx-auto space-y-4">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto scrollbar-hide" ref={scrollRef}>
+        <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
           {messages.length === 0 && (
-            <div className="text-center py-12 text-muted-foreground">
-              <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Start the consultation by greeting the patient.</p>
+            <div className="text-center py-16">
+              <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center ${isDarkMode ? "bg-white/[0.04]" : "bg-slate-100"}`}>
+                <MessageSquare className={`w-8 h-8 ${isDarkMode ? "text-slate-600" : "text-slate-300"}`} />
+              </div>
+              <p className={isDarkMode ? "text-slate-500" : "text-slate-400"}>
+                Start the consultation by greeting the patient.
+              </p>
             </div>
           )}
 
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={clsx(
-                "flex w-full",
-                msg.role === "user" ? "justify-end" : "justify-start"
-              )}
-            >
-              <div
-                className={clsx(
-                  "max-w-[80%] px-5 py-3 rounded-2xl text-sm leading-relaxed",
-                  msg.role === "user"
-                    ? "bg-primary text-white rounded-tr-sm shadow-lg shadow-primary/10"
-                    : isDarkMode
-                      ? "bg-[#1c1c1f] text-gray-100 border border-white/5 rounded-tl-sm"
-                      : "bg-white text-slate-900 border border-slate-200 rounded-tl-sm shadow-sm"
-                )}
+          <AnimatePresence mode="popLayout">
+            {messages.map((msg, i) => (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i === messages.length - 1 ? 0.1 : 0 }}
+                className={`flex items-end gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
-                <p>{msg.content}</p>
-              </div>
-            </div>
-          ))}
+                {msg.role === "assistant" && (
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center flex-shrink-0 mb-0.5">
+                    <User className="w-3.5 h-3.5 text-white" />
+                  </div>
+                )}
+                <div
+                  className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed ${
+                    msg.role === "user"
+                      ? "bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] text-[hsl(220,15%,5%)] rounded-2xl rounded-br-md"
+                      : isDarkMode
+                      ? "bg-white/[0.04] border border-white/[0.06] text-slate-200 rounded-2xl rounded-bl-md"
+                      : "bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-bl-md shadow-sm"
+                  }`}
+                >
+                  <p className={msg.role === "user" ? "font-medium" : ""}>{msg.content}</p>
+                </div>
+                {msg.role === "user" && (
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] flex items-center justify-center flex-shrink-0 mb-0.5">
+                    <Stethoscope className="w-3.5 h-3.5 text-[hsl(220,15%,5%)]" />
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </AnimatePresence>
 
           {isSending && (
-            <div className="flex justify-start">
-              <div className={`${isDarkMode ? "bg-[#1c1c1f] border-white/5" : "bg-white border-slate-200"} border px-5 py-3 rounded-2xl rounded-tl-sm text-sm`}>
-                <Loader2 className="w-4 h-4 animate-spin" />
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-end gap-2"
+            >
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center flex-shrink-0">
+                <User className="w-3.5 h-3.5 text-white" />
               </div>
-            </div>
+              <div className={`px-4 py-3 rounded-2xl rounded-bl-md ${isDarkMode ? "bg-white/[0.04] border border-white/[0.06]" : "bg-white border border-slate-200"}`}>
+                <div className="flex gap-1">
+                  <span className="w-2 h-2 rounded-full bg-slate-400 animate-pulse" style={{ animationDelay: "0ms" }} />
+                  <span className="w-2 h-2 rounded-full bg-slate-400 animate-pulse" style={{ animationDelay: "150ms" }} />
+                  <span className="w-2 h-2 rounded-full bg-slate-400 animate-pulse" style={{ animationDelay: "300ms" }} />
+                </div>
+              </div>
+            </motion.div>
           )}
         </div>
       </div>
 
-      <div className={`p-4 border-t ${isDarkMode ? "border-white/5 bg-[#161618]/50" : "border-slate-200 bg-white/50"} backdrop-blur-sm`}>
+      {/* Input */}
+      <div className={`relative z-10 p-4 border-t backdrop-blur-xl ${isDarkMode ? "border-white/[0.06] bg-[hsl(220,12%,8%)]/90" : "border-slate-200/80 bg-white/90"}`}>
         <div className="max-w-3xl mx-auto">
-          <form onSubmit={handleSend} className="relative flex items-center gap-2">
-            <Input
+          <form onSubmit={handleSend} className="relative">
+            <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask the patient a question..."
-              className={`pr-12 h-12 rounded-xl ${isDarkMode ? "bg-[#1c1c1f] border-white/10 text-white focus-visible:ring-primary/50" : "bg-white border-slate-200 text-slate-900"}`}
               disabled={isSending}
+              className={`w-full h-12 pl-4 pr-14 rounded-xl text-sm transition-all duration-200 ${
+                isDarkMode 
+                  ? "bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-slate-500 focus:bg-white/[0.06] focus:border-[hsl(168,84%,45%)]/40 focus:ring-2 focus:ring-[hsl(168,84%,45%)]/20" 
+                  : "bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-[hsl(168,84%,45%)]/50 focus:ring-2 focus:ring-[hsl(168,84%,45%)]/20"
+              } focus:outline-none`}
             />
-            <Button
+            <motion.button
               type="submit"
-              size="icon"
-              className="absolute right-1 w-10 h-10 rounded-lg bg-primary hover:bg-primary/90 text-white"
               disabled={!input.trim() || isSending}
+              className="absolute right-1.5 top-1.5 w-9 h-9 rounded-lg bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] flex items-center justify-center text-[hsl(220,15%,5%)] disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               {isSending ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <Send className="w-4 h-4" />
               )}
-            </Button>
+            </motion.button>
           </form>
         </div>
       </div>
 
+      {/* Diagnosis Modal */}
       <AnimatePresence>
         {showDiagnoseInput && (
           <motion.div
@@ -452,56 +505,62 @@ export default function Chat() {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className={`${isDarkMode ? "bg-[#1c1c1f] border-white/10" : "bg-white border-slate-200"} border rounded-2xl p-6 w-full max-w-md`}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.3 }}
+              className={`w-full max-w-md rounded-2xl p-6 ${isDarkMode ? "bg-[hsl(220,12%,10%)] border border-white/[0.08]" : "bg-white border border-slate-200 shadow-xl"}`}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold">Submit Your Diagnosis</h3>
+                <h3 className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                  Submit Your Diagnosis
+                </h3>
                 <button
                   onClick={() => setShowDiagnoseInput(false)}
-                  className="text-muted-foreground hover:text-current"
+                  className={`p-1.5 rounded-lg transition-colors ${isDarkMode ? "hover:bg-white/[0.06] text-slate-400" : "hover:bg-slate-100 text-slate-500"}`}
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
-              <p className="text-sm text-muted-foreground mb-4">
-                Based on your conversation with the patient, what is your
-                diagnosis?
+              <p className={`text-sm mb-4 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+                Based on your conversation, what is your diagnosis?
               </p>
-              <Input
+              <input
                 value={diagnosisInput}
                 onChange={(e) => setDiagnosisInput(e.target.value)}
                 placeholder="Enter your diagnosis..."
-                className={`mb-4 ${isDarkMode ? "bg-[#0a0a0c] border-white/10 text-white" : "bg-slate-50 border-slate-200"}`}
                 autoFocus
+                className={`w-full h-11 px-4 rounded-xl text-sm mb-4 transition-all ${
+                  isDarkMode 
+                    ? "bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-slate-500 focus:border-[hsl(168,84%,45%)]/40" 
+                    : "bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-[hsl(168,84%,45%)]/50"
+                } focus:outline-none focus:ring-2 focus:ring-[hsl(168,84%,45%)]/20`}
               />
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
+                <button
                   onClick={() => setShowDiagnoseInput(false)}
-                  className={`flex-1 ${isDarkMode ? "border-white/10 text-white hover:bg-white/5" : ""}`}
+                  className={`flex-1 h-11 rounded-xl font-medium text-sm transition-all ${isDarkMode ? "bg-white/[0.04] border border-white/[0.08] text-white hover:bg-white/[0.08]" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}
                 >
                   Cancel
-                </Button>
-                <Button
+                </button>
+                <button
                   onClick={handleDiagnose}
                   disabled={!diagnosisInput.trim() || isSubmitting}
-                  className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 text-white"
+                  className="flex-1 h-11 rounded-xl font-medium text-sm btn-primary disabled:opacity-50"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin mx-auto" />
                   ) : (
                     "Submit"
                   )}
-                </Button>
+                </button>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Result Modal */}
       <AnimatePresence>
         {showPopup && diagnosisResult && (
           <motion.div
@@ -511,76 +570,83 @@ export default function Chat() {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className={`${isDarkMode ? "bg-[#1c1c1f] border-white/10" : "bg-white border-slate-200"} border rounded-2xl p-6 w-full max-w-md text-center`}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.3 }}
+              className={`w-full max-w-md rounded-2xl p-6 text-center ${isDarkMode ? "bg-[hsl(220,12%,10%)] border border-white/[0.08]" : "bg-white border border-slate-200 shadow-xl"}`}
             >
               {diagnosisResult === "correct" && (
                 <>
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                    <CheckCircle className="w-8 h-8 text-emerald-500" />
-                  </div>
-                  <h3 className="text-xl font-bold text-emerald-500 mb-2">
-                    Correct Diagnosis!
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", delay: 0.1 }}
+                    className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-emerald-500/20 flex items-center justify-center"
+                  >
+                    <CheckCircle className="w-8 h-8 text-emerald-400" />
+                  </motion.div>
+                  <h3 className="text-xl font-bold text-emerald-400 mb-2">Correct Diagnosis!</h3>
+                  <p className={`mb-6 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
                     Excellent work! You correctly identified the condition.
                   </p>
                 </>
               )}
               {diagnosisResult === "partial" && (
                 <>
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-yellow-500/20 flex items-center justify-center">
-                    <AlertCircle className="w-8 h-8 text-yellow-500" />
-                  </div>
-                  <h3 className="text-xl font-bold text-yellow-500 mb-2">
-                    Partially Correct
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    You're on the right track, but the diagnosis could be more
-                    specific.
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", delay: 0.1 }}
+                    className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-500/20 flex items-center justify-center"
+                  >
+                    <AlertCircle className="w-8 h-8 text-amber-400" />
+                  </motion.div>
+                  <h3 className="text-xl font-bold text-amber-400 mb-2">Partially Correct</h3>
+                  <p className={`mb-6 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+                    You're on the right track, but the diagnosis could be more specific.
                   </p>
                 </>
               )}
               {diagnosisResult === "wrong" && (
                 <>
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
-                    <XCircle className="w-8 h-8 text-red-500" />
-                  </div>
-                  <h3 className="text-xl font-bold text-red-500 mb-2">
-                    Incorrect Diagnosis
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", delay: 0.1 }}
+                    className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-rose-500/20 flex items-center justify-center"
+                  >
+                    <XCircle className="w-8 h-8 text-rose-400" />
+                  </motion.div>
+                  <h3 className="text-xl font-bold text-rose-400 mb-2">Incorrect Diagnosis</h3>
+                  <p className={`mb-6 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
                     Keep practicing! Review the symptoms and try again.
                   </p>
                 </>
               )}
 
-              <div className="flex flex-col gap-3">
-                <Button
+              <div className="space-y-2">
+                <button
                   onClick={handleViewFeedback}
-                  variant="outline"
-                  className={`w-full ${isDarkMode ? "border-white/10 text-white hover:bg-white/5" : ""}`}
+                  className={`w-full h-11 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all ${isDarkMode ? "bg-white/[0.04] border border-white/[0.08] text-white hover:bg-white/[0.08]" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}
                 >
-                  <MessageSquare className="w-4 h-4 mr-2" />
+                  <MessageSquare className="w-4 h-4" />
                   View Feedback
-                </Button>
-                <Button
+                </button>
+                <button
                   onClick={handleRetry}
-                  variant="outline"
-                  className={`w-full ${isDarkMode ? "border-white/10 text-white hover:bg-white/5" : ""}`}
+                  className={`w-full h-11 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all ${isDarkMode ? "bg-white/[0.04] border border-white/[0.08] text-white hover:bg-white/[0.08]" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}
                 >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  Retry Diagnosis
-                </Button>
-                <Button
+                  <RotateCcw className="w-4 h-4" />
+                  Try Again
+                </button>
+                <button
                   onClick={handleNextPatient}
-                  className="w-full bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90 text-white"
+                  className="w-full h-11 rounded-xl font-medium text-sm btn-primary flex items-center justify-center gap-2"
                 >
                   Next Patient
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
               </div>
             </motion.div>
           </motion.div>
