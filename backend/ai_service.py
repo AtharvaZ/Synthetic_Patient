@@ -4,7 +4,8 @@ AI Service for patient simulation and feedback generation using Gemini
 
 import os
 import json
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from typing import Optional
 
 from ai_schemas import (
@@ -18,10 +19,8 @@ from ai_schemas import (
     AIInsight,
 )
 
-
-# Configure Gemini
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ""))
-
+# Configure Gemini client
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY", ""))
 
 # ============================================
 # PATIENT SIMULATION PROMPT
@@ -178,7 +177,6 @@ Good Response: "I don't know... maybe a 5 or 6? It's definitely bothering me a l
 
 Respond as the patient. Stay in character. Be realistic and appropriately vague.
 """
-
 
 # ============================================
 # FEEDBACK GENERATION PROMPT
@@ -446,12 +444,12 @@ def format_conversation_history(request: PatientSimulationRequest) -> str:
     """Format conversation history for the prompt"""
     if not request.conversation_history:
         return "No previous conversation. This is the start of the encounter."
-    
+
     formatted = []
     for msg in request.conversation_history:
         role = "Student" if msg.role == "user" else "Patient"
         formatted.append(f"{role}: {msg.content}")
-    
+
     return "\n".join(formatted)
 
 
@@ -479,64 +477,59 @@ EXAM FINDINGS:
 """
 
 
-def format_conversation_for_feedback(request: FeedbackGenerationRequest) -> str:
+def format_conversation_for_feedback(
+        request: FeedbackGenerationRequest) -> str:
     """Format the conversation for feedback analysis"""
     formatted = []
     for msg in request.conversation:
         role = "Student" if msg.sender == "user" else "Patient"
         formatted.append(f"{role}: {msg.content}")
-    
+
     return "\n".join(formatted)
 
 
-async def generate_patient_response(request: PatientSimulationRequest) -> PatientSimulationResponse:
+async def generate_patient_response(
+        request: PatientSimulationRequest) -> PatientSimulationResponse:
     """Generate a patient response using Gemini"""
-    
+
     prompt = PATIENT_SIMULATION_PROMPT.format(
         case_data=format_case_data_for_patient(request),
         conversation_history=format_conversation_history(request),
-        student_message=request.student_message
-    )
-    
-    model = genai.GenerativeModel("gemini-pro")
-    
-    response = model.generate_content(
-        prompt,
-        generation_config=genai.types.GenerationConfig(
+        student_message=request.student_message)
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash-lite",
+        contents=prompt,
+        config=types.GenerateContentConfig(
             temperature=0.7,
             max_output_tokens=500,
-        )
-    )
-    
+        ))
+
     patient_response = response.text.strip()
-    
-    return PatientSimulationResponse(
-        patient_response=patient_response,
-        revealed_symptoms=[],
-        internal_notes=None
-    )
+
+    return PatientSimulationResponse(patient_response=patient_response,
+                                     revealed_symptoms=[],
+                                     internal_notes=None)
 
 
-async def generate_feedback(request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
+async def generate_feedback(
+        request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
     """Generate detailed feedback using Gemini"""
-    
+
     prompt = FEEDBACK_GENERATION_PROMPT.format(
         case_data=format_case_data_for_feedback(request),
         conversation=format_conversation_for_feedback(request),
         student_diagnosis=request.student_diagnosis,
-        diagnosis_result=request.diagnosis_result
-    )
-    
-    model = genai.GenerativeModel("gemini-pro")
-    
-    response = model.generate_content(
-        prompt,
-        generation_config=genai.types.GenerationConfig(
+        diagnosis_result=request.diagnosis_result)
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash-lite",
+        contents=prompt,
+        config=types.GenerateContentConfig(
             temperature=0.3,
             max_output_tokens=2000,
-        )
-    )
-    
+        ))
+
     response_text = response.text.strip()
     if response_text.startswith("```json"):
         response_text = response_text[7:]
@@ -545,48 +538,45 @@ async def generate_feedback(request: FeedbackGenerationRequest) -> FeedbackGener
     if response_text.endswith("```"):
         response_text = response_text[:-3]
     response_text = response_text.strip()
-    
+
     try:
         feedback_data = json.loads(response_text)
     except json.JSONDecodeError as e:
         return create_fallback_feedback(request)
-    
+
     try:
         breakdown = ScoreBreakdown(
             correct_diagnosis=feedback_data["breakdown"]["correct_diagnosis"],
             key_questions=feedback_data["breakdown"]["key_questions"],
             right_tests=feedback_data["breakdown"]["right_tests"],
             time_efficiency=feedback_data["breakdown"]["time_efficiency"],
-            ruled_out_differentials=feedback_data["breakdown"]["ruled_out_differentials"]
-        )
-        
+            ruled_out_differentials=feedback_data["breakdown"]
+            ["ruled_out_differentials"])
+
         def parse_tree(node_data: dict) -> DecisionTreeNode:
-            return DecisionTreeNode(
-                id=node_data.get("id", "node"),
-                label=node_data.get("label", "Unknown"),
-                correct=node_data.get("correct"),
-                children=[parse_tree(c) for c in node_data.get("children", [])]
-            )
-        
+            return DecisionTreeNode(id=node_data.get("id", "node"),
+                                    label=node_data.get("label", "Unknown"),
+                                    correct=node_data.get("correct"),
+                                    children=[
+                                        parse_tree(c)
+                                        for c in node_data.get("children", [])
+                                    ])
+
         decision_tree = parse_tree(feedback_data["decision_tree"])
-        
+
         clues = [
-            MissedClue(
-                id=c["id"],
-                text=c["text"],
-                importance=c["importance"],
-                asked=c["asked"]
-            )
-            for c in feedback_data["clues"]
+            MissedClue(id=c["id"],
+                       text=c["text"],
+                       importance=c["importance"],
+                       asked=c["asked"]) for c in feedback_data["clues"]
         ]
-        
+
         insight = AIInsight(
             summary=feedback_data["insight"]["summary"],
             strengths=feedback_data["insight"]["strengths"],
             improvements=feedback_data["insight"]["improvements"],
-            tip=feedback_data["insight"]["tip"]
-        )
-        
+            tip=feedback_data["insight"]["tip"])
+
         return FeedbackGenerationResponse(
             score=feedback_data["score"],
             breakdown=breakdown,
@@ -595,49 +585,69 @@ async def generate_feedback(request: FeedbackGenerationRequest) -> FeedbackGener
             insight=insight,
             user_diagnosis=feedback_data["user_diagnosis"],
             correct_diagnosis=feedback_data["correct_diagnosis"],
-            result=feedback_data["result"]
-        )
-        
+            result=feedback_data["result"])
+
     except (KeyError, TypeError) as e:
         return create_fallback_feedback(request)
 
 
-def create_fallback_feedback(request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
+def create_fallback_feedback(
+        request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
     """Create fallback feedback if AI parsing fails"""
-    
+
     score_map = {"correct": 85, "partial": 55, "wrong": 25}
     base_score = score_map.get(request.diagnosis_result, 50)
-    
+
     return FeedbackGenerationResponse(
         score=base_score,
         breakdown=ScoreBreakdown(
-            correct_diagnosis=40 if request.diagnosis_result == "correct" else (20 if request.diagnosis_result == "partial" else 5),
+            correct_diagnosis=40 if request.diagnosis_result == "correct" else
+            (20 if request.diagnosis_result == "partial" else 5),
             key_questions=15,
             right_tests=15,
             time_efficiency=7,
-            ruled_out_differentials=8
-        ),
+            ruled_out_differentials=8),
         decision_tree=DecisionTreeNode(
             id="root",
             label="Clinical Interview",
             correct=None,
             children=[
-                DecisionTreeNode(id="q1", label="Chief Complaint", correct=True, children=[]),
-                DecisionTreeNode(id="q2", label="History Taking", correct=True, children=[]),
-                DecisionTreeNode(id="q3", label="Diagnosis", correct=request.diagnosis_result == "correct", children=[])
-            ]
-        ),
+                DecisionTreeNode(id="q1",
+                                 label="Chief Complaint",
+                                 correct=True,
+                                 children=[]),
+                DecisionTreeNode(id="q2",
+                                 label="History Taking",
+                                 correct=True,
+                                 children=[]),
+                DecisionTreeNode(id="q3",
+                                 label="Diagnosis",
+                                 correct=request.diagnosis_result == "correct",
+                                 children=[])
+            ]),
         clues=[
-            MissedClue(id="c1", text="Chief complaint explored", importance="critical", asked=True),
-            MissedClue(id="c2", text="Duration of symptoms", importance="helpful", asked=True),
+            MissedClue(id="c1",
+                       text="Chief complaint explored",
+                       importance="critical",
+                       asked=True),
+            MissedClue(id="c2",
+                       text="Duration of symptoms",
+                       importance="helpful",
+                       asked=True),
         ],
         insight=AIInsight(
-            summary=f"You submitted a {'correct' if request.diagnosis_result == 'correct' else 'partially correct' if request.diagnosis_result == 'partial' else 'incorrect'} diagnosis. Review the case details to understand the key findings.",
-            strengths=["Engaged with the patient", "Asked about chief complaint"],
-            improvements=["Consider a more systematic approach", "Explore all symptom domains"],
-            tip="Use a structured history-taking framework for consistent results."
+            summary=
+            f"You submitted a {'correct' if request.diagnosis_result == 'correct' else 'partially correct' if request.diagnosis_result == 'partial' else 'incorrect'} diagnosis. Review the case details to understand the key findings.",
+            strengths=[
+                "Engaged with the patient", "Asked about chief complaint"
+            ],
+            improvements=[
+                "Consider a more systematic approach",
+                "Explore all symptom domains"
+            ],
+            tip=
+            "Use a structured history-taking framework for consistent results."
         ),
         user_diagnosis=request.student_diagnosis,
         correct_diagnosis=request.case.expected_diagnosis,
-        result=request.diagnosis_result
-    )
+        result=request.diagnosis_result)
