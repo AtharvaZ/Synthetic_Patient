@@ -38,6 +38,14 @@ export const api = {
         404: errorSchemas.notFound,
       },
     },
+    similar: {
+      method: 'GET' as const,
+      path: '/api/cases/:id/similar',
+      responses: {
+        200: z.array(z.custom<typeof cases.$inferSelect>()),
+        404: errorSchemas.notFound,
+      },
+    },
   },
   chats: {
     create: {

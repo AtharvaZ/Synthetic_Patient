@@ -20,7 +20,7 @@ import DecisionTree, {
 import MissedClues from "@/components/feedback/MissedClues";
 import SimilarCases from "@/components/feedback/SimilarCases";
 import AIInsight from "@/components/feedback/AIInsight";
-import { useCase, useCases, useCompletedCases } from "@/hooks/use-cases";
+import { useCase, useCases, useCompletedCases, useSimilarCases } from "@/hooks/use-cases";
 import { useEffect, useState } from "react";
 
 interface FeedbackData {
@@ -60,6 +60,7 @@ export default function Feedback() {
   const [feedbackData, setFeedbackData] = useState<FeedbackData | null>(null);
   const { data: caseData } = useCase(caseId);
   const { data: allCases } = useCases();
+  const { data: similarCasesData } = useSimilarCases(caseId);
   const { data: completedCases } = useCompletedCases();
 
   const completedSet = new Set(completedCases || []);
@@ -88,18 +89,7 @@ export default function Feedback() {
     }
   }, [caseId]);
 
-  const similarCases =
-    allCases
-      ?.filter(
-        (c) => c.specialty === caseData?.specialty && c.id !== caseData?.id
-      )
-      .slice(0, 3)
-      .map((c) => ({
-        id: c.id,
-        title: c.title,
-        specialty: c.specialty,
-        difficulty: c.difficulty,
-      })) || [];
+  const similarCases = similarCasesData || [];
 
   const handleRetry = () => {
     navigate(`/chat/${caseId}`);
@@ -326,7 +316,7 @@ export default function Feedback() {
             </motion.div>
 
             {/* Similar Cases */}
-            {similarCases.length > 0 && allCases && allCases.length > 0 && (
+            {similarCases.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -334,10 +324,10 @@ export default function Feedback() {
                 className={`rounded-2xl p-6 ${isDarkMode ? "bg-white/[0.02] border border-white/[0.06]" : "bg-white border border-slate-200 shadow-sm"}`}
               >
                 <h3 className={`text-base font-semibold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                  Similar Cases
+                  Similar Cases (by symptoms)
                 </h3>
                 <SimilarCases 
-                  cases={allCases.filter(c => similarCases.some(sc => sc.id === c.id))} 
+                  cases={similarCases} 
                   completedCaseIds={Array.from(completedSet)}
                   onSelectCase={(id) => navigate(`/chat/${id}`)}
                 />

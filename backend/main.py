@@ -178,6 +178,68 @@ def cases_by_difficulty(difficulty: str, db: Session = Depends(get_db)):
     ) for c in cases]
 
 
+@app.get("/api/cases/{case_id}/similar", response_model=list[schemas.FrontendCaseResponse])
+def get_similar_cases(case_id: int, limit: int = 5, db: Session = Depends(get_db)):
+    """Get similar cases based on shared symptoms (at least 2 overlapping) or same specialty"""
+    from models import CaseSymptom, Symptom
+    from sqlalchemy import func
+    
+    target_case = db.query(Case).filter(Case.id == case_id).first()
+    if not target_case:
+        raise HTTPException(status_code=404, detail="Case not found")
+    
+    target_symptom_ids = db.query(CaseSymptom.symptom_id).filter(
+        CaseSymptom.case_id == case_id,
+        CaseSymptom.symptom_type == 'presenting'
+    ).subquery()
+    
+    similar_cases = db.query(
+        Case,
+        func.count(CaseSymptom.symptom_id).label('shared_count')
+    ).join(
+        CaseSymptom, Case.id == CaseSymptom.case_id
+    ).filter(
+        Case.id != case_id,
+        CaseSymptom.symptom_type == 'presenting',
+        CaseSymptom.symptom_id.in_(target_symptom_ids)
+    ).group_by(
+        Case.id
+    ).having(
+        func.count(CaseSymptom.symptom_id) >= 2
+    ).order_by(
+        func.count(CaseSymptom.symptom_id).desc()
+    ).limit(limit).all()
+    
+    if len(similar_cases) < limit:
+        target_specialty = get_specialty(target_case.description or "", target_case.diagnosis)
+        existing_ids = [c.id for c, _ in similar_cases]
+        specialty_cases = db.query(Case).filter(
+            Case.id != case_id,
+            Case.id.notin_(existing_ids) if existing_ids else True
+        ).all()
+        specialty_matches = [
+            (c, 0) for c in specialty_cases 
+            if get_specialty(c.description or "", c.diagnosis) == target_specialty
+        ][:limit - len(similar_cases)]
+        similar_cases.extend(specialty_matches)
+    
+    if not similar_cases:
+        fallback_cases = db.query(Case).filter(Case.id != case_id).limit(limit).all()
+        similar_cases = [(c, 0) for c in fallback_cases]
+    
+    return [schemas.FrontendCaseResponse(
+        id=c.id,
+        title=c.chief_complaint or c.diagnosis,
+        description=c.description or "",
+        specialty=get_specialty(c.description or "", c.diagnosis),
+        difficulty=difficulty_to_string(c.difficulty or 2),
+        expected_diagnosis=c.diagnosis,
+        acceptable_diagnoses="",
+        image_url=None,
+        status="available"
+    ) for c, _ in similar_cases[:limit]]
+
+
 @app.post("/api/patient-message")
 async def patient_message(data: PatientMessageRequest, db: Session = Depends(get_db)):
     """Stateless patient simulation - receives full conversation history"""

@@ -67,3 +67,16 @@ export function useCompletedCases() {
     staleTime: 0,
   });
 }
+
+export function useSimilarCases(caseId: number) {
+  return useQuery({
+    queryKey: [api.cases.similar.path, caseId],
+    queryFn: async () => {
+      const url = buildUrl(api.cases.similar.path, { id: caseId });
+      const res = await fetch(url, { credentials: "include" });
+      if (!res.ok) return [];
+      return api.cases.similar.responses[200].parse(await res.json());
+    },
+    enabled: !isNaN(caseId) && caseId > 0,
+  });
+}
