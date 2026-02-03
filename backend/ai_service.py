@@ -792,16 +792,33 @@ def analyze_conversation_for_clues(request: FeedbackGenerationRequest) -> tuple[
     if "medications" in asked_about or "history" in asked_about:
         strengths.append("Explored patient's medical history")
     
-    # Ensure we have enough strengths and improvements
-    if len(strengths) < 2:
-        strengths.append("Engaged with the patient throughout the interview")
-    if len(strengths) < 2:
-        strengths.append("Worked through the case systematically")
+    # Add conversation-specific strengths based on what was actually asked
+    question_count = len([m for m in request.conversation if m.sender == "user"])
     
+    if len(strengths) < 2:
+        if question_count >= 3:
+            strengths.append(f"Asked {question_count} questions to explore the patient's condition")
+        else:
+            strengths.append("Initiated the diagnostic process with the patient")
+    if len(strengths) < 2:
+        if "how long" in conversation_text or "when" in conversation_text:
+            strengths.append("Explored the timeline of symptoms")
+        elif presenting:
+            strengths.append(f"Addressed the patient's main concern about {presenting[0].lower()}")
+    
+    # Add specific improvements based on what was missed from the case
     if len(improvements) < 2:
-        improvements.append(f"For {case.specialty} cases, consider a more systematic review of systems")
+        missed_symptoms = [s for i, s in enumerate(presenting[:3]) 
+                         if not any(word in conversation_text for word in s.lower().split()[:2])]
+        if missed_symptoms:
+            improvements.append(f"Could have asked about {missed_symptoms[0].lower()} - an important symptom in this case")
+        else:
+            improvements.append(f"Consider exploring what makes the symptoms better or worse")
     if len(improvements) < 2:
-        improvements.append("Try asking about aggravating and relieving factors")
+        if exam_findings and "examine" not in conversation_text and "check" not in conversation_text:
+            improvements.append(f"Physical examination would help - key findings include {exam_findings[0].lower()}")
+        elif absent and len(absent) > 0:
+            improvements.append(f"Asking about {absent[0].lower()} would help rule out other conditions")
     
     return clues[:6], strengths[:3], improvements[:3]
 
