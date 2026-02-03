@@ -181,6 +181,8 @@ Good Response: "I don't know... maybe a 5 or 6? It's definitely bothering me a l
 ---
 
 Respond as the patient. Stay in character. Be realistic and appropriately vague.
+
+IMPORTANT: Do NOT include any meta-commentary, stage directions in parentheses, or notes about how you're responding. Just give the patient's direct speech. No prefixes like "(Responding as...)" or "(Speaking with concern)".
 """
 
 # ============================================
