@@ -171,14 +171,14 @@ export default function Home() {
                   stiffness: 300,
                   damping: 15
                 }}
-                viewport={{ once: true }}
+                viewport={{ once: false, amount: 0.5 }}
               >
                 <motion.div 
                   className="relative mb-4"
                   initial={{ y: 0 }}
                   whileInView={{ y: [0, -15, 0] }}
                   transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false, amount: 0.5 }}
                 >
                   <div className="absolute -inset-3 bg-[#137fec]/20 rounded-full blur-xl" />
                   <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-[#137fec] to-blue-600 flex items-center justify-center shadow-lg shadow-[#137fec]/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
@@ -204,14 +204,14 @@ export default function Home() {
                   stiffness: 300,
                   damping: 15
                 }}
-                viewport={{ once: true }}
+                viewport={{ once: false, amount: 0.5 }}
               >
                 <motion.div 
                   className="relative mb-4"
                   initial={{ y: 0 }}
                   whileInView={{ y: [0, -15, 0] }}
                   transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false, amount: 0.5 }}
                 >
                   <div className="absolute -inset-3 bg-purple-500/20 rounded-full blur-xl" />
                   <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
@@ -237,14 +237,14 @@ export default function Home() {
                   stiffness: 300,
                   damping: 15
                 }}
-                viewport={{ once: true }}
+                viewport={{ once: false, amount: 0.5 }}
               >
                 <motion.div 
                   className="relative mb-4"
                   initial={{ y: 0 }}
                   whileInView={{ y: [0, -15, 0] }}
                   transition={{ delay: 1.3, duration: 0.6, ease: "easeOut" }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false, amount: 0.5 }}
                 >
                   <div className="absolute -inset-3 bg-pink-500/20 rounded-full blur-xl" />
                   <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
@@ -270,14 +270,14 @@ export default function Home() {
                   stiffness: 300,
                   damping: 15
                 }}
-                viewport={{ once: true }}
+                viewport={{ once: false, amount: 0.5 }}
               >
                 <motion.div 
                   className="relative mb-4"
                   initial={{ y: 0 }}
                   whileInView={{ y: [0, -15, 0] }}
                   transition={{ delay: 1.8, duration: 0.6, ease: "easeOut" }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false, amount: 0.5 }}
                 >
                   <div className="absolute -inset-3 bg-green-500/20 rounded-full blur-xl" />
                   <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30 border-4 ${isDarkMode ? 'border-[#0a0a0c]' : 'border-white'}`}>
