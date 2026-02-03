@@ -1,5 +1,6 @@
 """
-FastAPI Medical Case Training API
+FastAPI Medical Case Training API - Stateless Version
+Database only stores cases. Chats are session-based (frontend manages state).
 """
 
 import os
@@ -12,11 +13,10 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from sqlalchemy.orm import Session
-from typing import Optional
-from datetime import datetime, timedelta
+from pydantic import BaseModel
+from typing import Optional, List
 
-from models import get_db, engine, Base, Case, User, Chat, Message, Completion
-import crud
+from models import get_db, engine, Base, Case
 import schemas
 from ai_schemas import (
     PatientSimulationRequest,
@@ -26,12 +26,12 @@ from ai_schemas import (
     FeedbackCaseContext,
     FeedbackConversationMessage,
 )
-from ai_service import generate_patient_response, generate_feedback
+from ai_service import generate_patient_response, generate_feedback, compare_diagnoses
 
 app = FastAPI(
     title="Medical Case Training API",
     description="API for medical student training with GP-level patient cases",
-    version="2.0.0"
+    version="3.0.0"
 )
 
 app.add_middleware(
@@ -41,6 +41,21 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+class MessageInput(BaseModel):
+    role: str
+    content: str
+
+class PatientMessageRequest(BaseModel):
+    case_id: int
+    conversation: List[MessageInput]
+    student_message: str
+
+class DiagnosisRequest(BaseModel):
+    case_id: int
+    conversation: List[MessageInput]
+    diagnosis: str
 
 
 def extract_symptoms_from_description(description: str) -> dict:
@@ -84,16 +99,6 @@ def infer_demographics(description: str) -> dict:
     return {"age": age, "gender": gender}
 
 
-def get_or_create_user(db: Session) -> User:
-    user = db.query(User).filter(User.username == "medstudent").first()
-    if not user:
-        user = User(username="medstudent", name="Dr. Candidate", specialty="General Medicine")
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-    return user
-
-
 def difficulty_to_string(d: int) -> str:
     return {1: "Beginner", 2: "Intermediate", 3: "Advanced"}.get(d, "Intermediate")
 
@@ -113,7 +118,7 @@ def get_specialty(desc: str, diag: str) -> str:
 
 @app.get("/")
 def root():
-    return {"message": "Medical Case Training API", "version": "2.0.0", "docs": "/docs"}
+    return {"message": "Medical Case Training API", "version": "3.0.0", "docs": "/docs"}
 
 
 @app.get("/api/health")
@@ -173,200 +178,52 @@ def cases_by_difficulty(difficulty: str, db: Session = Depends(get_db)):
     ) for c in cases]
 
 
-@app.post("/api/chats", response_model=schemas.ChatResponse, status_code=201)
-def create_chat(data: schemas.ChatCreate, db: Session = Depends(get_db)):
-    user = get_or_create_user(db)
+@app.post("/api/patient-message")
+async def patient_message(data: PatientMessageRequest, db: Session = Depends(get_db)):
+    """Stateless patient simulation - receives full conversation history"""
     case = db.query(Case).filter(Case.id == data.case_id).first()
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
     
-    chat = Chat(user_id=user.id, case_id=data.case_id)
-    db.add(chat)
-    db.commit()
-    db.refresh(chat)
+    history = [ConversationMessage(role=m.role, content=m.content) for m in data.conversation]
+    extracted = extract_symptoms_from_description(case.description or "")
+    demographics = infer_demographics(case.description or "")
     
-    greeting = Message(chat_id=chat.id, sender="ai", content="Hello doctor. I'm feeling not quite right today...")
-    db.add(greeting)
-    db.commit()
-    
-    return schemas.ChatResponse(id=chat.id, user_id=chat.user_id, case_id=chat.case_id, created_at=chat.created_at)
+    try:
+        request = PatientSimulationRequest(
+            case=PatientCaseContext(
+                case_id=f"case_{case.id}",
+                age=demographics["age"],
+                gender=demographics["gender"],
+                chief_complaint=case.chief_complaint,
+                history=case.history,
+                duration=case.duration,
+                severity=case.severity,
+                triggers=case.triggers,
+                diagnosis=case.diagnosis,
+                description=case.description,
+                presenting_symptoms=extracted["presenting"],
+                absent_symptoms=extracted["absent"],
+                exam_findings=extracted["exam_findings"]
+            ),
+            conversation_history=history,
+            student_message=data.student_message
+        )
+        response = await generate_patient_response(request)
+        return {"response": response.patient_response}
+    except Exception as e:
+        print(f"AI error: {e}")
+        return {"response": "I'm here, doctor. What would you like to know about how I'm feeling?"}
 
 
-@app.get("/api/chats/{chat_id}", response_model=schemas.ChatDetailResponse)
-def get_chat(chat_id: int, db: Session = Depends(get_db)):
-    chat = db.query(Chat).filter(Chat.id == chat_id).first()
-    if not chat:
-        raise HTTPException(status_code=404, detail="Chat not found")
-    
-    messages = db.query(Message).filter(Message.chat_id == chat_id).order_by(Message.created_at).all()
-    return schemas.ChatDetailResponse(
-        id=chat.id,
-        user_id=chat.user_id,
-        case_id=chat.case_id,
-        created_at=chat.created_at,
-        messages=[schemas.MessageResponse(
-            id=m.id, chat_id=m.chat_id, sender=m.sender, content=m.content, created_at=m.created_at
-        ) for m in messages]
-    )
-
-
-@app.post("/api/chats/{chat_id}/messages", response_model=schemas.MessageResponse, status_code=201)
-async def send_message(chat_id: int, data: schemas.MessageCreate, db: Session = Depends(get_db)):
-    chat = db.query(Chat).filter(Chat.id == chat_id).first()
-    if not chat:
-        raise HTTPException(status_code=404, detail="Chat not found")
-    
-    case = db.query(Case).filter(Case.id == chat.case_id).first()
-    if not case:
-        raise HTTPException(status_code=404, detail="Case not found")
-    
-    user_msg = Message(chat_id=chat_id, sender=data.sender, content=data.content)
-    db.add(user_msg)
-    db.commit()
-    db.refresh(user_msg)
-    
-    if data.sender == "user":
-        messages = db.query(Message).filter(Message.chat_id == chat_id).order_by(Message.created_at).all()
-        history = [ConversationMessage(role="user" if m.sender == "user" else "assistant", content=m.content) for m in messages[:-1]]
-        
-        extracted = extract_symptoms_from_description(case.description or "")
-        demographics = infer_demographics(case.description or "")
-        
-        try:
-            request = PatientSimulationRequest(
-                case=PatientCaseContext(
-                    case_id=f"case_{case.id}",
-                    age=demographics["age"],
-                    gender=demographics["gender"],
-                    chief_complaint=case.chief_complaint,
-                    history=case.history,
-                    duration=case.duration,
-                    severity=case.severity,
-                    triggers=case.triggers,
-                    diagnosis=case.diagnosis,
-                    description=case.description,
-                    presenting_symptoms=extracted["presenting"],
-                    absent_symptoms=extracted["absent"],
-                    exam_findings=extracted["exam_findings"]
-                ),
-                conversation_history=history,
-                student_message=data.content
-            )
-            response = await generate_patient_response(request)
-            ai_content = response.patient_response
-        except Exception as e:
-            print(f"AI error: {e}")
-            ai_content = "I'm here, doctor. What would you like to know about how I'm feeling?"
-        
-        ai_msg = Message(chat_id=chat_id, sender="ai", content=ai_content)
-        db.add(ai_msg)
-        db.commit()
-    
-    return schemas.MessageResponse(
-        id=user_msg.id, chat_id=user_msg.chat_id, sender=user_msg.sender,
-        content=user_msg.content, created_at=user_msg.created_at
-    )
-
-
-@app.delete("/api/chats/{chat_id}/messages/last-user")
-def delete_last_user_message(chat_id: int, db: Session = Depends(get_db)):
-    msgs = db.query(Message).filter(Message.chat_id == chat_id).order_by(Message.created_at.desc()).all()
-    deleted = 0
-    for m in msgs:
-        if m.sender == "user" and deleted == 0:
-            db.delete(m)
-            deleted += 1
-        elif m.sender == "ai" and deleted == 1:
-            db.delete(m)
-            break
-    db.commit()
-    return {"success": True}
-
-
-@app.post("/api/completions", response_model=schemas.CompletionResultResponse, status_code=201)
-def submit_diagnosis(data: schemas.CompletionCreate, db: Session = Depends(get_db)):
-    user = get_or_create_user(db)
+@app.post("/api/submit-diagnosis")
+async def submit_diagnosis(data: DiagnosisRequest, db: Session = Depends(get_db)):
+    """Submit diagnosis and get feedback - stateless, receives full conversation"""
     case = db.query(Case).filter(Case.id == data.case_id).first()
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
     
-    from ai_service import compare_diagnoses
     result = compare_diagnoses(data.diagnosis, case.diagnosis)
-    
-    completion = Completion(
-        user_id=user.id, case_id=data.case_id, chat_id=data.chat_id,
-        diagnosis=data.diagnosis, result=result
-    )
-    db.add(completion)
-    db.commit()
-    db.refresh(completion)
-    
-    return schemas.CompletionResultResponse(
-        completion=schemas.CompletionResponse(
-            id=completion.id, user_id=completion.user_id, case_id=completion.case_id,
-            chat_id=completion.chat_id, diagnosis=completion.diagnosis,
-            result=completion.result, created_at=completion.created_at
-        ),
-        result=result
-    )
-
-
-@app.delete("/api/completions/retry/{chat_id}")
-def retry_diagnosis(chat_id: int, db: Session = Depends(get_db)):
-    completion = db.query(Completion).filter(Completion.chat_id == chat_id).order_by(Completion.created_at.desc()).first()
-    if completion:
-        db.delete(completion)
-        db.commit()
-    return {"success": True}
-
-
-@app.get("/api/user/stats", response_model=schemas.UserStatsResponse)
-def user_stats(db: Session = Depends(get_db)):
-    user = get_or_create_user(db)
-    completions = db.query(Completion).filter(
-        Completion.user_id == user.id, Completion.result.in_(["correct", "partial"])
-    ).all()
-    
-    completed_ids = list(set([c.case_id for c in completions]))
-    cases_solved = len(completed_ids)
-    accuracy = sum([100 if c.result == "correct" else 50 for c in completions]) / len(completions) if completions else 0
-    
-    streak = 0
-    check_date = datetime.now().date()
-    while True:
-        if any(c.created_at and c.created_at.date() == check_date for c in completions):
-            streak += 1
-            check_date -= timedelta(days=1)
-        else:
-            break
-    
-    return schemas.UserStatsResponse(streak=streak, cases_solved=cases_solved, accuracy=accuracy, completed_case_ids=completed_ids)
-
-
-@app.get("/api/user/completed-cases")
-def completed_cases(db: Session = Depends(get_db)):
-    user = get_or_create_user(db)
-    completions = db.query(Completion).filter(
-        Completion.user_id == user.id, Completion.result.in_(["correct", "partial"])
-    ).all()
-    return list(set([c.case_id for c in completions]))
-
-
-@app.get("/api/feedback/{chat_id}")
-async def get_feedback(chat_id: int, db: Session = Depends(get_db)):
-    chat = db.query(Chat).filter(Chat.id == chat_id).first()
-    if not chat:
-        raise HTTPException(status_code=404, detail="Chat not found")
-    
-    case = db.query(Case).filter(Case.id == chat.case_id).first()
-    if not case:
-        raise HTTPException(status_code=404, detail="Case not found")
-    
-    completion = db.query(Completion).filter(Completion.chat_id == chat_id).order_by(Completion.created_at.desc()).first()
-    if not completion:
-        raise HTTPException(status_code=400, detail="Case not completed")
-    
-    messages = db.query(Message).filter(Message.chat_id == chat_id).order_by(Message.created_at).all()
     extracted = extract_symptoms_from_description(case.description or "")
     
     try:
@@ -383,38 +240,38 @@ async def get_feedback(chat_id: int, db: Session = Depends(get_db)):
                 absent_symptoms=extracted["absent"],
                 exam_findings=extracted["exam_findings"]
             ),
-            conversation=[FeedbackConversationMessage(sender=m.sender, content=m.content, timestamp=m.created_at) for m in messages],
-            student_diagnosis=completion.diagnosis,
-            diagnosis_result=completion.result,
+            conversation=[FeedbackConversationMessage(sender=m.role, content=m.content, timestamp=None) for m in data.conversation],
+            student_diagnosis=data.diagnosis,
+            diagnosis_result=result,
             time_spent_seconds=None
         )
         fb = await generate_feedback(request)
         return {
-            "score": fb.score,
-            "breakdown": {
-                "correctDiagnosis": fb.breakdown.correct_diagnosis,
-                "keyQuestions": fb.breakdown.key_questions,
-                "rightTests": fb.breakdown.right_tests,
-                "timeEfficiency": fb.breakdown.time_efficiency,
-                "ruledOutDifferentials": fb.breakdown.ruled_out_differentials
-            },
-            "decisionTree": fb.decision_tree.model_dump() if hasattr(fb.decision_tree, 'model_dump') else fb.decision_tree,
-            "clues": [c.model_dump() if hasattr(c, 'model_dump') else c for c in fb.clues],
-            "insight": fb.insight.model_dump() if hasattr(fb.insight, 'model_dump') else fb.insight,
-            "userDiagnosis": fb.user_diagnosis,
-            "correctDiagnosis": fb.correct_diagnosis,
-            "result": fb.result
+            "result": result,
+            "correctDiagnosis": case.diagnosis,
+            "feedback": {
+                "score": fb.score,
+                "breakdown": {
+                    "correctDiagnosis": fb.breakdown.correct_diagnosis,
+                    "keyQuestions": fb.breakdown.key_questions,
+                    "rightTests": fb.breakdown.right_tests,
+                    "timeEfficiency": fb.breakdown.time_efficiency,
+                    "ruledOutDifferentials": fb.breakdown.ruled_out_differentials
+                },
+                "decisionTree": fb.decision_tree.model_dump() if hasattr(fb.decision_tree, 'model_dump') else fb.decision_tree,
+                "clues": [c.model_dump() if hasattr(c, 'model_dump') else c for c in fb.clues],
+                "insight": fb.insight.model_dump() if hasattr(fb.insight, 'model_dump') else fb.insight,
+            }
         }
     except Exception as e:
         print(f"AI feedback error: {e}")
-        return generate_fallback_feedback(case, messages, completion)
+        return generate_fallback_response(case, data.conversation, data.diagnosis, result)
 
 
-def generate_fallback_feedback(case, messages, completion):
-    user_msgs = [m for m in messages if m.sender == "user"]
-    n = len(user_msgs)
-    is_correct = completion.result == "correct"
-    is_partial = completion.result == "partial"
+def generate_fallback_response(case, conversation, user_diagnosis, result):
+    n = len([m for m in conversation if m.role == "user"])
+    is_correct = result == "correct"
+    is_partial = result == "partial"
     
     diag_pts = 40 if is_correct else (20 if is_partial else 0)
     q_pts = min(n * 4, 20)
@@ -454,23 +311,24 @@ def generate_fallback_feedback(case, messages, completion):
         ]
     
     return {
-        "score": diag_pts + q_pts + test_pts + time_pts + diff_pts,
-        "breakdown": {"correctDiagnosis": diag_pts, "keyQuestions": q_pts, "rightTests": test_pts, "timeEfficiency": time_pts, "ruledOutDifferentials": diff_pts},
-        "decisionTree": {"id": "root", "label": case.chief_complaint or case.diagnosis, "correct": None, "children": [{"id": "diag", "label": case.diagnosis.upper(), "correct": is_correct or is_partial, "children": []}]},
-        "clues": [
-            {"id": "1", "text": "Chief complaint details", "importance": "critical", "asked": n >= 1},
-            {"id": "2", "text": "Symptom timeline", "importance": "helpful", "asked": n >= 2},
-            {"id": "3", "text": "Medical history", "importance": "minor", "asked": n >= 3}
-        ],
-        "insight": {
-            "summary": f"{'Great job!' if is_correct else ('Good effort.' if is_partial else 'Keep practicing.')} The diagnosis was {case.diagnosis}.",
-            "strengths": strengths,
-            "improvements": improvements,
-            "tip": f"For {case.diagnosis}, focus on asking about the key presenting symptoms and their characteristics."
-        },
-        "userDiagnosis": completion.diagnosis,
+        "result": result,
         "correctDiagnosis": case.diagnosis,
-        "result": completion.result
+        "feedback": {
+            "score": diag_pts + q_pts + test_pts + time_pts + diff_pts,
+            "breakdown": {"correctDiagnosis": diag_pts, "keyQuestions": q_pts, "rightTests": test_pts, "timeEfficiency": time_pts, "ruledOutDifferentials": diff_pts},
+            "decisionTree": {"id": "root", "label": case.chief_complaint or case.diagnosis, "correct": None, "children": [{"id": "diag", "label": case.diagnosis.upper(), "correct": is_correct or is_partial, "children": []}]},
+            "clues": [
+                {"id": "1", "text": "Chief complaint details", "importance": "critical", "asked": n >= 1},
+                {"id": "2", "text": "Symptom timeline", "importance": "helpful", "asked": n >= 2},
+                {"id": "3", "text": "Medical history", "importance": "minor", "asked": n >= 3}
+            ],
+            "insight": {
+                "summary": f"{'Great job!' if is_correct else ('Good effort.' if is_partial else 'Keep practicing.')} The diagnosis was {case.diagnosis}.",
+                "strengths": strengths,
+                "improvements": improvements,
+                "tip": f"For {case.diagnosis}, focus on asking about the key presenting symptoms and their characteristics."
+            }
+        }
     }
 
 

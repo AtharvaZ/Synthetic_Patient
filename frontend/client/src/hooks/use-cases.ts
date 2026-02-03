@@ -1,5 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api, buildUrl } from "@shared/routes";
+import { getUserStats, getCompletedCaseIds, getStreak } from "@/lib/localStorage";
 
 export function useCases() {
   return useQuery({
@@ -35,68 +36,34 @@ export function useCase(id: number) {
       if (!res.ok) throw new Error("Failed to fetch case");
       return api.cases.get.responses[200].parse(await res.json());
     },
-    enabled: !isNaN(id),
+    enabled: !isNaN(id) && id > 0,
   });
 }
 
 export function useUserStats() {
   return useQuery({
-    queryKey: [api.completions.userStats.path],
-    queryFn: async () => {
-      const res = await fetch(api.completions.userStats.path, { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch user stats");
-      return api.completions.userStats.responses[200].parse(await res.json());
+    queryKey: ["localStorage", "userStats"],
+    queryFn: () => {
+      const stats = getUserStats();
+      const streak = getStreak();
+      const completedIds = getCompletedCaseIds();
+      return {
+        streak: streak.current,
+        casesSolved: completedIds.length,
+        accuracy: stats.totalCompleted > 0 
+          ? Math.round((stats.correct / stats.totalCompleted) * 100) 
+          : 0,
+        completedCaseIds: completedIds,
+      };
     },
+    staleTime: 0,
   });
 }
 
 export function useCompletedCases() {
   return useQuery({
-    queryKey: [api.completions.completedCases.path],
-    queryFn: async () => {
-      const res = await fetch(api.completions.completedCases.path, { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch completed cases");
-      return api.completions.completedCases.responses[200].parse(await res.json());
-    },
-  });
-}
-
-export function useCompleteCase() {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: async (data: { caseId: number; chatId: number; diagnosis: string }) => {
-      const res = await fetch(api.completions.create.path, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error("Failed to complete case");
-      return res.json() as Promise<{ completion: unknown; result: "correct" | "partial" | "wrong" }>;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [api.completions.userStats.path] });
-      queryClient.invalidateQueries({ queryKey: [api.completions.completedCases.path] });
-    },
-  });
-}
-
-export function useRetryDiagnosis() {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: async (chatId: number) => {
-      const res = await fetch(`/api/completions/retry/${chatId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to retry");
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [api.completions.userStats.path] });
-      queryClient.invalidateQueries({ queryKey: [api.completions.completedCases.path] });
-    },
+    queryKey: ["localStorage", "completedCases"],
+    queryFn: () => getCompletedCaseIds(),
+    staleTime: 0,
   });
 }

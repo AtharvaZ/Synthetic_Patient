@@ -48,14 +48,7 @@ export default function Dashboard() {
     }
     
     if (selectedCase) {
-      const res = await fetch("/api/chats", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ caseId: selectedCase.id }),
-      });
-      const chat = await res.json();
-      navigate(`/chat/${chat.id}`);
+      navigate(`/chat/${selectedCase.id}`);
     }
   };
 
