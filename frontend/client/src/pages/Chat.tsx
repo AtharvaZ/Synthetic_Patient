@@ -107,27 +107,22 @@ export default function Chat() {
   const handleNextPatient = async () => {
     if (!caseData || !allCases) return;
 
-    const sameDifficultyUnsolved = allCases.filter(
-      (c) =>
-        c.difficulty === caseData.difficulty &&
-        c.id !== caseData.id &&
-        !completedSet.has(c.id),
+    // Get all unsolved cases (excluding current case)
+    const unsolvedCases = allCases.filter(
+      (c) => c.id !== caseData.id && !completedSet.has(c.id),
     );
 
-    let nextCase = sameDifficultyUnsolved[0];
-
-    if (!nextCase) {
-      const difficulties = ["Beginner", "Intermediate", "Advanced"];
-      const currentIndex = difficulties.indexOf(caseData.difficulty);
-
-      for (let i = currentIndex + 1; i < difficulties.length; i++) {
-        const nextDifficultyUnsolved = allCases.filter(
-          (c) => c.difficulty === difficulties[i] && !completedSet.has(c.id),
-        );
-        if (nextDifficultyUnsolved.length > 0) {
-          nextCase = nextDifficultyUnsolved[0];
-          break;
-        }
+    // Pick a random case from unsolved, or any random case if all solved
+    let nextCase;
+    if (unsolvedCases.length > 0) {
+      const randomIndex = Math.floor(Math.random() * unsolvedCases.length);
+      nextCase = unsolvedCases[randomIndex];
+    } else {
+      // All cases solved - pick random from all cases except current
+      const otherCases = allCases.filter((c) => c.id !== caseData.id);
+      if (otherCases.length > 0) {
+        const randomIndex = Math.floor(Math.random() * otherCases.length);
+        nextCase = otherCases[randomIndex];
       }
     }
 

@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useCases, useUserStats, useCompletedCases } from "@/hooks/use-cases";
 import { 
   Flame, Trophy, Target, Stethoscope, ArrowRight, 
-  GraduationCap, BookOpen, ChevronRight, Home, Check, Sun, Moon
+  GraduationCap, BookOpen, ChevronRight, Home, Check, Sun, Moon, Shuffle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -27,15 +27,32 @@ export default function Dashboard() {
   const userStats = stats || { streak: 0, casesSolved: 0, accuracy: 0 };
 
   const handleStartCase = async (difficulty: string) => {
-    const casesByDiff = cases?.filter(c => c.difficulty === difficulty) || [];
-    const unsolvedCase = casesByDiff.find(c => !completedSet.has(c.id)) || casesByDiff[0];
+    let targetCases: typeof cases = [];
     
-    if (unsolvedCase) {
+    if (difficulty === "Random") {
+      // Get all unsolved cases first, or all cases if all are solved
+      const allCases = cases || [];
+      const unsolvedCases = allCases.filter(c => !completedSet.has(c.id));
+      targetCases = unsolvedCases.length > 0 ? unsolvedCases : allCases;
+    } else {
+      targetCases = cases?.filter(c => c.difficulty === difficulty) || [];
+    }
+    
+    // For Random, pick a random case; for specific difficulty, pick first unsolved or first
+    let selectedCase;
+    if (difficulty === "Random") {
+      const randomIndex = Math.floor(Math.random() * targetCases.length);
+      selectedCase = targetCases[randomIndex];
+    } else {
+      selectedCase = targetCases.find(c => !completedSet.has(c.id)) || targetCases[0];
+    }
+    
+    if (selectedCase) {
       const res = await fetch("/api/chats", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ caseId: unsolvedCase.id }),
+        body: JSON.stringify({ caseId: selectedCase.id }),
       });
       const chat = await res.json();
       navigate(`/chat/${chat.id}`);
@@ -127,10 +144,14 @@ export default function Dashboard() {
             <div className="w-8 h-8 border-2 border-[#137fec] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-4 gap-6">
             <div 
               onClick={() => handleStartCase("Beginner")}
-              className="group bg-[#161618] hover:bg-[#1a1a1d] rounded-2xl p-6 border border-[#283039] hover:border-green-500/30 transition-all cursor-pointer"
+              className={`group rounded-2xl p-6 border transition-all cursor-pointer ${
+                isDarkMode 
+                  ? "bg-[#161618] hover:bg-[#1a1a1d] border-[#283039] hover:border-green-500/30" 
+                  : "bg-white hover:bg-slate-50 border-slate-200 hover:border-green-500/50 shadow-sm"
+              }`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -139,29 +160,33 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <h3 className="font-bold text-lg">Beginner</h3>
-                    <p className="text-sm text-slate-400">{beginnerCases.length} cases</p>
+                    <p className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{beginnerCases.length} cases</p>
                   </div>
                 </div>
                 {beginnerCompleted === beginnerCases.length && beginnerCases.length > 0 ? (
                   <Check className="w-5 h-5 text-green-500" />
                 ) : (
-                  <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-green-500 transition-colors" />
+                  <ChevronRight className={`w-5 h-5 ${isDarkMode ? "text-slate-500" : "text-slate-400"} group-hover:text-green-500 transition-colors`} />
                 )}
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-2 flex-1 bg-[#283039] rounded-full overflow-hidden">
+                <div className={`h-2 flex-1 rounded-full overflow-hidden ${isDarkMode ? "bg-[#283039]" : "bg-slate-200"}`}>
                   <div 
                     className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-500" 
                     style={{ width: beginnerCases.length > 0 ? `${(beginnerCompleted / beginnerCases.length) * 100}%` : '0%' }}
                   />
                 </div>
-                <span className="text-xs text-slate-500">{beginnerCompleted}/{beginnerCases.length}</span>
+                <span className={`text-xs ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>{beginnerCompleted}/{beginnerCases.length}</span>
               </div>
             </div>
 
             <div 
               onClick={() => handleStartCase("Intermediate")}
-              className="group bg-[#161618] hover:bg-[#1a1a1d] rounded-2xl p-6 border border-[#283039] hover:border-yellow-500/30 transition-all cursor-pointer"
+              className={`group rounded-2xl p-6 border transition-all cursor-pointer ${
+                isDarkMode 
+                  ? "bg-[#161618] hover:bg-[#1a1a1d] border-[#283039] hover:border-yellow-500/30" 
+                  : "bg-white hover:bg-slate-50 border-slate-200 hover:border-yellow-500/50 shadow-sm"
+              }`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -170,29 +195,33 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <h3 className="font-bold text-lg">Intermediate</h3>
-                    <p className="text-sm text-slate-400">{intermediateCases.length} cases</p>
+                    <p className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{intermediateCases.length} cases</p>
                   </div>
                 </div>
                 {intermediateCompleted === intermediateCases.length && intermediateCases.length > 0 ? (
                   <Check className="w-5 h-5 text-yellow-500" />
                 ) : (
-                  <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-yellow-500 transition-colors" />
+                  <ChevronRight className={`w-5 h-5 ${isDarkMode ? "text-slate-500" : "text-slate-400"} group-hover:text-yellow-500 transition-colors`} />
                 )}
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-2 flex-1 bg-[#283039] rounded-full overflow-hidden">
+                <div className={`h-2 flex-1 rounded-full overflow-hidden ${isDarkMode ? "bg-[#283039]" : "bg-slate-200"}`}>
                   <div 
                     className="h-full bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full transition-all duration-500" 
                     style={{ width: intermediateCases.length > 0 ? `${(intermediateCompleted / intermediateCases.length) * 100}%` : '0%' }}
                   />
                 </div>
-                <span className="text-xs text-slate-500">{intermediateCompleted}/{intermediateCases.length}</span>
+                <span className={`text-xs ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>{intermediateCompleted}/{intermediateCases.length}</span>
               </div>
             </div>
 
             <div 
               onClick={() => handleStartCase("Advanced")}
-              className="group bg-[#161618] hover:bg-[#1a1a1d] rounded-2xl p-6 border border-[#283039] hover:border-red-500/30 transition-all cursor-pointer"
+              className={`group rounded-2xl p-6 border transition-all cursor-pointer ${
+                isDarkMode 
+                  ? "bg-[#161618] hover:bg-[#1a1a1d] border-[#283039] hover:border-red-500/30" 
+                  : "bg-white hover:bg-slate-50 border-slate-200 hover:border-red-500/50 shadow-sm"
+              }`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -201,39 +230,70 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <h3 className="font-bold text-lg">Advanced</h3>
-                    <p className="text-sm text-slate-400">{advancedCases.length} cases</p>
+                    <p className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{advancedCases.length} cases</p>
                   </div>
                 </div>
                 {advancedCompleted === advancedCases.length && advancedCases.length > 0 ? (
                   <Check className="w-5 h-5 text-red-500" />
                 ) : (
-                  <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-red-500 transition-colors" />
+                  <ChevronRight className={`w-5 h-5 ${isDarkMode ? "text-slate-500" : "text-slate-400"} group-hover:text-red-500 transition-colors`} />
                 )}
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-2 flex-1 bg-[#283039] rounded-full overflow-hidden">
+                <div className={`h-2 flex-1 rounded-full overflow-hidden ${isDarkMode ? "bg-[#283039]" : "bg-slate-200"}`}>
                   <div 
                     className="h-full bg-gradient-to-r from-red-500 to-pink-500 rounded-full transition-all duration-500" 
                     style={{ width: advancedCases.length > 0 ? `${(advancedCompleted / advancedCases.length) * 100}%` : '0%' }}
                   />
                 </div>
-                <span className="text-xs text-slate-500">{advancedCompleted}/{advancedCases.length}</span>
+                <span className={`text-xs ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>{advancedCompleted}/{advancedCases.length}</span>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => handleStartCase("Random")}
+              className={`group rounded-2xl p-6 border transition-all cursor-pointer ${
+                isDarkMode 
+                  ? "bg-[#161618] hover:bg-[#1a1a1d] border-[#283039] hover:border-purple-500/30" 
+                  : "bg-white hover:bg-slate-50 border-slate-200 hover:border-purple-500/50 shadow-sm"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                    <Shuffle className="w-5 h-5 text-purple-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">Random</h3>
+                    <p className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{cases?.length || 0} cases</p>
+                  </div>
+                </div>
+                <ChevronRight className={`w-5 h-5 ${isDarkMode ? "text-slate-500" : "text-slate-400"} group-hover:text-purple-500 transition-colors`} />
+              </div>
+              <div className="flex items-center gap-2">
+                <div className={`h-2 flex-1 rounded-full overflow-hidden ${isDarkMode ? "bg-[#283039]" : "bg-slate-200"}`}>
+                  <div 
+                    className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500" 
+                    style={{ width: cases?.length ? `${(completedCases?.length || 0) / cases.length * 100}%` : '0%' }}
+                  />
+                </div>
+                <span className={`text-xs ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>{completedCases?.length || 0}/{cases?.length || 0}</span>
               </div>
             </div>
           </div>
         )}
 
-        <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-[#137fec]/10 via-teal-500/10 to-cyan-500/10 border border-[#283039]">
+        <div className={`mt-12 p-6 rounded-2xl bg-gradient-to-r from-[#137fec]/10 via-teal-500/10 to-cyan-500/10 border ${isDarkMode ? "border-[#283039]" : "border-slate-200"}`}>
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#137fec] to-teal-500 flex items-center justify-center">
               <Stethoscope className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
               <h3 className="font-bold text-lg">Real-World Clinical Data</h3>
-              <p className="text-sm text-slate-400">All cases are based on validated medical scenarios used in clinical training</p>
+              <p className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>All cases are based on validated medical scenarios used in clinical training</p>
             </div>
             <Button 
-              onClick={() => handleStartCase("Beginner")}
+              onClick={() => handleStartCase("Random")}
               className="bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90"
             >
               Continue Learning
