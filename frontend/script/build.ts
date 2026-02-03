@@ -1,9 +1,8 @@
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
 import { rm, readFile } from "fs/promises";
+import path from "path";
 
-// server deps to bundle to reduce openat(2) syscalls
-// which helps cold start times
 const allowlist = [
   "@google/generative-ai",
   "axios",
@@ -32,14 +31,19 @@ const allowlist = [
   "zod-validation-error",
 ];
 
+const rootDir = path.resolve(import.meta.dirname, "..", "..");
+const frontendDir = path.resolve(import.meta.dirname, "..");
+
 async function buildAll() {
-  await rm("dist", { recursive: true, force: true });
+  await rm(path.join(rootDir, "dist"), { recursive: true, force: true });
 
   console.log("building client...");
-  await viteBuild();
+  await viteBuild({
+    configFile: path.join(frontendDir, "vite.config.ts"),
+  });
 
   console.log("building server...");
-  const pkg = JSON.parse(await readFile("package.json", "utf-8"));
+  const pkg = JSON.parse(await readFile(path.join(rootDir, "package.json"), "utf-8"));
   const allDeps = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.devDependencies || {}),
@@ -47,11 +51,11 @@ async function buildAll() {
   const externals = allDeps.filter((dep) => !allowlist.includes(dep));
 
   await esbuild({
-    entryPoints: ["frontend/server/index.ts"],
+    entryPoints: [path.join(frontendDir, "server/index.ts")],
     platform: "node",
     bundle: true,
     format: "cjs",
-    outfile: "dist/index.cjs",
+    outfile: path.join(rootDir, "dist/index.cjs"),
     define: {
       "process.env.NODE_ENV": '"production"',
     },

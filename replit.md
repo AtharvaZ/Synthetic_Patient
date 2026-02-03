@@ -29,26 +29,28 @@ The app will be available at `http://localhost:5000`
 
 ```
 ├── frontend/
-│   ├── client/          # React frontend (Vite)
+│   ├── client/              # React frontend (Vite)
 │   │   ├── src/
 │   │   │   ├── components/
 │   │   │   ├── pages/
 │   │   │   ├── hooks/
 │   │   │   └── lib/
 │   │   └── index.html
-│   ├── server/          # Express backend
+│   ├── server/              # Express backend
 │   │   ├── index.ts
 │   │   ├── routes.ts
 │   │   └── storage.ts
-│   ├── shared/          # Shared types/schema
+│   ├── shared/              # Shared types/schema
 │   │   ├── schema.ts
 │   │   └── routes.ts
-│   └── script/          # Build scripts
+│   ├── script/              # Build scripts
+│   ├── vite.config.ts       # Vite configuration
+│   ├── tsconfig.json        # TypeScript configuration
+│   ├── tailwind.config.ts   # Tailwind CSS configuration
+│   ├── drizzle.config.ts    # Drizzle ORM configuration
+│   ├── components.json      # Shadcn/ui configuration
+│   └── postcss.config.js    # PostCSS configuration
 ├── package.json
-├── vite.config.ts
-├── tsconfig.json
-├── tailwind.config.ts
-├── drizzle.config.ts
 └── .env.example
 ```
 
