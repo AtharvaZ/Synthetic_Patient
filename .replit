@@ -1,10 +1,10 @@
-modules = ["python-3.11", "postgresql-16"]
+modules = ["python-3.11"]
 [agent]
 expertMode = true
 
 [nix]
 channel = "stable-25_05"
-packages = ["arrow-cpp", "glibcLocales", "libxcrypt", "pkg-config"]
+packages = ["arrow-cpp", "glibcLocales", "pkg-config"]
 
 [workflows]
 runButton = "Project"
@@ -27,7 +27,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd backend && python main.py"
+args = "python app.py"
 waitForPort = 5000
 
 [[ports]]

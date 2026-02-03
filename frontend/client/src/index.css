@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* HSL Values for easy manipulation */
+  --background: 240 10% 4%;     /* #0a0a0c */
+  --foreground: 0 0% 100%;      /* #ffffff */
+  
+  --card: 240 4% 9%;            /* #161618 */
+  --card-foreground: 0 0% 100%;
+  
+  --popover: 240 4% 9%;
+  --popover-foreground: 0 0% 100%;
+  
+  --primary: 210 88% 50%;       /* #137fec */
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: 240 4% 16%;      /* #27272a */
+  --secondary-foreground: 0 0% 100%;
+  
+  --muted: 240 4% 16%;
+  --muted-foreground: 240 5% 65%;
+  
+  --accent: 210 88% 50%;
+  --accent-foreground: 0 0% 100%;
+  
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 240 4% 16%;
+  --input: 240 4% 16%;
+  --ring: 210 88% 50%;
+  
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500;
+  }
+  
+  .glass-card {
+    @apply bg-[#161618]/80 backdrop-blur-sm border border-white/5 shadow-xl;
+  }
+  
+  .glass-header {
+    @apply bg-[#0a0a0c]/80 backdrop-blur-md border-b border-white/5;
+  }
+  
+  .animate-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  
+  .animate-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
