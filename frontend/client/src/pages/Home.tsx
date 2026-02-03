@@ -164,7 +164,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <Link href="/quiz">
+            <Link href="/dashboard">
               <Button
                 size="lg"
                 className="h-14 px-10 text-lg rounded-2xl bg-gradient-to-r from-[#137fec] via-teal-500 to-cyan-500 hover:opacity-90 shadow-lg shadow-teal-500/25"
