@@ -306,7 +306,7 @@ export default function Dashboard() {
                         {card.key}
                       </h3>
                       <p
-                        className={`text-xs ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}
+                        className={`text-xs ${isDarkMode ? "text-slate-500" : "text-slate-600"}`}
                       >
                         {card.cases.length} cases
                       </p>
@@ -348,7 +348,7 @@ export default function Dashboard() {
                     />
                   </div>
                   <span
-                    className={`text-xs font-medium tabular-nums ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}
+                    className={`text-xs font-medium tabular-nums ${isDarkMode ? "text-slate-500" : "text-slate-600"}`}
                   >
                     {card.completed}/{card.cases.length}
                   </span>
