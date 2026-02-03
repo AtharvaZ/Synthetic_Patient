@@ -4,13 +4,23 @@ Only stores clinical cases - user progress is managed client-side via localStora
 """
 
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, CheckConstraint, DateTime, func
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
+
+# Load .env file from backend directory or project root
+env_path = Path(__file__).parent / '.env'
+if env_path.exists():
+    load_dotenv(env_path)
+else:
+    # Try project root
+    load_dotenv(Path(__file__).parent.parent / '.env')
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL environment variable is not set")
+    raise ValueError("DATABASE_URL environment variable is not set. Create a .env file with DATABASE_URL=postgresql://...")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
