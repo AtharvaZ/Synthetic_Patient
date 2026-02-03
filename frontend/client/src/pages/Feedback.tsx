@@ -8,8 +8,10 @@ import {
   LayoutDashboard,
   Sun,
   Moon,
+  CheckCircle,
+  AlertCircle,
+  XCircle,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import ScoreRing from "@/components/feedback/ScoreRing";
 import DecisionTree, {
@@ -19,7 +21,6 @@ import MissedClues from "@/components/feedback/MissedClues";
 import SimilarCases from "@/components/feedback/SimilarCases";
 import AIInsight from "@/components/feedback/AIInsight";
 import { useCase, useCases, useCompletedCases } from "@/hooks/use-cases";
-import { getCompletedCaseIds } from "@/lib/localStorage";
 import { useEffect, useState } from "react";
 
 interface FeedbackData {
@@ -132,183 +133,250 @@ export default function Feedback() {
 
   if (!feedbackData) {
     return (
-      <div
-        className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col items-center justify-center gap-4`}
-      >
+      <div className={`min-h-screen flex flex-col items-center justify-center gap-4 ${isDarkMode ? "bg-[hsl(220,15%,5%)] text-white" : "bg-[hsl(220,20%,97%)] text-slate-900"}`}>
+        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${isDarkMode ? "bg-white/[0.04]" : "bg-slate-100"}`}>
+          <Stethoscope className={`w-8 h-8 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`} />
+        </div>
         <h2 className="text-xl font-semibold">No feedback available</h2>
-        <p className="text-muted-foreground">Complete a case first to see feedback</p>
+        <p className={isDarkMode ? "text-slate-500" : "text-slate-500"}>Complete a case first to see feedback</p>
         <Link href="/dashboard">
-          <Button>Return to Dashboard</Button>
+          <button className="btn-primary mt-2">Return to Dashboard</button>
         </Link>
       </div>
     );
   }
 
+  const resultConfig = {
+    correct: { icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10", label: "Correct" },
+    partial: { icon: AlertCircle, color: "text-amber-400", bg: "bg-amber-500/10", label: "Partial" },
+    wrong: { icon: XCircle, color: "text-rose-400", bg: "bg-rose-500/10", label: "Incorrect" },
+  };
+
+  const result = feedbackData.result && resultConfig[feedbackData.result] 
+    ? resultConfig[feedbackData.result] 
+    : resultConfig.wrong;
+
   return (
-    <div
-      className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} transition-colors duration-300`}
-    >
-      <header
-        className={`sticky top-0 z-50 w-full border-b ${isDarkMode ? "border-[#283039] bg-[#0a0a0c]/80" : "border-slate-200 bg-white/80"} backdrop-blur-md`}
-      >
-        <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
-          <Link
-            href="/dashboard"
-            className={`inline-flex items-center text-sm ${isDarkMode ? "text-muted-foreground hover:text-white" : "text-slate-500 hover:text-slate-900"} transition-colors`}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? "bg-[hsl(220,15%,5%)]" : "bg-[hsl(220,20%,97%)]"}`}>
+      {/* Noise overlay */}
+      <div className="noise-overlay" />
+
+      {/* Background glow */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className={`absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-[hsl(168,84%,45%)]/6" : "bg-[hsl(168,84%,45%)]/4"}`} />
+        <div className={`absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-[hsl(280,75%,60%)]/5" : "bg-[hsl(280,75%,60%)]/3"}`} />
+      </div>
+
+      {/* Header */}
+      <header className={`sticky top-0 z-50 w-full backdrop-blur-xl transition-colors duration-300 ${isDarkMode ? "bg-[hsl(220,15%,5%)]/80 border-b border-white/[0.06]" : "bg-white/80 border-b border-slate-200/80"}`}>
+        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/dashboard">
+            <motion.span
+              className={`inline-flex items-center text-sm font-medium transition-colors cursor-pointer ${isDarkMode ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}
+              whileHover={{ x: -2 }}
+            >
+              <ArrowLeft className="w-4 h-4 mr-1.5" />
+              Back to Dashboard
+            </motion.span>
           </Link>
-          <div className="flex items-center gap-4">
-            <button
+          <div className="flex items-center gap-2">
+            <motion.button
               onClick={toggleTheme}
-              className={`p-2 rounded-lg transition-colors ${isDarkMode ? "hover:bg-white/10" : "hover:bg-slate-100"}`}
+              className={`p-2.5 rounded-xl transition-all duration-200 ${isDarkMode ? "hover:bg-white/[0.06]" : "hover:bg-slate-100"}`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               {isDarkMode ? (
-                <Sun className="w-5 h-5 text-yellow-400" />
+                <Sun className="w-5 h-5 text-amber-400" />
               ) : (
                 <Moon className="w-5 h-5 text-slate-600" />
               )}
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
-                <Stethoscope className="w-4 h-4" />
+            </motion.button>
+            <div className="flex items-center gap-2">
+              <div className="size-8 bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] rounded-xl flex items-center justify-center">
+                <Stethoscope className="w-4 h-4 text-[hsl(220,15%,5%)]" />
               </div>
-              <span className="font-semibold">ClinIQ</span>
+              <span className={`font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>ClinIQ</span>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-[1200px] mx-auto px-6 py-8">
+      <main className="max-w-5xl mx-auto px-6 py-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
+          {/* Title */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold mb-2">Case Feedback</h1>
+            <h1 className={`text-2xl font-bold mb-2 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+              Case Feedback
+            </h1>
             {caseData && (
-              <p className="text-muted-foreground">
+              <p className={isDarkMode ? "text-slate-500" : "text-slate-500"}>
                 {caseData.title} · {caseData.specialty}
               </p>
             )}
           </div>
 
           <div className="grid lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1 space-y-6">
-              <div
-                className={`${isDarkMode ? "bg-[#161618] border-white/5" : "bg-white border-slate-200"} border rounded-2xl p-6`}
+            {/* Left Column */}
+            <div className="lg:col-span-1 space-y-5">
+              {/* Score Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className={`rounded-2xl p-6 ${isDarkMode ? "bg-white/[0.02] border border-white/[0.06]" : "bg-white border border-slate-200 shadow-sm"}`}
               >
-                <h3 className="text-lg font-semibold mb-4">Your Score</h3>
+                <h3 className={`text-base font-semibold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                  Your Score
+                </h3>
                 <ScoreRing score={feedbackData.score} breakdown={feedbackData.breakdown} />
                 <div className="mt-6 space-y-3">
-                  {Object.entries(feedbackData.breakdown).map(
-                    ([key, value]) => (
-                      <div
-                        key={key}
-                        className="flex justify-between text-sm"
-                      >
-                        <span className="text-muted-foreground capitalize">
-                          {key.replace(/([A-Z])/g, " $1").trim()}
-                        </span>
-                        <span className="font-medium">{value}</span>
-                      </div>
-                    )
-                  )}
+                  {Object.entries(feedbackData.breakdown).map(([key, value]) => (
+                    <div key={key} className="flex justify-between items-center text-sm">
+                      <span className={`capitalize ${isDarkMode ? "text-slate-500" : "text-slate-500"}`}>
+                        {key.replace(/([A-Z])/g, " $1").trim()}
+                      </span>
+                      <span className={`font-medium tabular-nums ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
+                        {value}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </motion.div>
 
-              <div
-                className={`${isDarkMode ? "bg-[#161618] border-white/5" : "bg-white border-slate-200"} border rounded-2xl p-6`}
+              {/* Diagnosis Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className={`rounded-2xl p-6 ${isDarkMode ? "bg-white/[0.02] border border-white/[0.06]" : "bg-white border border-slate-200 shadow-sm"}`}
               >
-                <h3 className="text-lg font-semibold mb-2">Your Diagnosis</h3>
-                <p
-                  className={`text-lg ${
-                    feedbackData.result === "correct"
-                      ? "text-emerald-500"
-                      : feedbackData.result === "partial"
-                        ? "text-yellow-500"
-                        : "text-red-500"
-                  }`}
-                >
+                <div className="flex items-center gap-2 mb-3">
+                  <div className={`p-1.5 rounded-lg ${result.bg}`}>
+                    <result.icon className={`w-4 h-4 ${result.color}`} />
+                  </div>
+                  <h3 className={`text-base font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                    Your Diagnosis
+                  </h3>
+                </div>
+                <p className={`text-lg font-medium ${result.color}`}>
                   {feedbackData.userDiagnosis}
                 </p>
                 {feedbackData.result !== "correct" && (
-                  <>
-                    <p className="text-sm text-muted-foreground mt-2">
+                  <div className={`mt-4 pt-4 border-t ${isDarkMode ? "border-white/[0.06]" : "border-slate-100"}`}>
+                    <p className={`text-xs mb-1 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
                       Correct Answer:
                     </p>
-                    <p className="text-emerald-500">
+                    <p className="text-emerald-400 font-medium">
                       {feedbackData.correctDiagnosis}
                     </p>
-                  </>
+                  </div>
                 )}
-              </div>
+              </motion.div>
             </div>
 
-            <div className="lg:col-span-2 space-y-6">
-              <div
-                className={`${isDarkMode ? "bg-[#161618] border-white/5" : "bg-white border-slate-200"} border rounded-2xl p-6`}
+            {/* Right Column */}
+            <div className="lg:col-span-2 space-y-5">
+              {/* Decision Tree */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className={`rounded-2xl p-6 ${isDarkMode ? "bg-white/[0.02] border border-white/[0.06]" : "bg-white border border-slate-200 shadow-sm"}`}
               >
-                <h3 className="text-lg font-semibold mb-4">Decision Path</h3>
+                <h3 className={`text-base font-semibold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                  Decision Path
+                </h3>
                 <DecisionTree 
                   tree={feedbackData.decisionTree as TreeNode} 
                   userDiagnosis={feedbackData.userDiagnosis}
                   correctDiagnosis={feedbackData.correctDiagnosis}
                 />
-              </div>
+              </motion.div>
 
-              <div
-                className={`${isDarkMode ? "bg-[#161618] border-white/5" : "bg-white border-slate-200"} border rounded-2xl p-6`}
+              {/* Key Clues */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className={`rounded-2xl p-6 ${isDarkMode ? "bg-white/[0.02] border border-white/[0.06]" : "bg-white border border-slate-200 shadow-sm"}`}
               >
-                <h3 className="text-lg font-semibold mb-4">Key Clues</h3>
+                <h3 className={`text-base font-semibold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                  Key Clues
+                </h3>
                 <MissedClues clues={feedbackData.clues} />
-              </div>
+              </motion.div>
 
-              <AIInsight insight={feedbackData.insight} />
+              {/* AI Insight */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <AIInsight insight={feedbackData.insight} />
+              </motion.div>
 
+              {/* Similar Cases */}
               {similarCases.length > 0 && allCases && allCases.length > 0 && (
-                <div
-                  className={`${isDarkMode ? "bg-[#161618] border-white/5" : "bg-white border-slate-200"} border rounded-2xl p-6`}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className={`rounded-2xl p-6 ${isDarkMode ? "bg-white/[0.02] border border-white/[0.06]" : "bg-white border border-slate-200 shadow-sm"}`}
                 >
-                  <h3 className="text-lg font-semibold mb-4">Similar Cases</h3>
+                  <h3 className={`text-base font-semibold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                    Similar Cases
+                  </h3>
                   <SimilarCases 
                     cases={allCases.filter(c => similarCases.some(sc => sc.id === c.id))} 
                     completedCaseIds={Array.from(completedSet)}
                     onSelectCase={(id) => navigate(`/chat/${id}`)}
                   />
-                </div>
+                </motion.div>
               )}
             </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-4 justify-center">
-            <Button
+          {/* Action Buttons */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="mt-8 flex flex-wrap gap-3 justify-center"
+          >
+            <motion.button
               onClick={handleRetry}
-              variant="outline"
-              className={`${isDarkMode ? "border-white/10 text-white hover:bg-white/5" : ""}`}
+              className={`h-11 px-5 rounded-xl font-medium text-sm flex items-center gap-2 transition-all ${isDarkMode ? "bg-white/[0.04] border border-white/[0.08] text-white hover:bg-white/[0.08]" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <RotateCcw className="w-4 h-4 mr-2" />
+              <RotateCcw className="w-4 h-4" />
               Try Again
-            </Button>
-            <Button
+            </motion.button>
+            <motion.button
               onClick={handleNextPatient}
-              className="bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90 text-white"
+              className="btn-primary h-11 flex items-center gap-2"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               Next Patient
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+              <ArrowRight className="w-4 h-4" />
+            </motion.button>
             <Link href="/dashboard">
-              <Button
-                variant="outline"
-                className={`${isDarkMode ? "border-white/10 text-white hover:bg-white/5" : ""}`}
+              <motion.button
+                className={`h-11 px-5 rounded-xl font-medium text-sm flex items-center gap-2 transition-all ${isDarkMode ? "bg-white/[0.04] border border-white/[0.08] text-white hover:bg-white/[0.08]" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <LayoutDashboard className="w-4 h-4 mr-2" />
+                <LayoutDashboard className="w-4 h-4" />
                 Dashboard
-              </Button>
+              </motion.button>
             </Link>
-          </div>
+          </motion.div>
         </motion.div>
       </main>
     </div>
