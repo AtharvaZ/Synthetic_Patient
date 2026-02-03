@@ -268,13 +268,13 @@ export default function Feedback() {
 
               <AIInsight insight={feedbackData.insight} />
 
-              {similarCases.length > 0 && (
+              {similarCases.length > 0 && allCases && allCases.length > 0 && (
                 <div
                   className={`${isDarkMode ? "bg-[#161618] border-white/5" : "bg-white border-slate-200"} border rounded-2xl p-6`}
                 >
                   <h3 className="text-lg font-semibold mb-4">Similar Cases</h3>
                   <SimilarCases 
-                    cases={allCases?.filter(c => similarCases.some(sc => sc.id === c.id)) || []} 
+                    cases={allCases.filter(c => similarCases.some(sc => sc.id === c.id))} 
                     completedCaseIds={Array.from(completedSet)}
                     onSelectCase={(id) => navigate(`/chat/${id}`)}
                   />

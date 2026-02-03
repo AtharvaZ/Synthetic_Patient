@@ -221,6 +221,14 @@ export default function Chat() {
       setDiagnosisResult(data.result);
       setFeedbackData(data);
       addCompletedCase(caseId, diagnosisInput, data.result as "correct" | "partial" | "wrong");
+      
+      // Store feedback in sessionStorage for the feedback page
+      sessionStorage.setItem("lastFeedback", JSON.stringify({
+        ...data,
+        userDiagnosis: diagnosisInput,
+        caseId,
+      }));
+      
       setShowPopup(true);
       setShowDiagnoseInput(false);
     } catch (error) {
