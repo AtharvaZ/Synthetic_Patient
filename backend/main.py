@@ -274,7 +274,9 @@ async def patient_message(data: PatientMessageRequest, db: Session = Depends(get
         response = await generate_patient_response(request)
         return {"response": response.patient_response}
     except Exception as e:
+        import traceback
         print(f"AI error: {e}")
+        print(f"Traceback: {traceback.format_exc()}")
         return {"response": "I'm here, doctor. What would you like to know about how I'm feeling?"}
 
 
