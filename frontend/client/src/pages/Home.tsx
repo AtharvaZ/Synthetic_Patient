@@ -100,15 +100,6 @@ export default function Home() {
                 Dashboard
               </span>
             </Link>
-            <Link href="/dashboard">
-              <Button
-                className="bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105"
-                data-testid="button-get-started"
-              >
-                Start Quiz
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
           </div>
         </div>
       </header>
