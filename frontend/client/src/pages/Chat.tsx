@@ -335,8 +335,8 @@ export default function Chat() {
                 )}
               </motion.button>
               <div className="flex items-center gap-2">
-                <div className="size-7 bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] rounded-lg flex items-center justify-center">
-                  <Stethoscope className="w-3.5 h-3.5 text-[hsl(180,8%,5%)]" />
+                <div className="size-7 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                  <Stethoscope className="w-3.5 h-3.5 text-white" />
                 </div>
                 <span className={`font-semibold text-sm ${isDarkMode ? "text-white" : "text-slate-900"}`}>ClinIQ</span>
               </div>
@@ -421,7 +421,7 @@ export default function Chat() {
                 <div
                   className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed ${
                     msg.role === "user"
-                      ? "bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] text-[hsl(180,8%,5%)] rounded-2xl rounded-br-md"
+                      ? "bg-gradient-to-br from-teal-500 to-emerald-500 text-white rounded-2xl rounded-br-md"
                       : isDarkMode
                       ? "bg-white/[0.04] border border-white/[0.06] text-slate-200 rounded-2xl rounded-bl-md"
                       : "bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-bl-md shadow-sm"
@@ -430,8 +430,8 @@ export default function Chat() {
                   <p className={msg.role === "user" ? "font-medium" : ""}>{msg.content}</p>
                 </div>
                 {msg.role === "user" && (
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] flex items-center justify-center flex-shrink-0 mb-0.5">
-                    <Stethoscope className="w-3.5 h-3.5 text-[hsl(180,8%,5%)]" />
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center flex-shrink-0 mb-0.5">
+                    <Stethoscope className="w-3.5 h-3.5 text-white" />
                   </div>
                 )}
               </motion.div>
@@ -477,7 +477,7 @@ export default function Chat() {
             <motion.button
               type="submit"
               disabled={!input.trim() || isSending}
-              className="absolute right-1.5 top-1.5 w-9 h-9 rounded-lg bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] flex items-center justify-center text-[hsl(180,8%,5%)] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="absolute right-1.5 top-1.5 w-9 h-9 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-white disabled:opacity-50 disabled:cursor-not-allowed"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

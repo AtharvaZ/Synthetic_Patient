@@ -55,8 +55,9 @@ export default function Home() {
       
       {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-[120px] ${isDarkMode ? "bg-[hsl(168,65%,42%)]/8" : "bg-[hsl(168,65%,42%)]/6"}`} />
-        <div className={`absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-[hsl(38,75%,55%)]/6" : "bg-[hsl(38,75%,55%)]/4"}`} />
+        <div className={`absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-[120px] ${isDarkMode ? "bg-teal-500/10" : "bg-teal-500/8"}`} />
+        <div className={`absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-emerald-500/8" : "bg-emerald-500/6"}`} />
+        <div className={`absolute bottom-1/4 right-1/3 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/8" : "bg-amber-500/6"}`} />
       </div>
 
       {/* Navigation */}
@@ -69,9 +70,9 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] rounded-xl blur-lg opacity-50" />
-              <div className="relative size-9 bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] rounded-xl flex items-center justify-center">
-                <Stethoscope className="w-5 h-5 text-[hsl(180,8%,5%)]" />
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-xl blur-lg opacity-50" />
+              <div className="relative size-9 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                <Stethoscope className="w-5 h-5 text-white" />
               </div>
             </div>
             <span className={`text-xl font-bold tracking-tight ${isDarkMode ? "text-white" : "text-slate-900"}`}>
@@ -240,10 +241,10 @@ export default function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Clipboard, title: "Meet Patient", desc: "Review the presenting complaint", color: "from-[hsl(168,65%,42%)] to-[hsl(180,70%,45%)]" },
-              { icon: MessageCircle, title: "Investigate", desc: "Ask targeted questions", color: "from-[hsl(150,55%,45%)] to-[hsl(220,75%,55%)]" },
-              { icon: Target, title: "Diagnose", desc: "Submit your diagnosis", color: "from-[hsl(38,75%,55%)] to-[hsl(300,70%,55%)]" },
-              { icon: GraduationCap, title: "Learn", desc: "Get AI-powered feedback", color: "from-[hsl(35,90%,55%)] to-[hsl(15,85%,55%)]" },
+              { icon: Clipboard, title: "Meet Patient", desc: "Review the presenting complaint", color: "from-teal-500 to-teal-600" },
+              { icon: MessageCircle, title: "Investigate", desc: "Ask targeted questions", color: "from-emerald-500 to-green-600" },
+              { icon: Target, title: "Diagnose", desc: "Submit your diagnosis", color: "from-amber-500 to-orange-500" },
+              { icon: GraduationCap, title: "Learn", desc: "Get AI-powered feedback", color: "from-teal-400 to-emerald-500" },
             ].map((step, i) => (
               <motion.div
                 key={step.title}
@@ -330,13 +331,13 @@ export default function Home() {
                 transition={{ delay: 0.4 }}
                 viewport={{ once: true }}
               >
-                <div className="rounded-2xl rounded-tr-md px-4 py-3 max-w-sm bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)]">
-                  <p className="text-sm text-[hsl(180,8%,5%)] font-medium">
+                <div className="rounded-2xl rounded-tr-md px-4 py-3 max-w-sm bg-gradient-to-br from-teal-500 to-emerald-500">
+                  <p className="text-sm text-white font-medium">
                     Do you notice any sensitivity to light or sound during these headaches?
                   </p>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] flex items-center justify-center flex-shrink-0">
-                  <Stethoscope className="w-4 h-4 text-[hsl(180,8%,5%)]" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
+                  <Stethoscope className="w-4 h-4 text-white" />
                 </div>
               </motion.div>
 
@@ -392,8 +393,8 @@ export default function Home() {
       <footer className={`py-8 border-t transition-colors duration-300 ${isDarkMode ? "border-white/[0.06]" : "border-slate-200"}`}>
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="size-8 bg-gradient-to-br from-[hsl(168,65%,42%)]/20 to-[hsl(150,55%,45%)]/20 rounded-lg flex items-center justify-center">
-              <Stethoscope className="w-4 h-4 text-[hsl(168,65%,42%)]" />
+            <div className="size-8 bg-gradient-to-br from-teal-500/20 to-emerald-500/20 rounded-lg flex items-center justify-center">
+              <Stethoscope className="w-4 h-4 text-teal-500" />
             </div>
             <span className={`font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
               ClinIQ

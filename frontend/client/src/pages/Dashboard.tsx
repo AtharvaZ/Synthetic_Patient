@@ -76,20 +76,20 @@ export default function Dashboard() {
       icon: Target,
       cases: advancedCases,
       completed: advancedCompleted,
-      gradient: "from-rose-500 to-pink-500",
-      bgGlow: "bg-rose-500/20",
-      accentColor: "text-rose-400",
-      borderHover: "hover:border-rose-500/30",
+      gradient: "from-orange-500 to-red-500",
+      bgGlow: "bg-orange-500/20",
+      accentColor: "text-orange-400",
+      borderHover: "hover:border-orange-500/30",
     },
     {
       key: "Random",
       icon: Shuffle,
       cases: cases || [],
       completed: completedCases?.length || 0,
-      gradient: "from-amber-500 to-orange-500",
-      bgGlow: "bg-amber-500/20",
-      accentColor: "text-amber-400",
-      borderHover: "hover:border-amber-500/30",
+      gradient: "from-teal-400 to-emerald-500",
+      bgGlow: "bg-teal-500/20",
+      accentColor: "text-teal-400",
+      borderHover: "hover:border-teal-500/30",
     },
   ];
 
@@ -100,12 +100,13 @@ export default function Dashboard() {
       
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute -top-40 right-0 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-[hsl(168,84%,45%)]/6" : "bg-[hsl(168,84%,45%)]/5"}`} />
-        <div className={`absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-[hsl(280,75%,60%)]/5" : "bg-[hsl(280,75%,60%)]/4"}`} />
+        <div className={`absolute -top-40 right-0 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-teal-500/8" : "bg-teal-500/6"}`} />
+        <div className={`absolute top-1/2 left-1/4 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-emerald-500/6" : "bg-emerald-500/5"}`} />
+        <div className={`absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/6" : "bg-amber-500/5"}`} />
       </div>
 
       {/* Header */}
-      <header className={`sticky top-0 z-50 w-full backdrop-blur-xl transition-colors duration-300 ${isDarkMode ? "bg-[hsl(220,15%,5%)]/80 border-b border-white/[0.06]" : "bg-white/80 border-b border-slate-200/80"}`}>
+      <header className={`sticky top-0 z-50 w-full backdrop-blur-xl transition-colors duration-300 ${isDarkMode ? "bg-[hsl(180,8%,5%)]/80 border-b border-white/[0.06]" : "bg-white/80 border-b border-slate-200/80"}`}>
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <motion.div 
             className="flex items-center gap-3"
@@ -113,9 +114,9 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] rounded-xl blur-lg opacity-50" />
-              <div className="relative size-9 bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] rounded-xl flex items-center justify-center">
-                <Stethoscope className="w-5 h-5 text-[hsl(220,15%,5%)]" />
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-xl blur-lg opacity-50" />
+              <div className="relative size-9 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                <Stethoscope className="w-5 h-5 text-white" />
               </div>
             </div>
             <span className={`text-xl font-bold tracking-tight ${isDarkMode ? "text-white" : "text-slate-900"}`}>

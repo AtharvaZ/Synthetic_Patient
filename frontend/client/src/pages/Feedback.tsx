@@ -161,8 +161,9 @@ export default function Feedback() {
 
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-[hsl(168,65%,42%)]/6" : "bg-[hsl(168,65%,42%)]/4"}`} />
-        <div className={`absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-[hsl(38,75%,55%)]/5" : "bg-[hsl(38,75%,55%)]/3"}`} />
+        <div className={`absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-teal-500/8" : "bg-teal-500/6"}`} />
+        <div className={`absolute top-1/2 left-1/3 w-[350px] h-[350px] rounded-full blur-[100px] ${isDarkMode ? "bg-emerald-500/6" : "bg-emerald-500/5"}`} />
+        <div className={`absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/6" : "bg-amber-500/5"}`} />
       </div>
 
       {/* Header */}
@@ -191,8 +192,8 @@ export default function Feedback() {
               )}
             </motion.button>
             <div className="flex items-center gap-2">
-              <div className="size-8 bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] rounded-xl flex items-center justify-center">
-                <Stethoscope className="w-4 h-4 text-[hsl(180,8%,5%)]" />
+              <div className="size-8 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                <Stethoscope className="w-4 h-4 text-white" />
               </div>
               <span className={`font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>ClinIQ</span>
             </div>
