@@ -157,19 +157,27 @@ export class MemStorage implements IStorage {
 
   async getCompletedCaseIds(userId: number): Promise<number[]> {
     const completions = await this.getUserCompletions(userId);
-    return Array.from(new Set(completions.map(c => c.caseId)));
+    const successfulCompletions = completions.filter(c => c.result === "correct" || c.result === "partial");
+    return Array.from(new Set(successfulCompletions.map(c => c.caseId)));
   }
 
   async getUserStats(userId: number): Promise<{ streak: number; casesSolved: number; accuracy: number }> {
     const completions = await this.getUserCompletions(userId);
-    const uniqueCases = new Set(completions.map(c => c.caseId));
-    const correctCount = completions.filter(c => c.result === "correct").length;
+    const successfulCompletions = completions.filter(c => c.result === "correct" || c.result === "partial");
+    const uniqueSolvedCases = new Set(successfulCompletions.map(c => c.caseId));
+    
     const totalAttempts = completions.length;
+    let accuracySum = 0;
+    for (const c of completions) {
+      if (c.result === "correct") accuracySum += 100;
+      else if (c.result === "partial") accuracySum += 50;
+    }
+    const avgAccuracy = totalAttempts > 0 ? Math.round(accuracySum / totalAttempts) : 0;
     
     return {
-      streak: Math.min(uniqueCases.size, 7),
-      casesSolved: uniqueCases.size,
-      accuracy: totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0
+      streak: Math.min(uniqueSolvedCases.size, 7),
+      casesSolved: uniqueSolvedCases.size,
+      accuracy: avgAccuracy
     };
   }
 }
