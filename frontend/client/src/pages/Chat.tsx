@@ -220,7 +220,7 @@ export default function Chat() {
 
       setDiagnosisResult(data.result);
       setFeedbackData(data);
-      addCompletedCase(caseId, diagnosisInput, data.result as "correct" | "partial" | "wrong");
+      addCompletedCase(caseId, diagnosisInput, data.result as "correct" | "partial" | "wrong", data.feedback.score);
       
       sessionStorage.setItem("lastFeedback", JSON.stringify({
         ...data,

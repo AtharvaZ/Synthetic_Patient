@@ -50,8 +50,8 @@ export function useUserStats() {
       return {
         streak: streak.current,
         casesSolved: completedIds.length,
-        accuracy: stats.totalCompleted > 0 
-          ? Math.round((stats.correct / stats.totalCompleted) * 100) 
+        accuracy: stats.scoreCount && stats.scoreCount > 0
+          ? Math.round((stats.totalScore || 0) / stats.scoreCount)
           : 0,
         completedCaseIds: completedIds,
       };
