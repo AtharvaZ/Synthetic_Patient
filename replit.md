@@ -4,6 +4,15 @@
 
 CaseLab is a medical education platform that helps medical students practice clinical diagnosis through interactive case simulations with AI-powered patient conversations. This is the frontend branch with React + Express.
 
+## Recent Changes (Feb 2026)
+
+- Added diagnosis workflow with popup feedback (correct/partial/wrong)
+- Server-side diagnosis evaluation based on case-specific expected diagnoses
+- Retry functionality that properly resets completion records
+- Next Patient navigation that excludes completed cases
+- Dashboard shows real stats from database (streak, cases solved, accuracy)
+- Cases organized by difficulty with completion progress tracking
+
 ## Local Setup
 
 ```bash
