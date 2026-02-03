@@ -284,9 +284,21 @@ export default function PatientCases() {
                   
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <h3 className={`font-semibold mb-1 truncate ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                        {caseItem.title}
-                      </h3>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className={`font-semibold truncate ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                          {caseItem.title}
+                        </h3>
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0 ${
+                          status === "correct" ? "bg-emerald-500/20 text-emerald-400" :
+                          status === "partial" ? "bg-amber-500/20 text-amber-400" :
+                          status === "wrong" ? "bg-red-500/20 text-red-400" :
+                          isDarkMode ? "bg-slate-500/20 text-slate-400" : "bg-slate-200 text-slate-500"
+                        }`}>
+                          {status === "correct" ? "Correct" :
+                           status === "partial" ? "Partial" :
+                           status === "wrong" ? "Wrong" : "Not Attempted"}
+                        </span>
+                      </div>
                       <p className={`text-sm line-clamp-2 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
                         {caseItem.description}
                       </p>
