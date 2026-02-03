@@ -168,10 +168,10 @@ export default function Dashboard() {
               value: userStats.casesSolved, 
               suffix: "",
               desc: userStats.casesSolved > 0 ? "Great progress!" : "Solve your first case!",
-              gradient: "from-emerald-500 to-green-500",
-              bgGradient: "from-emerald-500/10 to-green-500/10",
-              borderColor: "border-emerald-500/20",
-              valueColor: "text-emerald-400"
+              gradient: "from-blue-500 to-indigo-500",
+              bgGradient: "from-blue-500/10 to-indigo-500/10",
+              borderColor: "border-blue-500/20",
+              valueColor: "text-blue-400"
             },
             { 
               icon: Target, 
