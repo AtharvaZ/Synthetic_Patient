@@ -48,10 +48,10 @@ export function useUserStats() {
       const streak = getStreak();
       const completedIds = getCompletedCaseIds();
       return {
-        streak: streak.current,
+        streak: streak,
         casesSolved: completedIds.length,
-        accuracy: stats.totalCompleted > 0 
-          ? Math.round((stats.correct / stats.totalCompleted) * 100) 
+        accuracy: stats.totalCases > 0 
+          ? Math.round((stats.correctDiagnoses / stats.totalCases) * 100) 
           : 0,
         completedCaseIds: completedIds,
       };

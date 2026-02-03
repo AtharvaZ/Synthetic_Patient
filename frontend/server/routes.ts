@@ -2,16 +2,29 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { api } from "@shared/routes";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:8000";
 
 async function backendFetch(path: string, options: RequestInit = {}) {
-  return fetch(`${BACKEND_URL}${path}`, {
-    ...options,
-    headers: { "Content-Type": "application/json", ...options.headers },
-  });
+  const url = `${BACKEND_URL}${path}`;
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: { "Content-Type": "application/json", ...options.headers },
+    });
+    if (!response.ok) {
+      console.error(`Backend fetch failed: ${url} - ${response.status} ${response.statusText}`);
+    }
+    return response;
+  } catch (error) {
+    console.error(`Backend fetch error for ${url}:`, error);
+    throw error;
+  }
 }
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
+  
+  // Log backend URL on startup
+  console.log(`[Backend] Connecting to: ${BACKEND_URL}`);
   
   app.get(api.cases.list.path, async (req, res) => {
     try {
@@ -20,6 +33,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       res.json(cases.map((c: any) => ({
         id: c.id,
         title: c.title,
+        chiefComplaint: c.title, // title contains the chief complaint from backend
         description: c.description,
         specialty: c.specialty,
         difficulty: c.difficulty,
@@ -42,6 +56,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       res.json({
         id: c.id,
         title: c.title,
+        chiefComplaint: c.title, // title contains the chief complaint from backend
         description: c.description,
         specialty: c.specialty,
         difficulty: c.difficulty,
@@ -63,6 +78,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       res.json(cases.map((c: any) => ({
         id: c.id,
         title: c.title,
+        chiefComplaint: c.title, // title contains the chief complaint from backend
         description: c.description,
         specialty: c.specialty,
         difficulty: c.difficulty,

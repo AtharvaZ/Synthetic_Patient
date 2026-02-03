@@ -311,34 +311,38 @@ export default function Feedback() {
                 <MissedClues clues={feedbackData.clues} />
               </motion.div>
 
-              {/* AI Insight */}
+            </div>
+          </div>
+
+          {/* Full-width sections */}
+          <div className="mt-6 space-y-5">
+            {/* AI Insight */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <AIInsight insight={feedbackData.insight} />
+            </motion.div>
+
+            {/* Similar Cases */}
+            {similarCases.length > 0 && allCases && allCases.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.6 }}
+                className={`rounded-2xl p-6 ${isDarkMode ? "bg-white/[0.02] border border-white/[0.06]" : "bg-white border border-slate-200 shadow-sm"}`}
               >
-                <AIInsight insight={feedbackData.insight} />
+                <h3 className={`text-base font-semibold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                  Similar Cases
+                </h3>
+                <SimilarCases 
+                  cases={allCases.filter(c => similarCases.some(sc => sc.id === c.id))} 
+                  completedCaseIds={Array.from(completedSet)}
+                  onSelectCase={(id) => navigate(`/chat/${id}`)}
+                />
               </motion.div>
-
-              {/* Similar Cases */}
-              {similarCases.length > 0 && allCases && allCases.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className={`rounded-2xl p-6 ${isDarkMode ? "bg-white/[0.02] border border-white/[0.06]" : "bg-white border border-slate-200 shadow-sm"}`}
-                >
-                  <h3 className={`text-base font-semibold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                    Similar Cases
-                  </h3>
-                  <SimilarCases 
-                    cases={allCases.filter(c => similarCases.some(sc => sc.id === c.id))} 
-                    completedCaseIds={Array.from(completedSet)}
-                    onSelectCase={(id) => navigate(`/chat/${id}`)}
-                  />
-                </motion.div>
-              )}
-            </div>
+            )}
           </div>
 
           {/* Action Buttons */}

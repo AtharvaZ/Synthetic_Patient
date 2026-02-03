@@ -136,15 +136,29 @@ This guide helps you run ClinIQ on your local machine. You'll use your own local
 ### Prerequisites
 
 - **Node.js** 18+ and npm
-- **Python** 3.10+
+- **Python** 3.10+ (3.11+ recommended)
 - **PostgreSQL** 14+ (local installation)
+- **Git** (for cloning the repository)
 
-### Step 1: Install PostgreSQL
+### Step 1: Clone the Repository
+
+```bash
+git clone <repository-url>
+cd Synthetic_Patient
+```
+
+### Step 2: Install PostgreSQL
 
 **macOS (using Homebrew):**
 ```bash
 brew install postgresql@15
 brew services start postgresql@15
+
+# If createdb command is not found, add PostgreSQL to PATH:
+# For Homebrew on Apple Silicon:
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+# For Homebrew on Intel:
+export PATH="/usr/local/opt/postgresql@15/bin:$PATH"
 ```
 
 **Ubuntu/Debian:**
@@ -156,101 +170,249 @@ sudo systemctl start postgresql
 
 **Windows:**
 Download and install from [postgresql.org](https://www.postgresql.org/download/windows/)
+Make sure to add PostgreSQL to your system PATH during installation.
 
-### Step 2: Create a Local Database
+### Step 3: Create a Local Database
 
+**macOS (if createdb is not in PATH):**
+```bash
+# Use full path to createdb
+/opt/homebrew/opt/postgresql@15/bin/createdb cliniq
+```
+
+**Linux/Windows:**
 ```bash
 # Create the database
 createdb cliniq
-
-# (Optional) Create a dedicated user
-psql -c "CREATE USER cliniq_user WITH PASSWORD 'your_password';"
-psql -c "GRANT ALL PRIVILEGES ON DATABASE cliniq TO cliniq_user;"
 ```
 
-### Step 3: Clone and Install Dependencies
+**Alternative (using psql):**
+```bash
+psql postgres
+CREATE DATABASE cliniq;
+\q
+```
+
+**Note for macOS:** If you get "role postgres does not exist", use your macOS username instead:
+```bash
+# Replace 'your_username' with your actual macOS username
+createdb -U your_username cliniq
+```
+
+### Step 4: Install Frontend Dependencies
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd cliniq
-
-# Install frontend dependencies
+# From project root
 npm install
-
-# Install backend dependencies
-cd backend
-pip install -r requirements.txt
-cd ..
 ```
 
-### Step 4: Configure Environment Variables
+This will install all Node.js dependencies defined in `package.json`.
+
+### Step 5: Set Up Python Virtual Environment
+
+**macOS/Linux:**
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+**Windows:**
+```bash
+cd backend
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+**Note:** Always activate the virtual environment before running backend commands:
+- macOS/Linux: `source venv/bin/activate`
+- Windows: `venv\Scripts\activate`
+
+### Step 6: Configure Environment Variables
 
 Create a `.env` file in the `backend/` folder:
 
 ```bash
-# backend/.env
+cd backend
+touch .env  # or create manually
+```
 
-# Required - your local PostgreSQL connection
-DATABASE_URL=postgresql://postgres@localhost:5432/cliniq
+Add the following content to `backend/.env`:
 
-# Optional - for AI patient conversations
+```bash
+# Required - PostgreSQL connection string
+# For macOS with Homebrew (use your macOS username):
+DATABASE_URL=postgresql://your_username@localhost:5432/cliniq
+
+# For Linux/Windows (default postgres user):
+# DATABASE_URL=postgresql://postgres@localhost:5432/cliniq
+
+# Optional - Google Gemini API key for AI patient conversations
 # Get your key from https://aistudio.google.com/apikey
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-**Note:** `DATABASE_URL` is required - the app won't start without it. `GEMINI_API_KEY` is optional; without it, AI patient responses will use basic fallback messages.
+**Important Notes:**
+- Replace `your_username` with your actual macOS username (run `whoami` to find it)
+- `DATABASE_URL` is **required** - the app won't start without it
+- `GEMINI_API_KEY` is optional; without it, AI patient responses will use basic fallback messages
+- The `.env` file is gitignored and won't be committed to the repository
 
-### Step 5: Seed the Database
+### Step 7: Seed the Database
 
 This populates your database with the 62 clinical training cases:
 
 ```bash
 cd backend
+source venv/bin/activate  # Activate virtual environment (Windows: venv\Scripts\activate)
 python seed_data.py
 ```
 
-You should see output confirming cases were inserted.
+You should see output like:
+```
+Loading 62 cases...
+  Added: common_cold
+  Added: fungal_infection
+  ...
+Seeding complete!
+  Cases: 62
+  Symptoms: 294
+```
 
-### Step 6: Run the Application
+### Step 8: Configure VS Code (Optional but Recommended)
 
-Open **two terminal windows**:
+Create `.vscode/settings.json` in the project root:
+
+```json
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/venv/bin/python"
+}
+```
+
+This ensures VS Code uses the correct Python interpreter and resolves import errors.
+
+### Step 9: Run the Application
+
+Open **two separate terminal windows/tabs**:
 
 **Terminal 1 - Backend API (Port 8000):**
 ```bash
 cd backend
+source venv/bin/activate  # Windows: venv\Scripts\activate
 python main.py
+```
+
+You should see:
+```
+INFO:     Uvicorn running on http://0.0.0.0:8000
+INFO:     Application startup complete.
 ```
 
 **Terminal 2 - Frontend (Port 5000):**
 ```bash
+# From project root
 npm run dev
 ```
 
-### Step 7: Access the Application
+You should see:
+```
+🚀 Server running at http://127.0.0.1:5000
+   Also available at http://localhost:5000
+```
 
-Open your browser and navigate to: **http://localhost:5000**
+### Step 10: Access the Application
+
+Open your browser and navigate to:
+- **Frontend:** http://localhost:5000 or http://127.0.0.1:5000
+- **Backend API Docs:** http://localhost:8000/docs
+- **Backend Health Check:** http://localhost:8000/api/health
 
 ### Troubleshooting
 
 **Database connection errors:**
-- Verify PostgreSQL is running: `pg_isready`
-- Check your DATABASE_URL credentials match your local setup
-- Ensure the database exists: `psql -l | grep cliniq`
+```bash
+# Verify PostgreSQL is running
+pg_isready
+# or
+brew services list  # macOS
+
+# Check if database exists
+psql -l | grep cliniq
+# or
+psql -U your_username -l  # macOS with username
+
+# Test connection
+psql -U your_username -d cliniq  # macOS
+psql -U postgres -d cliniq      # Linux/Windows
+```
+
+**"createdb: command not found" (macOS):**
+```bash
+# Add PostgreSQL to PATH (add to ~/.zshrc or ~/.bash_profile)
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+source ~/.zshrc  # or source ~/.bash_profile
+```
+
+**"role postgres does not exist" (macOS):**
+- Use your macOS username in DATABASE_URL instead of `postgres`
+- Run `whoami` to find your username
+- Update `backend/.env` with: `DATABASE_URL=postgresql://your_username@localhost:5432/cliniq`
 
 **Port already in use:**
-- Backend: Change port in `backend/main.py`
-- Frontend: Update port in `package.json` scripts
-
-**Missing Python packages:**
 ```bash
-cd backend && pip install -r requirements.txt
+# Find process using port 8000
+lsof -ti:8000  # macOS/Linux
+# Kill the process
+kill -9 $(lsof -ti:8000)
+
+# Find process using port 5000
+lsof -ti:5000
+kill -9 $(lsof -ti:5000)
 ```
 
-**Missing Node packages:**
+**Python virtual environment issues:**
 ```bash
+# If venv creation fails, try with full permissions
+python3 -m venv venv --system-site-packages
+
+# If pip install fails, upgrade pip first
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+**Frontend "access to localhost denied" error:**
+- Ensure backend is running on port 8000
+- Check `frontend/server/routes.ts` has `BACKEND_URL=http://127.0.0.1:8000`
+- Restart both servers after making changes
+
+**Import errors in VS Code:**
+- Ensure `.vscode/settings.json` points to the virtual environment
+- Reload VS Code window (Cmd+Shift+P → "Reload Window")
+- Check Python interpreter in bottom-right of VS Code
+
+**Missing dependencies:**
+```bash
+# Frontend
 npm install
+
+# Backend (with venv activated)
+cd backend
+source venv/bin/activate
+pip install -r requirements.txt
 ```
+
+**Database seeding fails:**
+- Ensure database exists: `createdb cliniq`
+- Check DATABASE_URL in `backend/.env` is correct
+- Verify PostgreSQL is running
+- Try dropping and recreating the database:
+  ```bash
+  dropdb cliniq
+  createdb cliniq
+  python seed_data.py
+  ```
 
 ## Tech Stack
 

@@ -78,11 +78,12 @@ export default function Chat() {
 
   useEffect(() => {
     if (caseData && messages.length === 0) {
+      const chiefComplaint = caseData.chiefComplaint || caseData.title || "I'm feeling not quite right today";
       setMessages([
         {
           id: 1,
           role: "assistant",
-          content: "Hello doctor. I'm feeling not quite right today...",
+          content: `Hello doctor. ${chiefComplaint}`,
         },
       ]);
     }

@@ -6,6 +6,17 @@ import { createServer } from "http";
 const app = express();
 const httpServer = createServer(app);
 
+// Add CORS headers to all responses
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;
@@ -93,11 +104,11 @@ app.use((req, res, next) => {
   httpServer.listen(
     {
       port,
-      host: "0.0.0.0",
-      reusePort: true,
+      host: "127.0.0.1",
     },
     () => {
-      log(`serving on port ${port}`);
+      log(`🚀 Server running at http://127.0.0.1:${port}`);
+      log(`   Also available at http://localhost:${port}`);
     },
   );
 })();

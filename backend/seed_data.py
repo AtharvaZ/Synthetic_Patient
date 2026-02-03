@@ -71,13 +71,13 @@ def seed_database():
                 gender=case_data['patient']['gender'],
                 chief_complaint=case_data['presentation']['chief_complaint'],
                 history=case_data['presentation'].get('history', ''),
-                duration=case_data['presentation'].get('duration', ''),
-                severity=case_data['presentation'].get('severity', ''),
+                duration=(case_data['presentation'].get('duration', '') or '')[:50],
+                severity=(case_data['presentation'].get('severity', '') or '')[:50],
                 triggers=case_data['presentation'].get('triggers', ''),
-                diagnosis=case_data['diagnosis']['condition'],
-                description=case_data['diagnosis'].get('description', ''),
+                diagnosis=case_data.get('diagnosis', 'Unknown'),
+                description=case_data.get('description', ''),
                 difficulty=case_data.get('difficulty', 2),
-                source=case_data.get('source', 'Unknown')
+                source=(case_data.get('source', 'Unknown') or 'Unknown')[:50]
             )
             db.add(case)
             db.commit()
