@@ -5,30 +5,20 @@ import { z } from "zod";
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
 
-async function proxyToBackend(path: string, options: RequestInit = {}) {
-  const response = await fetch(`${BACKEND_URL}${path}`, {
+async function backendFetch(path: string, options: RequestInit = {}) {
+  return fetch(`${BACKEND_URL}${path}`, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
+    headers: { "Content-Type": "application/json", ...options.headers },
   });
-  return response;
 }
 
-export async function registerRoutes(
-  httpServer: Server,
-  app: Express
-): Promise<Server> {
+export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   
   app.get(api.cases.list.path, async (req, res) => {
     try {
-      const response = await proxyToBackend("/api/cases");
-      if (!response.ok) {
-        return res.status(response.status).json({ message: "Failed to fetch cases" });
-      }
-      const cases = await response.json();
-      const transformed = cases.map((c: any) => ({
+      const resp = await backendFetch("/api/cases");
+      const cases = await resp.json();
+      res.json(cases.map((c: any) => ({
         id: c.id,
         title: c.title,
         description: c.description,
@@ -38,21 +28,18 @@ export async function registerRoutes(
         acceptableDiagnoses: c.acceptable_diagnoses || "",
         imageUrl: c.image_url,
         status: c.status || "available"
-      }));
-      res.json(transformed);
-    } catch (error) {
-      console.error("Error fetching cases:", error);
+      })));
+    } catch (e) {
+      console.error("Error:", e);
       res.status(500).json({ message: "Failed to fetch cases" });
     }
   });
 
   app.get(api.cases.get.path, async (req, res) => {
     try {
-      const response = await proxyToBackend(`/api/cases/${req.params.id}`);
-      if (!response.ok) {
-        return res.status(response.status).json({ message: "Case not found" });
-      }
-      const c = await response.json();
+      const resp = await backendFetch(`/api/cases/${req.params.id}`);
+      if (!resp.ok) return res.status(resp.status).json({ message: "Case not found" });
+      const c = await resp.json();
       res.json({
         id: c.id,
         title: c.title,
@@ -64,20 +51,17 @@ export async function registerRoutes(
         imageUrl: c.image_url,
         status: c.status || "available"
       });
-    } catch (error) {
-      console.error("Error fetching case:", error);
+    } catch (e) {
+      console.error("Error:", e);
       res.status(500).json({ message: "Failed to fetch case" });
     }
   });
 
   app.get(api.cases.byDifficulty.path, async (req, res) => {
     try {
-      const response = await proxyToBackend(`/api/cases/difficulty/${req.params.difficulty}`);
-      if (!response.ok) {
-        return res.status(response.status).json({ message: "Failed to fetch cases" });
-      }
-      const cases = await response.json();
-      const transformed = cases.map((c: any) => ({
+      const resp = await backendFetch(`/api/cases/difficulty/${req.params.difficulty}`);
+      const cases = await resp.json();
+      res.json(cases.map((c: any) => ({
         id: c.id,
         title: c.title,
         description: c.description,
@@ -87,10 +71,9 @@ export async function registerRoutes(
         acceptableDiagnoses: c.acceptable_diagnoses || "",
         imageUrl: c.image_url,
         status: c.status || "available"
-      }));
-      res.json(transformed);
-    } catch (error) {
-      console.error("Error fetching cases by difficulty:", error);
+      })));
+    } catch (e) {
+      console.error("Error:", e);
       res.status(500).json({ message: "Failed to fetch cases" });
     }
   });
@@ -98,43 +81,30 @@ export async function registerRoutes(
   app.post(api.chats.create.path, async (req, res) => {
     try {
       const input = api.chats.create.input.parse(req.body);
-      const response = await proxyToBackend("/api/chats", {
+      const resp = await backendFetch("/api/chats", {
         method: "POST",
         body: JSON.stringify({ case_id: input.caseId }),
       });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        return res.status(response.status).json(error);
+      if (!resp.ok) {
+        const err = await resp.json();
+        return res.status(resp.status).json(err);
       }
-      
-      const chat = await response.json();
-      res.status(201).json({
-        id: chat.id,
-        caseId: chat.case_id,
-        userId: chat.user_id,
-        createdAt: chat.created_at
-      });
+      const chat = await resp.json();
+      res.status(201).json({ id: chat.id, caseId: chat.case_id, userId: chat.user_id, createdAt: chat.created_at });
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({
-          message: err.errors[0].message,
-          field: err.errors[0].path.join(".")
-        });
+        return res.status(400).json({ message: err.errors[0].message, field: err.errors[0].path.join(".") });
       }
-      console.error("Error creating chat:", err);
+      console.error("Error:", err);
       res.status(500).json({ message: "Failed to create chat" });
     }
   });
 
   app.get(api.chats.get.path, async (req, res) => {
     try {
-      const response = await proxyToBackend(`/api/chats/${req.params.id}`);
-      if (!response.ok) {
-        return res.status(response.status).json({ message: "Chat not found" });
-      }
-      
-      const chat = await response.json();
+      const resp = await backendFetch(`/api/chats/${req.params.id}`);
+      if (!resp.ok) return res.status(resp.status).json({ message: "Chat not found" });
+      const chat = await resp.json();
       res.json({
         id: chat.id,
         caseId: chat.case_id,
@@ -148,63 +118,40 @@ export async function registerRoutes(
           createdAt: m.created_at
         }))
       });
-    } catch (error) {
-      console.error("Error fetching chat:", error);
+    } catch (e) {
+      console.error("Error:", e);
       res.status(500).json({ message: "Failed to fetch chat" });
     }
   });
 
   app.post(api.messages.create.path, async (req, res) => {
     try {
-      const chatId = req.params.id;
       const input = api.messages.create.input.parse(req.body);
-      
-      const response = await proxyToBackend(`/api/chats/${chatId}/messages`, {
+      const resp = await backendFetch(`/api/chats/${req.params.id}/messages`, {
         method: "POST",
-        body: JSON.stringify({
-          content: input.content,
-          sender: input.sender
-        }),
+        body: JSON.stringify({ content: input.content, sender: input.sender }),
       });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        return res.status(response.status).json(error);
+      if (!resp.ok) {
+        const err = await resp.json();
+        return res.status(resp.status).json(err);
       }
-      
-      const message = await response.json();
-      res.status(201).json({
-        id: message.id,
-        chatId: message.chat_id,
-        sender: message.sender,
-        content: message.content,
-        createdAt: message.created_at
-      });
+      const msg = await resp.json();
+      res.status(201).json({ id: msg.id, chatId: msg.chat_id, sender: msg.sender, content: msg.content, createdAt: msg.created_at });
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({
-          message: err.errors[0].message,
-          field: err.errors[0].path.join(".")
-        });
+        return res.status(400).json({ message: err.errors[0].message, field: err.errors[0].path.join(".") });
       }
-      console.error("Error creating message:", err);
+      console.error("Error:", err);
       res.status(500).json({ message: "Failed to send message" });
     }
   });
 
   app.delete(api.messages.deleteLastUser.path, async (req, res) => {
     try {
-      const response = await proxyToBackend(`/api/chats/${req.params.id}/messages/last`, {
-        method: "DELETE",
-      });
-      
-      if (!response.ok) {
-        return res.status(response.status).json({ message: "Failed to delete message" });
-      }
-      
+      const resp = await backendFetch(`/api/chats/${req.params.id}/messages/last-user`, { method: "DELETE" });
       res.json({ success: true });
-    } catch (error) {
-      console.error("Error deleting message:", error);
+    } catch (e) {
+      console.error("Error:", e);
       res.status(500).json({ message: "Failed to delete message" });
     }
   });
@@ -212,22 +159,15 @@ export async function registerRoutes(
   app.post(api.completions.create.path, async (req, res) => {
     try {
       const input = api.completions.create.input.parse(req.body);
-      
-      const response = await proxyToBackend("/api/completions", {
+      const resp = await backendFetch("/api/completions", {
         method: "POST",
-        body: JSON.stringify({
-          case_id: input.caseId,
-          chat_id: input.chatId,
-          diagnosis: input.diagnosis
-        }),
+        body: JSON.stringify({ case_id: input.caseId, chat_id: input.chatId, diagnosis: input.diagnosis }),
       });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        return res.status(response.status).json(error);
+      if (!resp.ok) {
+        const err = await resp.json();
+        return res.status(resp.status).json(err);
       }
-      
-      const data = await response.json();
+      const data = await resp.json();
       res.status(201).json({
         completion: {
           id: data.completion.id,
@@ -242,80 +182,55 @@ export async function registerRoutes(
       });
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({
-          message: err.errors[0].message,
-          field: err.errors[0].path.join(".")
-        });
+        return res.status(400).json({ message: err.errors[0].message, field: err.errors[0].path.join(".") });
       }
-      console.error("Error creating completion:", err);
+      console.error("Error:", err);
       res.status(500).json({ message: "Failed to submit diagnosis" });
     }
   });
 
   app.delete("/api/completions/retry/:chatId", async (req, res) => {
     try {
-      const response = await proxyToBackend(`/api/completions/retry/${req.params.chatId}`, {
-        method: "DELETE",
-      });
-      
-      if (!response.ok) {
-        return res.status(response.status).json({ message: "Failed to retry" });
-      }
-      
+      await backendFetch(`/api/completions/retry/${req.params.chatId}`, { method: "DELETE" });
       res.json({ success: true });
-    } catch (error) {
-      console.error("Error retrying completion:", error);
+    } catch (e) {
+      console.error("Error:", e);
       res.status(500).json({ message: "Failed to retry" });
     }
   });
 
   app.get(api.completions.userStats.path, async (req, res) => {
     try {
-      const response = await proxyToBackend("/api/user/stats");
-      if (!response.ok) {
-        return res.status(response.status).json({ message: "Failed to fetch stats" });
-      }
-      
-      const stats = await response.json();
-      res.json({
-        streak: stats.streak,
-        casesSolved: stats.cases_solved,
-        accuracy: stats.accuracy
-      });
-    } catch (error) {
-      console.error("Error fetching user stats:", error);
+      const resp = await backendFetch("/api/user/stats");
+      const stats = await resp.json();
+      res.json({ streak: stats.streak, casesSolved: stats.cases_solved, accuracy: stats.accuracy });
+    } catch (e) {
+      console.error("Error:", e);
       res.status(500).json({ message: "Failed to fetch stats" });
     }
   });
 
   app.get(api.completions.completedCases.path, async (req, res) => {
     try {
-      const response = await proxyToBackend("/api/completions/completed");
-      if (!response.ok) {
-        return res.status(response.status).json({ message: "Failed to fetch completed cases" });
-      }
-      
-      const completedIds = await response.json();
-      res.json(completedIds);
-    } catch (error) {
-      console.error("Error fetching completed cases:", error);
+      const resp = await backendFetch("/api/user/completed-cases");
+      const ids = await resp.json();
+      res.json(ids);
+    } catch (e) {
+      console.error("Error:", e);
       res.status(500).json({ message: "Failed to fetch completed cases" });
     }
   });
 
   app.get("/api/feedback/:chatId", async (req, res) => {
     try {
-      const response = await proxyToBackend(`/api/feedback/${req.params.chatId}`);
-      
-      if (!response.ok) {
-        const error = await response.json();
-        return res.status(response.status).json(error);
+      const resp = await backendFetch(`/api/feedback/${req.params.chatId}`);
+      if (!resp.ok) {
+        const err = await resp.json();
+        return res.status(resp.status).json(err);
       }
-      
-      const feedback = await response.json();
-      res.json(feedback);
-    } catch (error) {
-      console.error("Error fetching feedback:", error);
+      res.json(await resp.json());
+    } catch (e) {
+      console.error("Error:", e);
       res.status(500).json({ message: "Failed to fetch feedback" });
     }
   });
