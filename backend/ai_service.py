@@ -256,14 +256,38 @@ You MUST respond with valid JSON in this exact structure:
   },
   "decision_tree": {
     "id": "root",
-    "label": "Initial Presentation",
-    "correct": null,
+    "label": "<Chief Complaint - first sentence of what patient said>",
+    "type": "symptom",
+    "asked": true,
     "children": [
       {
         "id": "q1",
-        "label": "<first key question or topic explored>",
-        "correct": <true/false based on relevance>,
-        "children": [...]
+        "label": "<symptom or topic student asked about>",
+        "type": "symptom",
+        "asked": true,
+        "children": [
+          {
+            "id": "t1",
+            "label": "<test or exam if requested>",
+            "type": "test",
+            "asked": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ruled1",
+        "label": "<condition ruled out by questioning>",
+        "type": "ruled_out",
+        "asked": true,
+        "children": []
+      },
+      {
+        "id": "diag",
+        "label": "<final diagnosis>",
+        "type": "diagnosis",
+        "asked": <true if correct, false if wrong>,
+        "children": []
       }
     ]
   },
@@ -289,13 +313,29 @@ You MUST respond with valid JSON in this exact structure:
 
 ## DECISION TREE CONSTRUCTION
 
-Build the decision tree based on the student's actual questioning path:
-1. Start with "Initial Presentation" as root
-2. Each major topic/question branch becomes a child node
-3. Mark nodes as correct=true if the question was relevant to the diagnosis
-4. Mark nodes as correct=false if the question was irrelevant or a tangent
-5. Maximum depth of 4 levels
-6. Include 3-6 main branches representing key conversation topics
+Build a tree showing how the student's questions led to the diagnosis:
+
+1. **Root node**: The chief complaint (type="symptom", asked=true)
+2. **Children of root**: Main symptoms/topics the student asked about
+3. **Deeper nodes**: Tests requested, exam findings revealed, conditions ruled out
+4. **Final node**: The diagnosis (type="diagnosis", asked=true if correct, false if wrong)
+
+Node types:
+- "symptom": Questions about symptoms, history, onset, duration, etc.
+- "test": Physical exams, vital signs, lab tests, imaging requested
+- "ruled_out": Conditions/symptoms that were ruled out by questioning
+- "diagnosis": The final diagnosis (only one, at the end of a branch)
+
+Example tree for chest pain case:
+- Root: "Chest pain for 2 days" (symptom)
+  - "Pain radiation to arm" (symptom, asked=true)
+    - "ECG requested" (test, asked=true)
+      - "ST elevation found" (test, asked=true)
+        - "Acute MI" (diagnosis, asked=true)
+  - "Anxiety" (ruled_out, asked=true) - ruled out because pain is physical
+  - "Fever" (symptom, asked=false) - student didn't ask about this
+
+Maximum 4 levels deep. Include 3-6 main branches showing the actual conversation flow.
 
 ## CLUES ANALYSIS
 
@@ -644,15 +684,15 @@ async def generate_feedback(
             ruled_out_differentials=breakdown_data.get("ruled_out_differentials", 0))
 
         def parse_tree(node_data: dict) -> DecisionTreeNode:
-            return DecisionTreeNode(id=node_data.get("id", "node"),
-                                    label=node_data.get("label", "Unknown"),
-                                    correct=node_data.get("correct"),
-                                    children=[
-                                        parse_tree(c)
-                                        for c in node_data.get("children", [])
-                                    ])
+            return DecisionTreeNode(
+                id=node_data.get("id", "node"),
+                label=node_data.get("label", "Unknown"),
+                type=node_data.get("type", "symptom"),
+                asked=node_data.get("asked", True),
+                children=[parse_tree(c) for c in node_data.get("children", [])]
+            )
 
-        tree_data = feedback_data.get("decision_tree", {"id": "root", "label": "Interview", "correct": None, "children": []})
+        tree_data = feedback_data.get("decision_tree", {"id": "root", "label": "Interview", "type": "symptom", "asked": True, "children": []})
         decision_tree = parse_tree(tree_data)
 
         clues = []
@@ -764,6 +804,97 @@ def analyze_conversation_for_clues(request: FeedbackGenerationRequest) -> tuple[
     return clues[:6], strengths[:3], improvements[:3]
 
 
+def build_decision_tree_from_conversation(request: FeedbackGenerationRequest) -> DecisionTreeNode:
+    """Build a decision tree from the actual conversation"""
+    case = request.case
+    conversation = request.conversation
+    
+    # Extract topics from student messages
+    student_messages = [m.content.lower() for m in conversation if m.sender == "user"]
+    conversation_text = " ".join(student_messages)
+    
+    # Keywords for detecting different types of questions
+    symptom_keywords = ["pain", "hurt", "ache", "feel", "symptom", "when", "how long", "worse", "better", "start"]
+    test_keywords = ["examine", "check", "look at", "test", "blood pressure", "temperature", "listen", "vital"]
+    history_keywords = ["history", "before", "medication", "allergy", "family", "previous"]
+    
+    # Build tree children based on what student asked
+    tree_children = []
+    
+    # Check for symptom questions
+    asked_symptoms = []
+    presenting = case.presenting_symptoms or []
+    for symptom in presenting[:3]:
+        symptom_lower = symptom.lower()
+        symptom_words = symptom_lower.split()
+        if any(word in conversation_text for word in symptom_words if len(word) > 3):
+            asked_symptoms.append(symptom)
+    
+    # Add symptom branches
+    for i, symptom in enumerate(asked_symptoms[:2]):
+        tree_children.append(DecisionTreeNode(
+            id=f"sym{i+1}",
+            label=symptom[:40],
+            type="symptom",
+            asked=True,
+            children=[]
+        ))
+    
+    # Check for tests/exams
+    if any(kw in conversation_text for kw in test_keywords):
+        exam_findings = case.exam_findings or []
+        if exam_findings:
+            tree_children.append(DecisionTreeNode(
+                id="test1",
+                label=exam_findings[0][:40] if exam_findings else "Physical exam",
+                type="test",
+                asked=True,
+                children=[]
+            ))
+    
+    # Check for history
+    if any(kw in conversation_text for kw in history_keywords):
+        tree_children.append(DecisionTreeNode(
+            id="hist",
+            label="Medical history reviewed",
+            type="symptom",
+            asked=True,
+            children=[]
+        ))
+    
+    # Add missed important symptoms as not asked
+    for i, symptom in enumerate(presenting[:2]):
+        if symptom not in asked_symptoms:
+            tree_children.append(DecisionTreeNode(
+                id=f"missed{i}",
+                label=f"{symptom[:35]}",
+                type="symptom",
+                asked=False,
+                children=[]
+            ))
+    
+    # Add final diagnosis
+    is_correct = request.diagnosis_result == "correct"
+    tree_children.append(DecisionTreeNode(
+        id="diag",
+        label=request.student_diagnosis,
+        type="diagnosis",
+        asked=is_correct,
+        children=[]
+    ))
+    
+    # Root node with chief complaint
+    chief = case.title[:60] if case.title else "Patient presents with symptoms"
+    
+    return DecisionTreeNode(
+        id="root",
+        label=chief,
+        type="symptom",
+        asked=True,
+        children=tree_children
+    )
+
+
 def create_fallback_feedback(
         request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
     """Create case-specific fallback feedback if AI parsing fails"""
@@ -775,33 +906,11 @@ def create_fallback_feedback(
     # Analyze the actual conversation
     clues, strengths, improvements = analyze_conversation_for_clues(request)
     
-    # Build case-specific decision tree
-    presenting = case.presenting_symptoms or []
-    tree_children = [
-        DecisionTreeNode(
-            id="chief",
-            label=f"Chief Complaint: {case.chief_complaint[:50] if case.chief_complaint else 'Explored'}...",
-            correct=True,
-            children=[]
-        )
-    ]
-    
-    if len(presenting) > 0:
-        tree_children.append(DecisionTreeNode(
-            id="sym1",
-            label=f"Symptom: {presenting[0][:40]}",
-            correct=True,
-            children=[]
-        ))
-    
-    tree_children.append(DecisionTreeNode(
-        id="diag",
-        label=f"Diagnosis: {request.student_diagnosis}",
-        correct=request.diagnosis_result == "correct",
-        children=[]
-    ))
+    # Build conversation-based decision tree
+    decision_tree = build_decision_tree_from_conversation(request)
     
     # Generate case-specific tip
+    presenting = case.presenting_symptoms or []
     specialty_tips = {
         "General Medicine": f"For {case.expected_diagnosis}, key symptoms include: {', '.join(presenting[:3]) if presenting else 'the presenting complaints'}. Always explore these thoroughly.",
         "Cardiology": "For cardiac cases, always ask about radiation of pain, associated symptoms like sweating or nausea, and risk factors.",
@@ -831,11 +940,7 @@ def create_fallback_feedback(
             right_tests=15,
             time_efficiency=8,
             ruled_out_differentials=10 if request.diagnosis_result == "correct" else 5),
-        decision_tree=DecisionTreeNode(
-            id="root",
-            label="Clinical Interview",
-            correct=None,
-            children=tree_children),
+        decision_tree=decision_tree,
         clues=clues if clues else [
             MissedClue(id="c1", text="Chief complaint explored", importance="critical", asked=True),
             MissedClue(id="c2", text="Duration of symptoms", importance="helpful", asked=True),

@@ -101,8 +101,9 @@ class DecisionTreeNode(BaseModel):
     """Node in the diagnostic decision tree visualization"""
     id: str
     label: str
+    type: str = Field(default="symptom", description="Node type: symptom, test, diagnosis, or ruled_out")
+    asked: bool = Field(default=True, description="Whether the student asked about this")
     children: list["DecisionTreeNode"] = Field(default_factory=list)
-    correct: Optional[bool] = None
 
 
 class MissedClue(BaseModel):
