@@ -42,10 +42,12 @@ ClinIQ is a medical education platform that helps medical students practice clin
 - All endpoints are stateless - no session management on backend
 
 ### AI Integration
-- Gemini AI integration for realistic patient simulation
+- Claude AI (Anthropic) integration for realistic patient simulation
+- Uses claude-3-5-haiku model for fast, cost-effective responses
 - Patient simulation prompt with ambiguity rules, symptom disclosure, consistency
 - AI-generated feedback with structured scoring and personalized insights
 - Automatic symptom extraction from case descriptions
+- Smart fallback system when AI is unavailable
 
 ### Feedback System
 - Visual Feedback page with 5 core components:
@@ -64,7 +66,7 @@ ClinIQ is a medical education platform that helps medical students practice clin
 │   ├── crud.py                 # CRUD operations for cases
 │   ├── schemas.py              # Pydantic schemas
 │   ├── ai_schemas.py           # AI request/response schemas
-│   ├── ai_service.py           # Gemini AI integration
+│   ├── ai_service.py           # Claude AI integration
 │   ├── seed_data.py            # Database seeding script
 │   └── training_cases.json     # 62 validated medical cases
 │
@@ -126,7 +128,7 @@ completions (id, user_id, case_id, chat_id, diagnosis, result, created_at)
 | Variable | Description |
 |----------|-------------|
 | `DATABASE_URL` | PostgreSQL connection string |
-| `GEMINI_API_KEY` | Google Gemini API key for AI |
+| `ANTHROPIC_API_KEY` | Anthropic API key for Claude AI |
 | `BACKEND_URL` | Backend API URL (default: http://localhost:8000) |
 
 ## Local Development Setup
@@ -251,13 +253,13 @@ DATABASE_URL=postgresql://your_username@localhost:5432/cliniq
 
 # Optional - Google Gemini API key for AI patient conversations
 # Get your key from https://aistudio.google.com/apikey
-GEMINI_API_KEY=your_gemini_api_key_here
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
 ```
 
 **Important Notes:**
 - Replace `your_username` with your actual macOS username (run `whoami` to find it)
 - `DATABASE_URL` is **required** - the app won't start without it
-- `GEMINI_API_KEY` is optional; without it, AI patient responses will use basic fallback messages
+- `ANTHROPIC_API_KEY` is optional; without it, AI patient responses will use basic fallback messages
 - The `.env` file is gitignored and won't be committed to the repository
 
 ### Step 7: Seed the Database
