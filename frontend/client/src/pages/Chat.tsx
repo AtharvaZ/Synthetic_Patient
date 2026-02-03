@@ -344,24 +344,19 @@ export default function Chat() {
           </div>
 
           <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <h2 className={`text-base font-semibold truncate mb-1.5 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                {caseData.chiefComplaint}
-              </h2>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isDarkMode ? "bg-white/[0.06] text-slate-300" : "bg-slate-100 text-slate-600"}`}>
-                  {caseData.specialty}
-                </span>
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                  caseData.difficulty === "Beginner" 
-                    ? "bg-emerald-500/10 text-emerald-400" 
-                    : caseData.difficulty === "Intermediate"
-                    ? "bg-amber-500/10 text-amber-400"
-                    : "bg-rose-500/10 text-rose-400"
-                }`}>
-                  {caseData.difficulty}
-                </span>
-              </div>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isDarkMode ? "bg-white/[0.06] text-slate-300" : "bg-slate-100 text-slate-600"}`}>
+                {caseData.specialty}
+              </span>
+              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                caseData.difficulty === "Beginner" 
+                  ? "bg-emerald-500/10 text-emerald-400" 
+                  : caseData.difficulty === "Intermediate"
+                  ? "bg-amber-500/10 text-amber-400"
+                  : "bg-rose-500/10 text-rose-400"
+              }`}>
+                {caseData.difficulty}
+              </span>
             </div>
             <motion.button
               onClick={() => setShowDiagnoseInput(true)}
