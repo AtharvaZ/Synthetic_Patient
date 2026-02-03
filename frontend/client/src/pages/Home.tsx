@@ -5,7 +5,7 @@ import {
   Stethoscope, Brain, Target, Award, ArrowRight, Activity, Zap,
   Heart, Pill, Microscope, Thermometer, Clipboard, GraduationCap, ChevronRight,
   Star, Trophy, Sparkles, BookOpen, Globe, Palette, Calculator, FlaskConical,
-  Sun, Moon, MessageCircle, User, Wind, Bone
+  Sun, Moon, MessageCircle, User, Wind, Bone, Eye, Ear, Bug, Smile, Droplets, Gauge
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -119,14 +119,18 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="mt-16 grid grid-cols-2 gap-12 max-w-md mx-auto"
+            className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
           >
             <div className="text-center">
               <p className="text-3xl font-bold bg-gradient-to-r from-[#137fec] to-cyan-400 bg-clip-text text-transparent"><AnimatedCounter end={62} />+</p>
               <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Patient Cases</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent"><AnimatedCounter end={150} />+</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent"><AnimatedCounter end={12} /></p>
+              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Categories</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent"><AnimatedCounter end={150} />+</p>
               <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Symptoms</p>
             </div>
           </motion.div>
@@ -140,12 +144,19 @@ export default function Home() {
             <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Conditions Covered</h2>
             <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Practice diagnosing common GP-level conditions</p>
           </div>
-          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
             <CategoryBadge icon={Heart} label="Cardiovascular" color="red" isDarkMode={isDarkMode} />
             <CategoryBadge icon={Wind} label="Respiratory" color="cyan" isDarkMode={isDarkMode} />
             <CategoryBadge icon={Brain} label="Neurological" color="purple" isDarkMode={isDarkMode} />
             <CategoryBadge icon={Pill} label="Gastrointestinal" color="green" isDarkMode={isDarkMode} />
             <CategoryBadge icon={Bone} label="Musculoskeletal" color="orange" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Droplets} label="Dermatological" color="pink" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Ear} label="ENT" color="teal" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Activity} label="Genitourinary" color="blue" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Gauge} label="Endocrine" color="amber" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Smile} label="Mental Health" color="indigo" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Bug} label="Infectious" color="lime" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Eye} label="Ophthalmology" color="sky" isDarkMode={isDarkMode} />
           </div>
         </div>
       </section>
@@ -330,14 +341,21 @@ function CategoryBadge({ icon: Icon, label, color, isDarkMode }: { icon: any, la
     cyan: `${isDarkMode ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' : 'bg-cyan-50 text-cyan-600 border-cyan-200'}`,
     green: `${isDarkMode ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-green-50 text-green-600 border-green-200'}`,
     orange: `${isDarkMode ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 'bg-orange-50 text-orange-600 border-orange-200'}`,
+    pink: `${isDarkMode ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' : 'bg-pink-50 text-pink-600 border-pink-200'}`,
+    teal: `${isDarkMode ? 'bg-teal-500/10 text-teal-400 border-teal-500/20' : 'bg-teal-50 text-teal-600 border-teal-200'}`,
+    blue: `${isDarkMode ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-blue-50 text-blue-600 border-blue-200'}`,
+    amber: `${isDarkMode ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-amber-50 text-amber-600 border-amber-200'}`,
+    indigo: `${isDarkMode ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200'}`,
+    lime: `${isDarkMode ? 'bg-lime-500/10 text-lime-400 border-lime-500/20' : 'bg-lime-50 text-lime-600 border-lime-200'}`,
+    sky: `${isDarkMode ? 'bg-sky-500/10 text-sky-400 border-sky-500/20' : 'bg-sky-50 text-sky-600 border-sky-200'}`,
   };
   
   return (
     <div 
-      className={`flex items-center gap-3 px-5 py-3 rounded-xl border ${colors[color]}`}
+      className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border ${colors[color]}`}
     >
-      <Icon className="w-5 h-5" />
-      <span className="font-semibold">{label}</span>
+      <Icon className="w-4 h-4" />
+      <span className="font-medium text-sm">{label}</span>
     </div>
   );
 }
