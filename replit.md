@@ -48,7 +48,8 @@ The app will be available at `http://localhost:5000`
 │   ├── tsconfig.json        # TypeScript configuration
 │   ├── tailwind.config.ts   # Tailwind CSS configuration
 │   ├── drizzle.config.ts    # Drizzle ORM configuration
-│   ├── components.json      # Shadcn/ui configuration
+│   └── components.json      # Shadcn/ui configuration
+│   client/
 │   └── postcss.config.js    # PostCSS configuration
 ├── package.json
 └── .env.example
