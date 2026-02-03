@@ -83,10 +83,10 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
+            className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}
           >
             Master the Art of <br />
-            <span className="bg-gradient-to-r from-[#137fec] via-purple-500 to-pink-500 bg-clip-text text-transparent">Clinical Diagnosis</span>
+            <span className="bg-gradient-to-r from-[#137fec] via-purple-600 to-pink-600 bg-clip-text text-transparent">Clinical Diagnosis</span>
           </motion.h1>
 
           <motion.p 
@@ -134,7 +134,7 @@ export default function Home() {
       <section className={`py-16 border-y ${isDarkMode ? 'border-[#283039]' : 'border-slate-200'}`}>
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold mb-2">Conditions Covered</h2>
+            <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Conditions Covered</h2>
             <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Practice diagnosing common GP-level conditions</p>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6">
@@ -151,7 +151,7 @@ export default function Home() {
       <section className={`py-20 border-t ${isDarkMode ? 'border-white/5' : 'border-slate-100'} overflow-hidden`}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">The Learning Journey</h2>
+            <h2 className={`text-3xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>The Learning Journey</h2>
             <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Follow the path to diagnostic mastery</p>
           </div>
           
@@ -188,13 +188,13 @@ export default function Home() {
                     1
                   </div>
                 </motion.div>
-                <h3 className="font-bold text-lg mb-1">Read Case</h3>
+                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Read Case</h3>
                 <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Review patient presentation</p>
               </motion.div>
 
               {/* Node 2 - Ask Questions */}
               <motion.div 
-                className="flex flex-col items-center md:mt-16"
+                className="flex flex-col items-center"
                 initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ 
@@ -221,13 +221,13 @@ export default function Home() {
                     2
                   </div>
                 </motion.div>
-                <h3 className="font-bold text-lg mb-1">Ask Questions</h3>
+                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Ask Questions</h3>
                 <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Chat with AI patient</p>
               </motion.div>
 
               {/* Node 3 - Diagnose */}
               <motion.div 
-                className="flex flex-col items-center md:mt-24"
+                className="flex flex-col items-center"
                 initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ 
@@ -254,13 +254,13 @@ export default function Home() {
                     3
                   </div>
                 </motion.div>
-                <h3 className="font-bold text-lg mb-1">Diagnose</h3>
+                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Diagnose</h3>
                 <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Submit your answer</p>
               </motion.div>
 
               {/* Node 4 - Learn */}
               <motion.div 
-                className="flex flex-col items-center md:mt-8"
+                className="flex flex-col items-center"
                 initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ 
@@ -287,7 +287,7 @@ export default function Home() {
                     4
                   </div>
                 </motion.div>
-                <h3 className="font-bold text-lg mb-1">Learn</h3>
+                <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Learn</h3>
                 <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'} text-center`}>Review feedback</p>
               </motion.div>
             </div>
@@ -299,7 +299,7 @@ export default function Home() {
       <section className={`py-20 ${isDarkMode ? 'bg-[#0d0d10]' : 'bg-slate-50'} border-t ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Interactive Patient Chat</h2>
+            <h2 className={`text-3xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Interactive Patient Chat</h2>
             <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Ask questions and gather information like a real consultation</p>
           </div>
           
@@ -364,7 +364,7 @@ export default function Home() {
             <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#137fec]/20 to-purple-500/20 flex items-center justify-center">
               <Stethoscope className="w-8 h-8 text-[#137fec]" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Start Practicing?</h2>
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Ready to Start Practicing?</h2>
             <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'} mb-8 max-w-[500px] mx-auto`}>
               Begin diagnosing patients and sharpen your clinical reasoning skills today.
             </p>
@@ -385,7 +385,7 @@ export default function Home() {
             <div className="bg-gradient-to-br from-[#137fec]/10 to-purple-500/10 p-2 rounded-xl">
               <Stethoscope className="w-5 h-5 text-[#137fec]" />
             </div>
-            <span className="text-lg font-bold">MediTutor AI</span>
+            <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>MediTutor AI</span>
           </div>
           <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>© 2024 MediTutor AI. Educational purposes only.</p>
         </div>
