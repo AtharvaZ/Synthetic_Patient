@@ -39,7 +39,7 @@ export default function Home() {
             <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
               <Stethoscope className="w-5 h-5" />
             </div>
-            <h2 className="text-xl font-bold tracking-tight">MediTutor AI</h2>
+            <h2 className="text-xl font-bold tracking-tight">CaseLab</h2>
           </div>
           <div className="flex items-center gap-4">
             <button 
@@ -119,19 +119,15 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
+            className="mt-16 grid grid-cols-2 gap-12 max-w-sm mx-auto"
           >
             <div className="text-center">
-              <p className="text-3xl font-bold bg-gradient-to-r from-[#137fec] to-cyan-400 bg-clip-text text-transparent"><AnimatedCounter end={62} />+</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-[#137fec] to-cyan-400 bg-clip-text text-transparent"><AnimatedCounter end={3} /></p>
               <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Patient Cases</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent"><AnimatedCounter end={12} /></p>
-              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Categories</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent"><AnimatedCounter end={150} />+</p>
-              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Symptoms</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent"><AnimatedCounter end={3} /></p>
+              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Specialties</p>
             </div>
           </motion.div>
         </div>
@@ -144,19 +140,10 @@ export default function Home() {
             <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Conditions Covered</h2>
             <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Practice diagnosing common GP-level conditions</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
-            <CategoryBadge icon={Heart} label="Cardiovascular" color="red" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Wind} label="Respiratory" color="cyan" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Brain} label="Neurological" color="purple" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Pill} label="Gastrointestinal" color="green" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Bone} label="Musculoskeletal" color="orange" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Droplets} label="Dermatological" color="pink" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Ear} label="ENT" color="teal" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Activity} label="Genitourinary" color="blue" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Gauge} label="Endocrine" color="amber" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Smile} label="Mental Health" color="indigo" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Bug} label="Infectious" color="lime" isDarkMode={isDarkMode} />
-            <CategoryBadge icon={Eye} label="Ophthalmology" color="sky" isDarkMode={isDarkMode} />
+          <div className="flex flex-wrap justify-center items-center gap-3 md:gap-4">
+            <CategoryBadge icon={Heart} label="Cardiology" color="red" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={Brain} label="Neurology" color="purple" isDarkMode={isDarkMode} />
+            <CategoryBadge icon={User} label="Pediatrics" color="cyan" isDarkMode={isDarkMode} />
           </div>
         </div>
       </section>
@@ -325,9 +312,9 @@ export default function Home() {
             <div className="bg-gradient-to-br from-[#137fec]/10 to-teal-500/10 p-2 rounded-xl">
               <Stethoscope className="w-5 h-5 text-[#137fec]" />
             </div>
-            <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>MediTutor AI</span>
+            <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>CaseLab</span>
           </div>
-          <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>© 2024 MediTutor AI. Educational purposes only.</p>
+              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>© 2024 CaseLab. Educational purposes only.</p>
         </div>
       </footer>
     </div>

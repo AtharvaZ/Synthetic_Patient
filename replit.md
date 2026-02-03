@@ -1,8 +1,8 @@
-# MediTutor AI - Frontend
+# CaseLab - Frontend
 
 ## Overview
 
-MediTutor AI is a medical education platform that helps medical students practice clinical diagnosis through interactive case simulations. This is the frontend branch with React + Express.
+CaseLab is a medical education platform that helps medical students practice clinical diagnosis through interactive case simulations with AI-powered patient conversations. This is the frontend branch with React + Express.
 
 ## Local Setup
 
