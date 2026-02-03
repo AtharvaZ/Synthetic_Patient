@@ -313,29 +313,27 @@ Include 6-10 clues covering the most important symptoms and findings.
 ### Summary
 Write a balanced 2-3 sentence assessment. Be SPECIFIC to this exact conversation - mention the actual condition and actual questions asked. Never be generic.
 
-### Strengths (2-4 items)
-CRITICAL: Each strength MUST reference a specific action from the conversation. Examples:
-- "Asked about duration and severity of the chest pain early in the interview"
-- "Correctly followed up on the patient's mention of shortness of breath"
-- "Requested appropriate vitals examination before concluding"
-- "Explored family history which was relevant to the cardiac presentation"
+### Strengths (EXACTLY 2-3 items - NO MORE, NO LESS)
+You MUST provide exactly 2-3 strengths. Each MUST reference a specific question or action from this conversation.
 
-BAD (too generic - NEVER do this):
-- "Good questioning technique"
-- "Thorough approach"
-- "Nice interview style"
+GOOD examples:
+- "Asked about onset and duration of symptoms which helped narrow the diagnosis"
+- "Followed up on the patient's shortness of breath appropriately"
+- "Requested vital signs check before making a diagnosis"
 
-### Improvements (2-4 items)
-CRITICAL: Each improvement MUST be specific and actionable. Reference actual symptoms or areas they missed. Examples:
-- "Did not ask about radiation of pain, which would have helped localize the issue"
-- "Missed exploring associated GI symptoms like nausea, which was present in this case"
-- "Should have asked about medication history earlier - patient was on relevant medications"
-- "No physical examination requested despite abdominal complaint"
+BAD examples (NEVER use generic statements like these):
+- "Good questioning" / "Completed the case" / "Nice approach"
 
-BAD (too generic - NEVER do this):
-- "Could improve questioning"
-- "Consider being more thorough"
-- "Work on clinical reasoning"
+### Improvements (EXACTLY 2-3 items - NO MORE, NO LESS)
+You MUST provide exactly 2-3 improvements. Each MUST name a specific symptom, question, or exam that was missed.
+
+GOOD examples:
+- "Did not ask about pain radiation which would help localize the cardiac issue"
+- "Missed asking about medication history - patient was on beta blockers"
+- "Should have examined the abdomen given the GI symptoms"
+
+BAD examples (NEVER use statements like these):
+- "The correct diagnosis was X" / "Could be more thorough" / "Improve questioning"
 
 ### Tip
 One SPECIFIC, ACTIONABLE recommendation that directly relates to what they missed in THIS case. Not generic advice.
