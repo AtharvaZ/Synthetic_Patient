@@ -4,10 +4,12 @@ FastAPI Medical Case Training API
 
 import os
 import sys
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 from sqlalchemy.orm import Session
 from typing import Optional
 
@@ -18,8 +20,7 @@ import schemas
 app = FastAPI(
     title="Medical Case Training API",
     description="API for medical student training with GP-level patient cases",
-    version="1.0.0"
-)
+    version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,6 +29,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.on_event("startup")
 def on_startup():
@@ -45,10 +47,8 @@ def get_stats(db: Session = Depends(get_db)):
 
 
 @app.get("/api/cases", response_model=schemas.CaseListResponse)
-def get_cases(
-    difficulty: Optional[int] = Query(None, ge=1, le=3),
-    db: Session = Depends(get_db)
-):
+def get_cases(difficulty: Optional[int] = Query(None, ge=1, le=3),
+              db: Session = Depends(get_db)):
     cases = crud.get_all_cases_detail(db, difficulty=difficulty)
     return {"total": len(cases), "cases": cases}
 
@@ -65,12 +65,15 @@ def get_case(case_id: int, db: Session = Depends(get_db)):
 def create_case(case: schemas.CaseCreate, db: Session = Depends(get_db)):
     existing = crud.get_case_by_case_id(db, case.case_id)
     if existing:
-        raise HTTPException(status_code=400, detail="Case with this case_id already exists")
+        raise HTTPException(status_code=400,
+                            detail="Case with this case_id already exists")
     return crud.create_case(db, case)
 
 
 @app.put("/api/cases/{case_id}", response_model=schemas.CaseResponse)
-def update_case(case_id: int, case_update: schemas.CaseUpdate, db: Session = Depends(get_db)):
+def update_case(case_id: int,
+                case_update: schemas.CaseUpdate,
+                db: Session = Depends(get_db)):
     updated = crud.update_case(db, case_id, case_update)
     if not updated:
         raise HTTPException(status_code=404, detail="Case not found")
@@ -85,12 +88,10 @@ def delete_case(case_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/api/symptoms", response_model=list[schemas.SymptomResponse])
-def get_symptoms(
-    category: Optional[str] = None,
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
+def get_symptoms(category: Optional[str] = None,
+                 skip: int = 0,
+                 limit: int = 100,
+                 db: Session = Depends(get_db)):
     return crud.get_symptoms(db, category=category, skip=skip, limit=limit)
 
 
@@ -103,7 +104,8 @@ def get_symptom(symptom_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/api/symptoms", response_model=schemas.SymptomResponse)
-def create_symptom(symptom: schemas.SymptomCreate, db: Session = Depends(get_db)):
+def create_symptom(symptom: schemas.SymptomCreate,
+                   db: Session = Depends(get_db)):
     existing = crud.get_symptom_by_name(db, symptom.name)
     if existing:
         raise HTTPException(status_code=400, detail="Symptom already exists")
@@ -118,24 +120,25 @@ def delete_symptom(symptom_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/api/cases/{case_id}/symptoms")
-def add_symptom_to_case(
-    case_id: int,
-    symptom_data: schemas.CaseSymptomCreate,
-    db: Session = Depends(get_db)
-):
+def add_symptom_to_case(case_id: int,
+                        symptom_data: schemas.CaseSymptomCreate,
+                        db: Session = Depends(get_db)):
     case = crud.get_case(db, case_id)
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
-    
+
     symptom = crud.get_symptom(db, symptom_data.symptom_id)
     if not symptom:
         raise HTTPException(status_code=404, detail="Symptom not found")
-    
-    return crud.add_case_symptom(db, case_id, symptom_data.symptom_id, symptom_data.symptom_type)
+
+    return crud.add_case_symptom(db, case_id, symptom_data.symptom_id,
+                                 symptom_data.symptom_type)
 
 
 @app.delete("/api/cases/{case_id}/symptoms/{case_symptom_id}")
-def remove_symptom_from_case(case_id: int, case_symptom_id: int, db: Session = Depends(get_db)):
+def remove_symptom_from_case(case_id: int,
+                             case_symptom_id: int,
+                             db: Session = Depends(get_db)):
     if not crud.remove_case_symptom(db, case_symptom_id):
         raise HTTPException(status_code=404, detail="Case symptom not found")
     return {"message": "Symptom removed from case"}
@@ -154,5 +157,5 @@ def search_by_diagnosis(diagnosis: str, db: Session = Depends(get_db)):
 
 
 if __name__ == "__main__":
-    import uvicorn
+    Base.metadata.create_all(bind=engine)
     uvicorn.run(app, host="0.0.0.0", port=5000)
