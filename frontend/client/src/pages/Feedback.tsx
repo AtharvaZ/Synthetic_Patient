@@ -321,11 +321,7 @@ export default function Feedback() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className={`rounded-2xl p-6 ${isDarkMode ? "bg-white/[0.02] border border-white/[0.06]" : "bg-white border border-slate-200 shadow-sm"}`}
               >
-                <h3 className={`text-base font-semibold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                  Similar Cases (by symptoms)
-                </h3>
                 <SimilarCases 
                   cases={similarCases} 
                   completedCaseIds={Array.from(completedSet)}

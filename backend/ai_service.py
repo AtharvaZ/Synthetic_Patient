@@ -582,6 +582,31 @@ Your answer:"""
         return "wrong"
 
 
+def extract_json_from_response(text: str) -> str:
+    """Extract JSON from AI response, handling various formats"""
+    text = text.strip()
+    
+    # Remove markdown code blocks
+    if "```json" in text:
+        start = text.find("```json") + 7
+        end = text.find("```", start)
+        if end > start:
+            text = text[start:end].strip()
+    elif "```" in text:
+        start = text.find("```") + 3
+        end = text.find("```", start)
+        if end > start:
+            text = text[start:end].strip()
+    
+    # Find JSON object boundaries
+    start_brace = text.find("{")
+    end_brace = text.rfind("}")
+    if start_brace != -1 and end_brace != -1 and end_brace > start_brace:
+        text = text[start_brace:end_brace + 1]
+    
+    return text.strip()
+
+
 async def generate_feedback(
         request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
     """Generate detailed feedback using Gemini"""
@@ -592,36 +617,31 @@ async def generate_feedback(
         student_diagnosis=request.student_diagnosis,
         diagnosis_result=request.diagnosis_result)
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash-lite",
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            temperature=0.3,
-            max_output_tokens=2000,
-        ))
-
-    response_text = response.text.strip()
-    if response_text.startswith("```json"):
-        response_text = response_text[7:]
-    if response_text.startswith("```"):
-        response_text = response_text[3:]
-    if response_text.endswith("```"):
-        response_text = response_text[:-3]
-    response_text = response_text.strip()
-
     try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash-lite",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.3,
+                max_output_tokens=2500,
+            ))
+        
+        response_text = extract_json_from_response(response.text)
         feedback_data = json.loads(response_text)
-    except json.JSONDecodeError as e:
+        
+    except (json.JSONDecodeError, Exception) as e:
+        print(f"AI feedback error: {e}")
         return create_fallback_feedback(request)
 
     try:
+        # Safely extract with defaults
+        breakdown_data = feedback_data.get("breakdown", {})
         breakdown = ScoreBreakdown(
-            correct_diagnosis=feedback_data["breakdown"]["correct_diagnosis"],
-            key_questions=feedback_data["breakdown"]["key_questions"],
-            right_tests=feedback_data["breakdown"]["right_tests"],
-            time_efficiency=feedback_data["breakdown"]["time_efficiency"],
-            ruled_out_differentials=feedback_data["breakdown"]
-            ["ruled_out_differentials"])
+            correct_diagnosis=breakdown_data.get("correct_diagnosis", 0),
+            key_questions=breakdown_data.get("key_questions", 0),
+            right_tests=breakdown_data.get("right_tests", 0),
+            time_efficiency=breakdown_data.get("time_efficiency", 0),
+            ruled_out_differentials=breakdown_data.get("ruled_out_differentials", 0))
 
         def parse_tree(node_data: dict) -> DecisionTreeNode:
             return DecisionTreeNode(id=node_data.get("id", "node"),
@@ -632,95 +652,200 @@ async def generate_feedback(
                                         for c in node_data.get("children", [])
                                     ])
 
-        decision_tree = parse_tree(feedback_data["decision_tree"])
+        tree_data = feedback_data.get("decision_tree", {"id": "root", "label": "Interview", "correct": None, "children": []})
+        decision_tree = parse_tree(tree_data)
 
-        clues = [
-            MissedClue(id=c["id"],
-                       text=c["text"],
-                       importance=c["importance"],
-                       asked=c["asked"]) for c in feedback_data["clues"]
-        ]
+        clues = []
+        for i, c in enumerate(feedback_data.get("clues", [])):
+            clues.append(MissedClue(
+                id=c.get("id", f"clue{i}"),
+                text=c.get("text", "Unknown"),
+                importance=c.get("importance", "helpful"),
+                asked=c.get("asked", False)
+            ))
 
+        insight_data = feedback_data.get("insight", {})
         insight = AIInsight(
-            summary=feedback_data["insight"]["summary"],
-            strengths=feedback_data["insight"]["strengths"],
-            improvements=feedback_data["insight"]["improvements"],
-            tip=feedback_data["insight"]["tip"])
+            summary=insight_data.get("summary", f"Review your approach to this {request.case.specialty} case."),
+            strengths=insight_data.get("strengths", ["Engaged with the patient"]),
+            improvements=insight_data.get("improvements", ["Consider a more systematic approach"]),
+            tip=insight_data.get("tip", "Use structured history-taking for consistent results."))
 
         return FeedbackGenerationResponse(
-            score=feedback_data["score"],
+            score=feedback_data.get("score", 50),
             breakdown=breakdown,
             decision_tree=decision_tree,
             clues=clues,
             insight=insight,
-            user_diagnosis=feedback_data["user_diagnosis"],
-            correct_diagnosis=feedback_data["correct_diagnosis"],
-            result=feedback_data["result"])
+            user_diagnosis=feedback_data.get("user_diagnosis", request.student_diagnosis),
+            correct_diagnosis=feedback_data.get("correct_diagnosis", request.case.expected_diagnosis),
+            result=feedback_data.get("result", request.diagnosis_result))
 
-    except (KeyError, TypeError) as e:
+    except Exception as e:
+        print(f"AI feedback parsing error: {e}")
         return create_fallback_feedback(request)
+
+
+def analyze_conversation_for_clues(request: FeedbackGenerationRequest) -> tuple[list[MissedClue], list[str], list[str]]:
+    """Analyze conversation to find what was asked about and what was missed"""
+    case = request.case
+    conversation_text = " ".join([m.content.lower() for m in request.conversation])
+    
+    clues = []
+    strengths = []
+    improvements = []
+    
+    presenting = case.presenting_symptoms or []
+    absent = case.absent_symptoms or []
+    exam_findings = case.exam_findings or []
+    
+    # Check which symptoms were explored
+    symptom_keywords = {
+        "pain": ["pain", "hurt", "ache", "sore"],
+        "fever": ["fever", "temperature", "hot", "chills"],
+        "cough": ["cough", "coughing"],
+        "nausea": ["nausea", "nauseous", "sick"],
+        "vomiting": ["vomit", "throw up", "throwing up"],
+        "fatigue": ["tired", "fatigue", "exhausted", "energy"],
+        "headache": ["headache", "head hurt", "head pain"],
+        "rash": ["rash", "skin", "itchy", "itch"],
+        "breathing": ["breath", "breathing", "shortness"],
+        "swelling": ["swell", "swollen", "swelling"],
+        "duration": ["how long", "when did", "started", "began"],
+        "severity": ["how bad", "scale", "worse", "better"],
+        "medications": ["medication", "medicine", "taking", "drugs"],
+        "allergies": ["allergy", "allergic", "allergies"],
+        "history": ["history", "before", "previous", "past"],
+    }
+    
+    asked_about = set()
+    for keyword, variations in symptom_keywords.items():
+        if any(v in conversation_text for v in variations):
+            asked_about.add(keyword)
+    
+    # Generate clues from presenting symptoms
+    for i, symptom in enumerate(presenting[:5]):
+        symptom_lower = symptom.lower()
+        was_asked = any(kw in symptom_lower or any(v in conversation_text for v in variations) 
+                        for kw, variations in symptom_keywords.items() if kw in symptom_lower)
+        
+        clues.append(MissedClue(
+            id=f"p{i+1}",
+            text=symptom,
+            importance="critical" if i < 2 else "helpful",
+            asked=was_asked
+        ))
+        
+        if was_asked and i < 2:
+            strengths.append(f"Asked about {symptom.lower()}")
+        elif not was_asked and i < 3:
+            improvements.append(f"Missed asking about {symptom.lower()} - a key symptom")
+    
+    # Add general interview clues
+    if "duration" in asked_about:
+        strengths.append("Inquired about symptom duration and timeline")
+    else:
+        improvements.append("Should ask about when symptoms started and how long they've lasted")
+    
+    if "medications" in asked_about or "history" in asked_about:
+        strengths.append("Explored patient's medical history")
+    
+    # Ensure we have enough strengths and improvements
+    if len(strengths) < 2:
+        strengths.append("Engaged with the patient throughout the interview")
+    if len(strengths) < 2:
+        strengths.append("Worked through the case systematically")
+    
+    if len(improvements) < 2:
+        improvements.append(f"For {case.specialty} cases, consider a more systematic review of systems")
+    if len(improvements) < 2:
+        improvements.append("Try asking about aggravating and relieving factors")
+    
+    return clues[:6], strengths[:3], improvements[:3]
 
 
 def create_fallback_feedback(
         request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
-    """Create fallback feedback if AI parsing fails"""
-
+    """Create case-specific fallback feedback if AI parsing fails"""
+    
+    case = request.case
     score_map = {"correct": 85, "partial": 55, "wrong": 25}
     base_score = score_map.get(request.diagnosis_result, 50)
+    
+    # Analyze the actual conversation
+    clues, strengths, improvements = analyze_conversation_for_clues(request)
+    
+    # Build case-specific decision tree
+    presenting = case.presenting_symptoms or []
+    tree_children = [
+        DecisionTreeNode(
+            id="chief",
+            label=f"Chief Complaint: {case.chief_complaint[:50] if case.chief_complaint else 'Explored'}...",
+            correct=True,
+            children=[]
+        )
+    ]
+    
+    if len(presenting) > 0:
+        tree_children.append(DecisionTreeNode(
+            id="sym1",
+            label=f"Symptom: {presenting[0][:40]}",
+            correct=True,
+            children=[]
+        ))
+    
+    tree_children.append(DecisionTreeNode(
+        id="diag",
+        label=f"Diagnosis: {request.student_diagnosis}",
+        correct=request.diagnosis_result == "correct",
+        children=[]
+    ))
+    
+    # Generate case-specific tip
+    specialty_tips = {
+        "General Medicine": f"For {case.expected_diagnosis}, key symptoms include: {', '.join(presenting[:3]) if presenting else 'the presenting complaints'}. Always explore these thoroughly.",
+        "Cardiology": "For cardiac cases, always ask about radiation of pain, associated symptoms like sweating or nausea, and risk factors.",
+        "Pulmonology": "For respiratory cases, assess onset, character of cough, sputum production, and any breathing difficulties.",
+        "Pediatrics": "For pediatric cases, consider developmental history, immunization status, and how symptoms affect daily activities.",
+    }
+    
+    tip = specialty_tips.get(
+        case.specialty,
+        f"For {case.expected_diagnosis}, focus on the characteristic symptoms: {', '.join(presenting[:2]) if presenting else 'presenting complaints'}."
+    )
+    
+    # Build summary based on result
+    if request.diagnosis_result == "correct":
+        summary = f"Excellent work! You correctly diagnosed {case.expected_diagnosis}. Your questioning approach led you to the right conclusion."
+    elif request.diagnosis_result == "partial":
+        summary = f"You were close with '{request.student_diagnosis}'. The correct diagnosis was {case.expected_diagnosis}. Review the distinguishing features between these conditions."
+    else:
+        summary = f"The correct diagnosis was {case.expected_diagnosis}, not {request.student_diagnosis}. Review the key symptoms that differentiate this condition."
 
     return FeedbackGenerationResponse(
         score=base_score,
         breakdown=ScoreBreakdown(
             correct_diagnosis=40 if request.diagnosis_result == "correct" else
             (20 if request.diagnosis_result == "partial" else 5),
-            key_questions=15,
+            key_questions=12 if len([c for c in clues if c.asked]) > 2 else 8,
             right_tests=15,
-            time_efficiency=7,
-            ruled_out_differentials=8),
+            time_efficiency=8,
+            ruled_out_differentials=10 if request.diagnosis_result == "correct" else 5),
         decision_tree=DecisionTreeNode(
             id="root",
             label="Clinical Interview",
             correct=None,
-            children=[
-                DecisionTreeNode(id="q1",
-                                 label="Chief Complaint",
-                                 correct=True,
-                                 children=[]),
-                DecisionTreeNode(id="q2",
-                                 label="History Taking",
-                                 correct=True,
-                                 children=[]),
-                DecisionTreeNode(id="q3",
-                                 label="Diagnosis",
-                                 correct=request.diagnosis_result == "correct",
-                                 children=[])
-            ]),
-        clues=[
-            MissedClue(id="c1",
-                       text="Chief complaint explored",
-                       importance="critical",
-                       asked=True),
-            MissedClue(id="c2",
-                       text="Duration of symptoms",
-                       importance="helpful",
-                       asked=True),
+            children=tree_children),
+        clues=clues if clues else [
+            MissedClue(id="c1", text="Chief complaint explored", importance="critical", asked=True),
+            MissedClue(id="c2", text="Duration of symptoms", importance="helpful", asked=True),
         ],
         insight=AIInsight(
-            summary=
-            f"You submitted a {'correct' if request.diagnosis_result == 'correct' else 'partially correct' if request.diagnosis_result == 'partial' else 'incorrect'} diagnosis. Review the case details to understand the key findings.",
-            strengths=[
-                "Engaged with the patient and gathered information",
-                "Worked through the diagnostic process",
-                "Attempted to reach a conclusion"
-            ],
-            improvements=[
-                "Consider asking about symptom onset, duration, and severity",
-                "Explore associated symptoms systematically",
-                "Request relevant physical examination findings"
-            ],
-            tip=
-            "Use a structured history-taking framework for consistent results."
+            summary=summary,
+            strengths=strengths,
+            improvements=improvements,
+            tip=tip
         ),
         user_diagnosis=request.student_diagnosis,
-        correct_diagnosis=request.case.expected_diagnosis,
+        correct_diagnosis=case.expected_diagnosis,
         result=request.diagnosis_result)

@@ -29,7 +29,7 @@ export default function SimilarCases({ cases, completedCaseIds, onSelectCase }: 
   return (
     <div className={`rounded-2xl p-6 border ${isDarkMode ? "bg-[#1c1c1f] border-white/10" : "bg-white border-slate-200 shadow-sm"}`}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">Similar Cases to Practice</h3>
+        <h3 className="text-lg font-semibold">Similar Cases (by symptoms)</h3>
         <div className="flex gap-2">
           <button
             onClick={() => scroll("left")}
