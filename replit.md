@@ -6,6 +6,14 @@ CaseLab is a medical education platform that helps medical students practice cli
 
 ## Recent Changes (Feb 2026)
 
+- Added visual Feedback page with 5 core components:
+  - Animated Score Ring (green 80+, yellow 60-79, red <60) with point breakdown
+  - Diagnostic Decision Tree showing conversation path to diagnosis
+  - Missed Clues Checklist with critical/helpful/minor importance levels
+  - Similar Cases Carousel for related practice cases
+  - AI Personalized Insight with strengths, improvements, and tips
+- Feedback data derived from actual case description and conversation history
+- Graceful handling for incomplete cases with "Continue Case" navigation
 - Added diagnosis workflow with popup feedback (correct/partial/wrong)
 - Server-side diagnosis evaluation based on case-specific expected diagnoses
 - Retry functionality that properly resets completion records
