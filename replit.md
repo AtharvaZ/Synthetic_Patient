@@ -75,11 +75,11 @@ CaseLab is a medical education platform that helps medical students practice cli
 | POST | `/api/chats` | Create chat session |
 | GET | `/api/chats/{id}` | Get chat with messages |
 | POST | `/api/chats/{id}/messages` | Send message (triggers AI response) |
-| DELETE | `/api/chats/{id}/messages/last` | Delete last user message |
+| DELETE | `/api/chats/{id}/messages/last-user` | Delete last user message |
 | POST | `/api/completions` | Submit diagnosis |
 | DELETE | `/api/completions/retry/{chatId}` | Retry diagnosis |
 | GET | `/api/user/stats` | User progress stats |
-| GET | `/api/completions/completed` | Completed case IDs |
+| GET | `/api/user/completed-cases` | Completed case IDs |
 | GET | `/api/feedback/{chatId}` | AI-generated feedback |
 
 ### Frontend API (Express - Port 5000)
@@ -135,5 +135,5 @@ cd backend && python seed_data.py
 
 ### Backend
 - FastAPI + SQLAlchemy
-- Google Gemini AI (gemini-2.5-flash)
+- Google Gemini AI (with fallback responses)
 - PostgreSQL

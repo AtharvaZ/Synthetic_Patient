@@ -498,7 +498,7 @@ async def generate_patient_response(request: PatientSimulationRequest) -> Patien
         student_message=request.student_message
     )
     
-    model = genai.GenerativeModel("gemini-2.5-flash-preview-05-20")
+    model = genai.GenerativeModel("gemini-pro")
     
     response = model.generate_content(
         prompt,
@@ -527,7 +527,7 @@ async def generate_feedback(request: FeedbackGenerationRequest) -> FeedbackGener
         diagnosis_result=request.diagnosis_result
     )
     
-    model = genai.GenerativeModel("gemini-2.5-flash-preview-05-20")
+    model = genai.GenerativeModel("gemini-pro")
     
     response = model.generate_content(
         prompt,
