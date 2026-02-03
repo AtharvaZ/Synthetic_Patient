@@ -129,23 +129,131 @@ completions (id, user_id, case_id, chat_id, diagnosis, result, created_at)
 | `GEMINI_API_KEY` | Google Gemini API key for AI |
 | `BACKEND_URL` | Backend API URL (default: http://localhost:8000) |
 
-## Local Setup
+## Local Development Setup
+
+This guide helps you run ClinIQ on your local machine. You'll use your own local PostgreSQL database instead of Replit's.
+
+### Prerequisites
+
+- **Node.js** 18+ and npm
+- **Python** 3.10+
+- **PostgreSQL** 14+ (local installation)
+
+### Step 1: Install PostgreSQL
+
+**macOS (using Homebrew):**
+```bash
+brew install postgresql@15
+brew services start postgresql@15
+```
+
+**Ubuntu/Debian:**
+```bash
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+sudo systemctl start postgresql
+```
+
+**Windows:**
+Download and install from [postgresql.org](https://www.postgresql.org/download/windows/)
+
+### Step 2: Create a Local Database
 
 ```bash
-# 1. Install dependencies
+# Create the database
+createdb cliniq
+
+# (Optional) Create a dedicated user
+psql -c "CREATE USER cliniq_user WITH PASSWORD 'your_password';"
+psql -c "GRANT ALL PRIVILEGES ON DATABASE cliniq TO cliniq_user;"
+```
+
+### Step 3: Clone and Install Dependencies
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd cliniq
+
+# Install frontend dependencies
 npm install
+
+# Install backend dependencies
+cd backend
+pip install -r requirements.txt
+cd ..
+```
+
+### Step 4: Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```bash
+# Database - use YOUR local PostgreSQL credentials
+DATABASE_URL=postgresql://yourusername:yourpassword@localhost:5432/cliniq
+
+# Or if using default postgres user with no password:
+DATABASE_URL=postgresql://postgres@localhost:5432/cliniq
+
+# AI Integration (optional but recommended)
+# Get your API key from https://aistudio.google.com/apikey
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Backend URL (default for local development)
+BACKEND_URL=http://localhost:8000
+```
+
+**Note:** The `GEMINI_API_KEY` is optional. Without it, AI patient responses will use basic fallback messages instead of realistic simulated conversations.
+
+### Step 5: Seed the Database
+
+This populates your database with the 62 clinical training cases:
+
+```bash
+cd backend
+python seed_data.py
+```
+
+You should see output confirming cases were inserted.
+
+### Step 6: Run the Application
+
+Open **two terminal windows**:
+
+**Terminal 1 - Backend API (Port 8000):**
+```bash
+cd backend
+python main.py
+```
+
+**Terminal 2 - Frontend (Port 5000):**
+```bash
+npm run dev
+```
+
+### Step 7: Access the Application
+
+Open your browser and navigate to: **http://localhost:5000**
+
+### Troubleshooting
+
+**Database connection errors:**
+- Verify PostgreSQL is running: `pg_isready`
+- Check your DATABASE_URL credentials match your local setup
+- Ensure the database exists: `psql -l | grep cliniq`
+
+**Port already in use:**
+- Backend: Change port in `backend/main.py`
+- Frontend: Update port in `package.json` scripts
+
+**Missing Python packages:**
+```bash
 cd backend && pip install -r requirements.txt
+```
 
-# 2. Set up environment
-cp .env.example .env
-# Add GEMINI_API_KEY and DATABASE_URL
-
-# 3. Seed database (optional)
-cd backend && python seed_data.py
-
-# 4. Run both servers
-# Terminal 1: cd backend && python main.py
-# Terminal 2: npm run dev
+**Missing Node packages:**
+```bash
+npm install
 ```
 
 ## Tech Stack
