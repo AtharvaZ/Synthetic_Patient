@@ -291,7 +291,7 @@ export default function Feedback() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
-              className={`mb-6 rounded-2xl p-6 ${isDarkMode ? "bg-gradient-to-br from-primary/10 to-emerald-500/10 border border-primary/20" : "bg-gradient-to-br from-primary/5 to-emerald-500/5 border border-primary/20"}`}
+              className={`mb-6 rounded-2xl p-6 ${isDarkMode ? "bg-gradient-to-br from-primary/25 to-emerald-500/25 border border-primary/30" : "bg-gradient-to-br from-primary/18 to-emerald-500/18 border border-primary/35"}`}
             >
               <div className="flex items-center gap-2 mb-3">
                 <div
