@@ -1,8 +1,26 @@
-# CaseLab - Medical Training Platform
+# ClinIQ - Medical Training Platform
 
 ## Overview
 
-CaseLab is a medical education platform that helps medical students practice clinical diagnosis through interactive case simulations with AI-powered patient conversations.
+ClinIQ is a medical education platform that helps medical students practice clinical diagnosis through interactive case simulations with AI-powered patient conversations.
+
+## Design System
+
+**Theme**: Modern dark/light theme with teal-green primary (hsl(168,84%,45%)) and purple accent (hsl(280,75%,60%))
+
+**UI Features**:
+- Glassmorphism effects with subtle noise texture overlay
+- Framer Motion animations throughout
+- Gradient buttons and cards
+- Dark mode: hsl(220,15%,5%) background
+- Light mode: hsl(220,20%,97%) background
+
+**CSS Utility Classes**:
+- `.btn-primary` - Gradient primary button with hover effects
+- `.card-elevated` - Glassmorphism card styling
+- `.text-gradient-primary` - Gradient text effect
+- `.noise-overlay` - Subtle texture overlay
+- `.hover-lift` - Lift animation on hover
 
 ## Architecture
 
