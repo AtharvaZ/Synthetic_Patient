@@ -93,6 +93,29 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  app.get(api.cases.similar.path, async (req, res) => {
+    try {
+      const resp = await backendFetch(`/api/cases/${req.params.id}/similar`);
+      if (!resp.ok) return res.status(resp.status).json({ message: "Failed to fetch similar cases" });
+      const cases = await resp.json();
+      res.json(cases.map((c: any) => ({
+        id: c.id,
+        title: c.title,
+        chiefComplaint: c.title,
+        description: c.description,
+        specialty: c.specialty,
+        difficulty: c.difficulty,
+        expectedDiagnosis: c.expected_diagnosis,
+        acceptableDiagnoses: c.acceptable_diagnoses || "",
+        imageUrl: c.image_url,
+        status: c.status || "available"
+      })));
+    } catch (e) {
+      console.error("Error:", e);
+      res.status(500).json({ message: "Failed to fetch similar cases" });
+    }
+  });
+
   app.post("/api/patient-message", async (req, res) => {
     try {
       const resp = await backendFetch("/api/patient-message", {

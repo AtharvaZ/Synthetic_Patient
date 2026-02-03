@@ -252,70 +252,70 @@ Did the student's questions suggest they were considering other possibilities?
 You MUST respond with valid JSON in this exact structure:
 
 ```json
-{
+{{
   "score": <total score 0-100>,
-  "breakdown": {
+  "breakdown": {{
     "correct_diagnosis": <0-40>,
     "key_questions": <0-20>,
     "right_tests": <0-20>,
     "time_efficiency": <0-10>,
     "ruled_out_differentials": <0-10>
-  },
-  "decision_tree": {
+  }},
+  "decision_tree": {{
     "id": "root",
     "label": "<Chief Complaint - first sentence of what patient said>",
     "type": "symptom",
     "asked": true,
     "children": [
-      {
+      {{
         "id": "q1",
         "label": "<symptom or topic student asked about>",
         "type": "symptom",
         "asked": true,
         "children": [
-          {
+          {{
             "id": "t1",
             "label": "<test or exam if requested>",
             "type": "test",
             "asked": true,
             "children": []
-          }
+          }}
         ]
-      },
-      {
+      }},
+      {{
         "id": "ruled1",
         "label": "<condition ruled out by questioning>",
         "type": "ruled_out",
         "asked": true,
         "children": []
-      },
-      {
+      }},
+      {{
         "id": "diag",
         "label": "<final diagnosis>",
         "type": "diagnosis",
         "asked": <true if correct, false if wrong>,
         "children": []
-      }
+      }}
     ]
-  },
+  }},
   "clues": [
-    {
+    {{
       "id": "clue1",
       "text": "<symptom or finding from the case>",
       "importance": "<critical|helpful|minor>",
       "asked": <true/false>
-    }
+    }}
   ],
-  "insight": {
+  "insight": {{
     "summary": "<2-3 sentence overall assessment>",
     "strengths": ["<strength 1>", "<strength 2>", ...],
     "improvements": ["<improvement 1>", "<improvement 2>", ...],
     "tip": "<one actionable tip for next time>"
-  },
+  }},
   "user_diagnosis": "<what the student diagnosed>",
   "correct_diagnosis": "<the actual diagnosis>",
   "result": "<correct|partial|wrong>"
-}
+}}
 ```
 
 ## DECISION TREE CONSTRUCTION
@@ -390,7 +390,7 @@ Example: "For chest pain presentations, always ask about radiation to jaw/arm an
 
 ### Example Insight - Good Performance
 ```json
-{
+{{
   "summary": "Strong diagnostic interview with systematic history-taking. You correctly identified the key symptoms and reached the right diagnosis efficiently.",
   "strengths": [
     "Thorough exploration of headache characteristics including timing and triggers",
@@ -402,12 +402,12 @@ Example: "For chest pain presentations, always ask about radiation to jaw/arm an
     "Could explore medication history more thoroughly"
   ],
   "tip": "When a patient presents with headache, always ask about visual changes early - they can indicate serious conditions."
-}
+}}
 ```
 
 ### Example Insight - Poor Performance
 ```json
-{
+{{
   "summary": "The interview missed several key symptoms that would have guided diagnosis. More systematic questioning of associated symptoms is needed.",
   "strengths": [
     "Good opening question about the chief complaint",
@@ -420,7 +420,7 @@ Example: "For chest pain presentations, always ask about radiation to jaw/arm an
     "Jumped to diagnosis without adequate history"
   ],
   "tip": "For any patient with headache, use a checklist approach: character, location, duration, severity, associated symptoms, red flags."
-}
+}}
 ```
 
 ## DO NOT
@@ -716,32 +716,46 @@ Your answer:"""
 
 def extract_json_from_response(text: str) -> str:
     """Extract JSON from AI response, handling various formats"""
+    import re
+    
     text = text.strip()
     
     # Remove markdown code blocks
     if "```json" in text:
-        start = text.find("```json") + 7
-        end = text.find("```", start)
-        if end > start:
-            text = text[start:end].strip()
+        match = re.search(r'```json\s*(.*?)\s*```', text, re.DOTALL)
+        if match:
+            text = match.group(1).strip()
     elif "```" in text:
-        start = text.find("```") + 3
-        end = text.find("```", start)
-        if end > start:
-            text = text[start:end].strip()
+        match = re.search(r'```\s*(.*?)\s*```', text, re.DOTALL)
+        if match:
+            text = match.group(1).strip()
     
-    # Find JSON object boundaries
+    # Find JSON object boundaries using brace matching
     start_brace = text.find("{")
-    end_brace = text.rfind("}")
-    if start_brace != -1 and end_brace != -1 and end_brace > start_brace:
-        text = text[start_brace:end_brace + 1]
+    if start_brace == -1:
+        return text
+    
+    # Count braces to find matching close
+    depth = 0
+    end_pos = -1
+    for i, char in enumerate(text[start_brace:], start_brace):
+        if char == '{':
+            depth += 1
+        elif char == '}':
+            depth -= 1
+            if depth == 0:
+                end_pos = i
+                break
+    
+    if end_pos != -1:
+        text = text[start_brace:end_pos + 1]
     
     return text.strip()
 
 
 async def generate_feedback(
         request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
-    """Generate detailed feedback using Gemini"""
+    """Generate detailed feedback using Claude"""
 
     prompt = FEEDBACK_GENERATION_PROMPT.format(
         case_data=format_case_data_for_feedback(request),
@@ -752,13 +766,15 @@ async def generate_feedback(
     try:
         response = client.messages.create(
             model=CLAUDE_MODEL,
-            max_tokens=2500,
+            max_tokens=3000,
+            system="You are a clinical education feedback analyst. You MUST respond with ONLY valid JSON. No text before or after the JSON. No markdown code blocks. Just pure JSON starting with { and ending with }.",
             messages=[
                 {"role": "user", "content": prompt}
             ]
         )
         
-        response_text = extract_json_from_response(response.content[0].text)
+        raw_text = response.content[0].text
+        response_text = extract_json_from_response(raw_text)
         feedback_data = json.loads(response_text)
         
     except (json.JSONDecodeError, Exception) as e:
@@ -915,7 +931,7 @@ def analyze_conversation_for_clues(request: FeedbackGenerationRequest) -> tuple[
 
 
 def build_decision_tree_from_conversation(request: FeedbackGenerationRequest) -> DecisionTreeNode:
-    """Build a decision tree from the actual conversation"""
+    """Build a hierarchical decision tree from the actual conversation"""
     case = request.case
     conversation = request.conversation
     
@@ -925,73 +941,128 @@ def build_decision_tree_from_conversation(request: FeedbackGenerationRequest) ->
     
     # Keywords for detecting different types of questions
     symptom_keywords = ["pain", "hurt", "ache", "feel", "symptom", "when", "how long", "worse", "better", "start"]
-    test_keywords = ["examine", "check", "look at", "test", "blood pressure", "temperature", "listen", "vital"]
-    history_keywords = ["history", "before", "medication", "allergy", "family", "previous"]
+    test_keywords = ["examine", "check", "look at", "test", "blood pressure", "temperature", "listen", "vital", "vitals"]
+    history_keywords = ["history", "before", "medication", "allergy", "family", "previous", "past"]
+    differential_keywords = ["could it be", "rule out", "worry about", "might", "or is it", "exclude"]
     
-    # Build tree children based on what student asked
-    tree_children = []
-    
-    # Check for symptom questions
-    asked_symptoms = []
     presenting = case.presenting_symptoms or []
-    for symptom in presenting[:3]:
+    exam_findings = case.exam_findings or []
+    is_correct = request.diagnosis_result == "correct"
+    
+    # Track what was explored
+    asked_symptoms = []
+    for symptom in presenting[:4]:
         symptom_lower = symptom.lower()
-        symptom_words = symptom_lower.split()
-        if any(word in conversation_text for word in symptom_words if len(word) > 3):
+        symptom_words = [w for w in symptom_lower.split() if len(w) > 3]
+        if any(word in conversation_text for word in symptom_words):
             asked_symptoms.append(symptom)
     
-    # Add symptom branches
-    for i, symptom in enumerate(asked_symptoms[:2]):
-        tree_children.append(DecisionTreeNode(
-            id=f"sym{i+1}",
+    asked_tests = any(kw in conversation_text for kw in test_keywords)
+    asked_history = any(kw in conversation_text for kw in history_keywords)
+    considered_differentials = any(kw in conversation_text for kw in differential_keywords)
+    
+    # Build hierarchical structure: symptoms -> findings -> diagnosis
+    # Main symptom branch
+    symptom_branch_children = []
+    
+    # Add sub-symptoms or related findings
+    for i, symptom in enumerate(asked_symptoms[1:3]):  # Secondary symptoms as children
+        symptom_branch_children.append(DecisionTreeNode(
+            id=f"sym_sub{i+1}",
             label=symptom[:40],
             type="symptom",
             asked=True,
             children=[]
         ))
     
-    # Check for tests/exams
-    if any(kw in conversation_text for kw in test_keywords):
-        exam_findings = case.exam_findings or []
-        if exam_findings:
-            tree_children.append(DecisionTreeNode(
-                id="test1",
-                label=exam_findings[0][:40] if exam_findings else "Physical exam",
+    # Add test findings as children of symptom investigation
+    if asked_tests and exam_findings:
+        test_children = []
+        for i, finding in enumerate(exam_findings[:2]):
+            test_children.append(DecisionTreeNode(
+                id=f"finding{i+1}",
+                label=finding[:40],
                 type="test",
                 asked=True,
                 children=[]
             ))
+        symptom_branch_children.append(DecisionTreeNode(
+            id="exam",
+            label="Physical examination",
+            type="test",
+            asked=True,
+            children=test_children
+        ))
     
-    # Check for history
-    if any(kw in conversation_text for kw in history_keywords):
-        tree_children.append(DecisionTreeNode(
+    # Main symptom branch
+    main_symptom = asked_symptoms[0] if asked_symptoms else (presenting[0] if presenting else "Chief complaint")
+    symptom_branch = DecisionTreeNode(
+        id="sym1",
+        label=main_symptom[:45],
+        type="symptom",
+        asked=len(asked_symptoms) > 0,
+        children=symptom_branch_children
+    )
+    
+    # History branch
+    history_branch = None
+    if asked_history:
+        history_branch = DecisionTreeNode(
             id="hist",
-            label="Medical history reviewed",
+            label="Medical/Social history",
             type="symptom",
             asked=True,
             children=[]
-        ))
+        )
     
-    # Add missed important symptoms as not asked
+    # Differential diagnosis branch (ruled out conditions)
+    ruled_out_branch = None
+    if considered_differentials and case.expected_diagnosis:
+        common_differentials = {
+            "Gastroenteritis": ["Food poisoning", "Appendicitis"],
+            "Common Cold": ["Flu", "Allergies"],
+            "Bronchitis": ["Pneumonia", "Asthma"],
+            "Migraine": ["Tension headache", "Cluster headache"],
+            "UTI": ["Kidney infection", "Sexually transmitted infection"],
+        }
+        differentials = common_differentials.get(case.expected_diagnosis, ["Other conditions"])
+        ruled_out_branch = DecisionTreeNode(
+            id="ruled",
+            label=f"{differentials[0]} ruled out",
+            type="ruled_out",
+            asked=True,
+            children=[]
+        )
+    
+    # Missed symptoms (things they should have asked)
+    missed_branches = []
     for i, symptom in enumerate(presenting[:2]):
         if symptom not in asked_symptoms:
-            tree_children.append(DecisionTreeNode(
+            missed_branches.append(DecisionTreeNode(
                 id=f"missed{i}",
-                label=f"{symptom[:35]}",
+                label=f"{symptom[:35]} (not explored)",
                 type="symptom",
                 asked=False,
                 children=[]
             ))
     
-    # Add final diagnosis
-    is_correct = request.diagnosis_result == "correct"
-    tree_children.append(DecisionTreeNode(
+    # Final diagnosis branch
+    diagnosis_branch = DecisionTreeNode(
         id="diag",
-        label=request.student_diagnosis,
+        label=request.student_diagnosis.upper(),
         type="diagnosis",
         asked=is_correct,
         children=[]
-    ))
+    )
+    
+    # Assemble root children
+    root_children = [symptom_branch]
+    if history_branch:
+        root_children.append(history_branch)
+    if ruled_out_branch:
+        root_children.append(ruled_out_branch)
+    root_children.extend(missed_branches[:1])  # At most 1 missed symptom at top level
+    root_children.append(diagnosis_branch)
     
     # Root node with chief complaint
     chief = case.title[:60] if case.title else "Patient presents with symptoms"
@@ -1001,7 +1072,7 @@ def build_decision_tree_from_conversation(request: FeedbackGenerationRequest) ->
         label=chief,
         type="symptom",
         asked=True,
-        children=tree_children
+        children=root_children
     )
 
 
