@@ -160,20 +160,20 @@ export default function Feedback() {
   const resultConfig = {
     correct: {
       icon: CheckCircle,
-      color: "text-emerald-400",
-      bg: "bg-emerald-500/10",
+      color: isDarkMode ? "text-emerald-400" : "text-emerald-600",
+      bg: isDarkMode ? "bg-emerald-500/10" : "bg-emerald-100",
       label: "Correct",
     },
     partial: {
       icon: AlertCircle,
-      color: "text-amber-400",
-      bg: "bg-amber-500/10",
+      color: isDarkMode ? "text-amber-400" : "text-amber-600",
+      bg: isDarkMode ? "bg-amber-500/10" : "bg-amber-100",
       label: "Partial",
     },
     wrong: {
       icon: XCircle,
-      color: "text-rose-400",
-      bg: "bg-rose-500/10",
+      color: isDarkMode ? "text-rose-400" : "text-rose-600",
+      bg: isDarkMode ? "bg-rose-500/10" : "bg-rose-100",
       label: "Incorrect",
     },
   };
@@ -190,16 +190,10 @@ export default function Feedback() {
       {/* Noise overlay */}
       <div className="noise-overlay" />
 
-      {/* Background glow - subtle amber for feedback page */}
+      {/* Background glow - centered subtle amber for feedback page */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
-          className={`absolute -top-20 left-1/4 w-[700px] h-[700px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-500/14.5" : "bg-amber-500/9"}`}
-        />
-        <div
-          className={`absolute top-1/3 -right-20 w-[500px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-600/15" : "bg-amber-500/9"}`}
-        />
-        <div
-          className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-500/14" : "bg-amber-500/7"}`}
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[150px] ${isDarkMode ? "bg-amber-500/15" : "bg-amber-400/20"}`}
         />
       </div>
 
@@ -390,7 +384,7 @@ export default function Feedback() {
                     >
                       Correct Answer:
                     </p>
-                    <p className="text-emerald-400 font-medium">
+                    <p className={`font-medium ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                       {feedbackData.correctDiagnosis}
                     </p>
                   </div>

@@ -84,8 +84,8 @@ export default function DecisionTree({ tree, userDiagnosis, correctDiagnosis }: 
   
   return (
     <div className={`rounded-2xl p-6 border ${isDarkMode ? "bg-[#1c1c1f] border-white/10" : "bg-white border-slate-200 shadow-sm"}`}>
-      <h3 className="text-lg font-semibold mb-4">Diagnostic Decision Tree</h3>
-      <p className="text-sm text-muted-foreground mb-6">
+      <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>Diagnostic Decision Tree</h3>
+      <p className={`text-sm mb-6 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
         Simplified view of your diagnostic path
       </p>
       
@@ -95,11 +95,11 @@ export default function DecisionTree({ tree, userDiagnosis, correctDiagnosis }: 
 
       <div className={`mt-6 pt-4 border-t grid grid-cols-2 gap-4 ${isDarkMode ? "border-white/10" : "border-slate-200"}`}>
         <div>
-          <span className="text-xs text-muted-foreground">Your Diagnosis</span>
-          <p className="text-sm font-medium mt-1">{userDiagnosis}</p>
+          <span className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Your Diagnosis</span>
+          <p className={`text-sm font-medium mt-1 ${isDarkMode ? "text-white" : "text-slate-900"}`}>{userDiagnosis}</p>
         </div>
         <div>
-          <span className="text-xs text-muted-foreground">Correct Diagnosis</span>
+          <span className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Correct Diagnosis</span>
           <p className={`text-sm font-medium mt-1 ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>{correctDiagnosis}</p>
         </div>
       </div>

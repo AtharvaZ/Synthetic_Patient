@@ -29,7 +29,7 @@ export default function SimilarCases({ cases, completedCaseIds, onSelectCase }: 
   return (
     <div className={`rounded-2xl p-6 border ${isDarkMode ? "bg-[#1c1c1f] border-white/10" : "bg-white border-slate-200 shadow-sm"}`}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">Similar Cases (by symptoms)</h3>
+        <h3 className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>Similar Cases (by symptoms)</h3>
         <div className="flex gap-2">
           <button
             onClick={() => scroll("left")}
@@ -77,7 +77,7 @@ export default function SimilarCases({ cases, completedCaseIds, onSelectCase }: 
                 )}
               </div>
               
-              <h4 className="font-medium text-sm mb-2 line-clamp-2">{caseItem.title}</h4>
+              <h4 className={`font-medium text-sm mb-2 line-clamp-2 ${isDarkMode ? "text-white" : "text-slate-900"}`}>{caseItem.title}</h4>
               
               <div className="flex items-center justify-between mt-3">
                 <span className="text-xs text-muted-foreground">{caseItem.difficulty}</span>

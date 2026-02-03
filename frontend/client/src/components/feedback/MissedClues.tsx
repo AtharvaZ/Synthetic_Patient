@@ -58,7 +58,7 @@ export default function MissedClues({ clues }: MissedCluesProps) {
     <div className={`rounded-2xl p-6 border ${isDarkMode ? "bg-[#1c1c1f] border-white/10" : "bg-white border-slate-200 shadow-sm"}`}>
       <div className="flex items-center gap-2 mb-4">
         <AlertCircle className="w-5 h-5 text-primary" />
-        <h3 className="text-lg font-semibold">Key Symptoms Checklist</h3>
+        <h3 className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>Key Symptoms Checklist</h3>
       </div>
       
       <div className={`flex gap-4 mb-4 text-xs ${isDarkMode ? "" : "text-slate-600"}`}>
