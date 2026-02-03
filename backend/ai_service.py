@@ -550,7 +550,7 @@ async def generate_patient_response(
         student_message=request.student_message)
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash-lite",
+        model="gemini-2.0-flash",
         contents=prompt,
         config=types.GenerateContentConfig(
             temperature=0.7,
@@ -603,7 +603,7 @@ Your answer:"""
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash-lite",
+            model="gemini-2.0-flash",
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0,
@@ -662,7 +662,7 @@ async def generate_feedback(
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash-lite",
+            model="gemini-2.0-flash",
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.3,
