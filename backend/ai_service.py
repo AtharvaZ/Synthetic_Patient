@@ -648,11 +648,14 @@ def create_fallback_feedback(
             summary=
             f"You submitted a {'correct' if request.diagnosis_result == 'correct' else 'partially correct' if request.diagnosis_result == 'partial' else 'incorrect'} diagnosis. Review the case details to understand the key findings.",
             strengths=[
-                "Engaged with the patient", "Asked about chief complaint"
+                "Engaged with the patient and gathered information",
+                "Worked through the diagnostic process",
+                "Attempted to reach a conclusion"
             ],
             improvements=[
-                "Consider a more systematic approach",
-                "Explore all symptom domains"
+                "Consider asking about symptom onset, duration, and severity",
+                "Explore associated symptoms systematically",
+                "Request relevant physical examination findings"
             ],
             tip=
             "Use a structured history-taking framework for consistent results."
