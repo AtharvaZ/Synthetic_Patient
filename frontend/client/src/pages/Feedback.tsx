@@ -1,15 +1,29 @@
 import { useParams, Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowLeft, Stethoscope, RotateCcw, ArrowRight, LayoutDashboard, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Stethoscope,
+  RotateCcw,
+  ArrowRight,
+  LayoutDashboard,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ScoreRing from "@/components/feedback/ScoreRing";
-import DecisionTree, { type TreeNode } from "@/components/feedback/DecisionTree";
+import DecisionTree, {
+  type TreeNode,
+} from "@/components/feedback/DecisionTree";
 import MissedClues from "@/components/feedback/MissedClues";
 import SimilarCases from "@/components/feedback/SimilarCases";
 import AIInsight from "@/components/feedback/AIInsight";
 import { useChat } from "@/hooks/use-chats";
-import { useCase, useCases, useCompletedCases, useRetryDiagnosis } from "@/hooks/use-cases";
+import {
+  useCase,
+  useCases,
+  useCompletedCases,
+  useRetryDiagnosis,
+} from "@/hooks/use-cases";
 
 interface FeedbackData {
   score: number;
@@ -42,22 +56,30 @@ export default function Feedback() {
   const { chatId } = useParams<{ chatId: string }>();
   const [, navigate] = useLocation();
   const chatIdNum = parseInt(chatId);
-  
+
   const { data: chat, isLoading: chatLoading } = useChat(chatIdNum);
   const { data: caseData, isLoading: caseLoading } = useCase(chat?.caseId ?? 0);
   const { data: allCases } = useCases();
   const { data: completedCases } = useCompletedCases();
   const retryDiagnosis = useRetryDiagnosis();
-  
+
   const completedSet = new Set(completedCases || []);
 
-  const { data: feedbackData, isLoading: feedbackLoading, error: feedbackError } = useQuery<FeedbackData, Error & { status?: string }>({
+  const {
+    data: feedbackData,
+    isLoading: feedbackLoading,
+    error: feedbackError,
+  } = useQuery<FeedbackData, Error & { status?: string }>({
     queryKey: ["feedback", chatIdNum],
     queryFn: async () => {
-      const res = await fetch(`/api/feedback/${chatIdNum}`, { credentials: "include" });
+      const res = await fetch(`/api/feedback/${chatIdNum}`, {
+        credentials: "include",
+      });
       if (!res.ok) {
         const errorData = await res.json();
-        const error = new Error(errorData.message || "Failed to fetch feedback") as Error & { status?: string };
+        const error = new Error(
+          errorData.message || "Failed to fetch feedback",
+        ) as Error & { status?: string };
         error.status = errorData.status;
         throw error;
       }
@@ -67,10 +89,12 @@ export default function Feedback() {
     retry: false,
   });
 
-  const similarCases = allCases?.filter(c => 
-    c.specialty === caseData?.specialty && 
-    c.id !== caseData?.id
-  ).slice(0, 5) || [];
+  const similarCases =
+    allCases
+      ?.filter(
+        (c) => c.specialty === caseData?.specialty && c.id !== caseData?.id,
+      )
+      .slice(0, 5) || [];
 
   const handleRetry = async () => {
     await retryDiagnosis.mutateAsync(chatIdNum);
@@ -79,20 +103,23 @@ export default function Feedback() {
 
   const handleNextPatient = async () => {
     if (!caseData || !allCases) return;
-    
-    const sameDifficultyUnsolved = allCases.filter(c => 
-      c.difficulty === caseData.difficulty && c.id !== caseData.id && !completedSet.has(c.id)
+
+    const sameDifficultyUnsolved = allCases.filter(
+      (c) =>
+        c.difficulty === caseData.difficulty &&
+        c.id !== caseData.id &&
+        !completedSet.has(c.id),
     );
-    
+
     let nextCase = sameDifficultyUnsolved[0];
-    
+
     if (!nextCase) {
       const difficulties = ["Beginner", "Intermediate", "Advanced"];
       const currentIndex = difficulties.indexOf(caseData.difficulty);
-      
+
       for (let i = currentIndex + 1; i < difficulties.length; i++) {
-        const nextDifficultyUnsolved = allCases.filter(c => 
-          c.difficulty === difficulties[i] && !completedSet.has(c.id)
+        const nextDifficultyUnsolved = allCases.filter(
+          (c) => c.difficulty === difficulties[i] && !completedSet.has(c.id),
         );
         if (nextDifficultyUnsolved.length > 0) {
           nextCase = nextDifficultyUnsolved[0];
@@ -136,21 +163,26 @@ export default function Feedback() {
 
   if (feedbackError || (!feedbackLoading && !feedbackData)) {
     const isIncomplete = (feedbackError as any)?.status === "incomplete";
-    
+
     return (
       <div className="min-h-screen bg-[#0a0a0c] flex flex-col items-center justify-center text-white gap-4 p-4">
         <div className="text-center max-w-md">
           <h2 className="text-xl font-semibold mb-2">
-            {isIncomplete ? "Complete the Case First" : "Feedback Not Available"}
+            {isIncomplete
+              ? "Complete the Case First"
+              : "Feedback Not Available"}
           </h2>
           <p className="text-muted-foreground mb-6">
-            {isIncomplete 
+            {isIncomplete
               ? "You need to submit a diagnosis before viewing feedback."
               : "Unable to load feedback for this case."}
           </p>
           <div className="flex gap-3 justify-center">
             {isIncomplete && (
-              <Button onClick={() => navigate(`/chat/${chatIdNum}`)} className="bg-primary">
+              <Button
+                onClick={() => navigate(`/chat/${chatIdNum}`)}
+                className="bg-primary"
+              >
                 Continue Case
               </Button>
             )}
@@ -174,7 +206,10 @@ export default function Feedback() {
       <header className="border-b border-white/5 bg-[#161618] sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/dashboard" className="inline-flex items-center text-sm text-muted-foreground hover:text-white transition-colors">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center text-sm text-muted-foreground hover:text-white transition-colors"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
@@ -182,7 +217,7 @@ export default function Feedback() {
               <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
                 <Stethoscope className="w-4 h-4" />
               </div>
-              <span className="font-semibold">CaseLab</span>
+              <span className="font-semibold">Examen</span>
             </div>
           </div>
         </div>
@@ -209,7 +244,10 @@ export default function Feedback() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <ScoreRing score={feedbackData.score} breakdown={feedbackData.breakdown} />
+            <ScoreRing
+              score={feedbackData.score}
+              breakdown={feedbackData.breakdown}
+            />
           </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-6">
@@ -218,7 +256,7 @@ export default function Feedback() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <DecisionTree 
+              <DecisionTree
                 tree={feedbackData.decisionTree}
                 userDiagnosis={feedbackData.userDiagnosis}
                 correctDiagnosis={feedbackData.correctDiagnosis}
@@ -247,7 +285,7 @@ export default function Feedback() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <SimilarCases 
+            <SimilarCases
               cases={similarCases}
               completedCaseIds={completedCases || []}
               onSelectCase={handleSelectCase}
@@ -260,24 +298,24 @@ export default function Feedback() {
             transition={{ delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-3 pt-4"
           >
-            <Button 
+            <Button
               onClick={() => navigate("/dashboard")}
-              variant="outline" 
+              variant="outline"
               className="flex-1 border-white/10 text-white hover:bg-white/5"
             >
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Dashboard
             </Button>
-            <Button 
+            <Button
               onClick={handleRetry}
-              variant="outline" 
+              variant="outline"
               className="flex-1 border-white/10 text-white hover:bg-white/5"
               disabled={retryDiagnosis.isPending}
             >
               <RotateCcw className="w-4 h-4 mr-2" />
               Retry Case
             </Button>
-            <Button 
+            <Button
               onClick={handleNextPatient}
               className="flex-1 bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90 text-white"
             >

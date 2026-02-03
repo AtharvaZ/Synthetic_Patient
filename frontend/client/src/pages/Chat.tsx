@@ -1,12 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, Link, useLocation } from "wouter";
 import { useChat, useSendMessage } from "@/hooks/use-chats";
-import { useCase, useCases, useCompleteCase, useRetryDiagnosis, useCompletedCases } from "@/hooks/use-cases";
+import {
+  useCase,
+  useCases,
+  useCompleteCase,
+  useRetryDiagnosis,
+  useCompletedCases,
+} from "@/hooks/use-cases";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Send, Loader2, ArrowLeft, Stethoscope, X,
-  CheckCircle, AlertCircle, XCircle, RotateCcw, ArrowRight, MessageSquare
+import {
+  Send,
+  Loader2,
+  ArrowLeft,
+  Stethoscope,
+  X,
+  CheckCircle,
+  AlertCircle,
+  XCircle,
+  RotateCcw,
+  ArrowRight,
+  MessageSquare,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,17 +32,21 @@ export default function Chat() {
   const { id } = useParams<{ id: string }>();
   const [, navigate] = useLocation();
   const chatId = parseInt(id);
-  
-  const { data: chat, isLoading: chatLoading, refetch: refetchChat } = useChat(chatId);
+
+  const {
+    data: chat,
+    isLoading: chatLoading,
+    refetch: refetchChat,
+  } = useChat(chatId);
   const { data: caseData, isLoading: caseLoading } = useCase(chat?.caseId ?? 0);
   const { data: allCases } = useCases();
   const { data: completedCases } = useCompletedCases();
   const sendMessage = useSendMessage();
   const completeCase = useCompleteCase();
   const retryDiagnosis = useRetryDiagnosis();
-  
+
   const completedSet = new Set(completedCases || []);
-  
+
   const [input, setInput] = useState("");
   const [showDiagnoseInput, setShowDiagnoseInput] = useState(false);
   const [diagnosisInput, setDiagnosisInput] = useState("");
@@ -83,20 +102,23 @@ export default function Chat() {
 
   const handleNextPatient = async () => {
     if (!caseData || !allCases) return;
-    
-    const sameDifficultyUnsolved = allCases.filter(c => 
-      c.difficulty === caseData.difficulty && c.id !== caseData.id && !completedSet.has(c.id)
+
+    const sameDifficultyUnsolved = allCases.filter(
+      (c) =>
+        c.difficulty === caseData.difficulty &&
+        c.id !== caseData.id &&
+        !completedSet.has(c.id),
     );
-    
+
     let nextCase = sameDifficultyUnsolved[0];
-    
+
     if (!nextCase) {
       const difficulties = ["Beginner", "Intermediate", "Advanced"];
       const currentIndex = difficulties.indexOf(caseData.difficulty);
-      
+
       for (let i = currentIndex + 1; i < difficulties.length; i++) {
-        const nextDifficultyUnsolved = allCases.filter(c => 
-          c.difficulty === difficulties[i] && !completedSet.has(c.id)
+        const nextDifficultyUnsolved = allCases.filter(
+          (c) => c.difficulty === difficulties[i] && !completedSet.has(c.id),
         );
         if (nextDifficultyUnsolved.length > 0) {
           nextCase = nextDifficultyUnsolved[0];
@@ -143,7 +165,10 @@ export default function Chat() {
       <header className="border-b border-white/5 bg-[#161618]">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-3">
-            <Link href="/dashboard" className="inline-flex items-center text-sm text-muted-foreground hover:text-white transition-colors">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center text-sm text-muted-foreground hover:text-white transition-colors"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
@@ -151,10 +176,10 @@ export default function Chat() {
               <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
                 <Stethoscope className="w-4 h-4" />
               </div>
-              <span className="font-semibold">CaseLab</span>
+              <span className="font-semibold">Examen</span>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold">{caseData.title}</h2>
@@ -162,7 +187,7 @@ export default function Chat() {
                 {caseData.specialty} · {caseData.difficulty}
               </span>
             </div>
-            <Button 
+            <Button
               onClick={() => setShowDiagnoseInput(true)}
               className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 text-white"
             >
@@ -177,7 +202,7 @@ export default function Chat() {
               <span>{Math.round(progressPercent)}%</span>
             </div>
             <div className="h-2 bg-[#283039] rounded-full overflow-hidden">
-              <motion.div 
+              <motion.div
                 className="h-full bg-gradient-to-r from-[#137fec] to-teal-500 rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
@@ -199,13 +224,13 @@ export default function Chat() {
               <p>Start the consultation by greeting the patient.</p>
             </div>
           )}
-          
+
           {chat.messages?.map((msg) => (
             <div
               key={msg.id}
               className={clsx(
                 "flex w-full",
-                msg.sender === "user" ? "justify-end" : "justify-start"
+                msg.sender === "user" ? "justify-end" : "justify-start",
               )}
             >
               <div
@@ -213,14 +238,14 @@ export default function Chat() {
                   "max-w-[80%] px-5 py-3 rounded-2xl text-sm leading-relaxed",
                   msg.sender === "user"
                     ? "bg-primary text-white rounded-tr-sm shadow-lg shadow-primary/10"
-                    : "bg-[#1c1c1f] text-gray-100 border border-white/5 rounded-tl-sm"
+                    : "bg-[#1c1c1f] text-gray-100 border border-white/5 rounded-tl-sm",
                 )}
               >
                 <p>{msg.content}</p>
               </div>
             </div>
           ))}
-          
+
           {sendMessage.isPending && (
             <div className="flex justify-end">
               <div className="bg-primary/50 text-white/50 px-5 py-3 rounded-2xl rounded-tr-sm text-sm">
@@ -233,7 +258,10 @@ export default function Chat() {
 
       <div className="p-4 border-t border-white/5 bg-[#161618]/50 backdrop-blur-sm">
         <div className="max-w-3xl mx-auto">
-          <form onSubmit={handleSend} className="relative flex items-center gap-2">
+          <form
+            onSubmit={handleSend}
+            className="relative flex items-center gap-2"
+          >
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -241,9 +269,9 @@ export default function Chat() {
               className="pr-12 bg-[#1c1c1f] border-white/10 focus-visible:ring-primary/50 text-white h-12 rounded-xl"
               disabled={sendMessage.isPending}
             />
-            <Button 
-              type="submit" 
-              size="icon" 
+            <Button
+              type="submit"
+              size="icon"
               className="absolute right-1 w-10 h-10 rounded-lg bg-primary hover:bg-primary/90 text-white"
               disabled={!input.trim() || sendMessage.isPending}
             >
@@ -259,13 +287,13 @@ export default function Chat() {
 
       <AnimatePresence>
         {showDiagnoseInput && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -273,12 +301,16 @@ export default function Chat() {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold">Submit Your Diagnosis</h3>
-                <button onClick={() => setShowDiagnoseInput(false)} className="text-muted-foreground hover:text-white">
+                <button
+                  onClick={() => setShowDiagnoseInput(false)}
+                  className="text-muted-foreground hover:text-white"
+                >
                   <X className="w-5 h-5" />
                 </button>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                Based on your conversation with the patient, what is your diagnosis?
+                Based on your conversation with the patient, what is your
+                diagnosis?
               </p>
               <Input
                 value={diagnosisInput}
@@ -288,19 +320,23 @@ export default function Chat() {
                 autoFocus
               />
               <div className="flex gap-3">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setShowDiagnoseInput(false)}
                   className="flex-1 border-white/10 text-white hover:bg-white/5"
                 >
                   Cancel
                 </Button>
-                <Button 
+                <Button
                   onClick={handleDiagnose}
                   disabled={!diagnosisInput.trim() || completeCase.isPending}
                   className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 text-white"
                 >
-                  {completeCase.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Submit"}
+                  {completeCase.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    "Submit"
+                  )}
                 </Button>
               </div>
             </motion.div>
@@ -310,13 +346,13 @@ export default function Chat() {
 
       <AnimatePresence>
         {showPopup && diagnosisResult && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -327,8 +363,12 @@ export default function Chat() {
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-500/20 flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-emerald-500" />
                   </div>
-                  <h3 className="text-xl font-bold text-emerald-500 mb-2">Correct Diagnosis!</h3>
-                  <p className="text-muted-foreground mb-6">Excellent work! You correctly identified the condition.</p>
+                  <h3 className="text-xl font-bold text-emerald-500 mb-2">
+                    Correct Diagnosis!
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    Excellent work! You correctly identified the condition.
+                  </p>
                 </>
               )}
               {diagnosisResult === "partial" && (
@@ -336,8 +376,13 @@ export default function Chat() {
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-yellow-500/20 flex items-center justify-center">
                     <AlertCircle className="w-8 h-8 text-yellow-500" />
                   </div>
-                  <h3 className="text-xl font-bold text-yellow-500 mb-2">Partially Correct</h3>
-                  <p className="text-muted-foreground mb-6">You're on the right track, but the diagnosis could be more specific.</p>
+                  <h3 className="text-xl font-bold text-yellow-500 mb-2">
+                    Partially Correct
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    You're on the right track, but the diagnosis could be more
+                    specific.
+                  </p>
                 </>
               )}
               {diagnosisResult === "wrong" && (
@@ -345,29 +390,33 @@ export default function Chat() {
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
                     <XCircle className="w-8 h-8 text-red-500" />
                   </div>
-                  <h3 className="text-xl font-bold text-red-500 mb-2">Incorrect Diagnosis</h3>
-                  <p className="text-muted-foreground mb-6">Keep practicing! Review the symptoms and try again.</p>
+                  <h3 className="text-xl font-bold text-red-500 mb-2">
+                    Incorrect Diagnosis
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    Keep practicing! Review the symptoms and try again.
+                  </p>
                 </>
               )}
-              
+
               <div className="flex flex-col gap-3">
-                <Button 
+                <Button
                   onClick={() => navigate(`/feedback/${chatId}`)}
-                  variant="outline" 
+                  variant="outline"
                   className="w-full border-white/10 text-white hover:bg-white/5"
                 >
                   <MessageSquare className="w-4 h-4 mr-2" />
                   View Feedback
                 </Button>
-                <Button 
+                <Button
                   onClick={handleRetry}
-                  variant="outline" 
+                  variant="outline"
                   className="w-full border-white/10 text-white hover:bg-white/5"
                 >
                   <RotateCcw className="w-4 h-4 mr-2" />
                   Retry Diagnosis
                 </Button>
-                <Button 
+                <Button
                   onClick={handleNextPatient}
                   className="w-full bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90 text-white"
                 >
