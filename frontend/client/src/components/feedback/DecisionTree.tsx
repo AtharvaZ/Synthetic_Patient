@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Check, X, Circle } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export interface TreeNode {
   id: string;
@@ -16,19 +17,21 @@ interface DecisionTreeProps {
 }
 
 function TreeNodeComponent({ node, depth = 0, isLast = true }: { node: TreeNode; depth?: number; isLast?: boolean }) {
+  const { isDarkMode } = useTheme();
+  
   const getNodeStyles = () => {
     if (node.type === "diagnosis") {
       return node.asked 
-        ? "bg-emerald-500/20 border-emerald-500 text-emerald-400"
-        : "bg-red-500/20 border-red-500/50 text-red-400";
+        ? isDarkMode ? "bg-emerald-500/20 border-emerald-500 text-emerald-400" : "bg-emerald-100 border-emerald-500 text-emerald-600"
+        : isDarkMode ? "bg-red-500/20 border-red-500/50 text-red-400" : "bg-red-100 border-red-300 text-red-600";
     }
     if (node.type === "ruled_out") {
-      return "bg-gray-500/20 border-gray-500/50 text-gray-400 line-through";
+      return isDarkMode ? "bg-gray-500/20 border-gray-500/50 text-gray-400 line-through" : "bg-slate-100 border-slate-300 text-slate-500 line-through";
     }
     if (node.asked) {
-      return "bg-teal-500/20 border-teal-500 text-teal-300";
+      return isDarkMode ? "bg-teal-500/20 border-teal-500 text-teal-300" : "bg-teal-100 border-teal-500 text-teal-700";
     }
-    return "bg-white/5 border-white/20 text-gray-400";
+    return isDarkMode ? "bg-white/5 border-white/20 text-gray-400" : "bg-slate-100 border-slate-300 text-slate-500";
   };
 
   const getIcon = () => {
@@ -50,8 +53,8 @@ function TreeNodeComponent({ node, depth = 0, isLast = true }: { node: TreeNode;
     >
       {depth > 0 && (
         <div className="absolute left-0 top-0 -translate-x-6 h-full">
-          <div className="w-6 border-l border-b border-white/20 h-4 rounded-bl-lg" />
-          {!isLast && <div className="w-px bg-white/20 h-full ml-0" />}
+          <div className={`w-6 border-l border-b h-4 rounded-bl-lg ${isDarkMode ? "border-white/20" : "border-slate-300"}`} />
+          {!isLast && <div className={`w-px h-full ml-0 ${isDarkMode ? "bg-white/20" : "bg-slate-300"}`} />}
         </div>
       )}
       
@@ -77,8 +80,10 @@ function TreeNodeComponent({ node, depth = 0, isLast = true }: { node: TreeNode;
 }
 
 export default function DecisionTree({ tree, userDiagnosis, correctDiagnosis }: DecisionTreeProps) {
+  const { isDarkMode } = useTheme();
+  
   return (
-    <div className="bg-[#1c1c1f] rounded-2xl p-6 border border-white/10">
+    <div className={`rounded-2xl p-6 border ${isDarkMode ? "bg-[#1c1c1f] border-white/10" : "bg-white border-slate-200 shadow-sm"}`}>
       <h3 className="text-lg font-semibold mb-4">Diagnostic Decision Tree</h3>
       <p className="text-sm text-muted-foreground mb-6">
         Simplified view of your diagnostic path
@@ -88,14 +93,14 @@ export default function DecisionTree({ tree, userDiagnosis, correctDiagnosis }: 
         <TreeNodeComponent node={tree} />
       </div>
 
-      <div className="mt-6 pt-4 border-t border-white/10 grid grid-cols-2 gap-4">
+      <div className={`mt-6 pt-4 border-t grid grid-cols-2 gap-4 ${isDarkMode ? "border-white/10" : "border-slate-200"}`}>
         <div>
           <span className="text-xs text-muted-foreground">Your Diagnosis</span>
           <p className="text-sm font-medium mt-1">{userDiagnosis}</p>
         </div>
         <div>
           <span className="text-xs text-muted-foreground">Correct Diagnosis</span>
-          <p className="text-sm font-medium text-emerald-400 mt-1">{correctDiagnosis}</p>
+          <p className={`text-sm font-medium mt-1 ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>{correctDiagnosis}</p>
         </div>
       </div>
     </div>

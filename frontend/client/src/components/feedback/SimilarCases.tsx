@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, CheckCircle, Circle, ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import type { Case } from "@shared/schema";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface SimilarCasesProps {
   cases: Case[];
@@ -10,6 +11,7 @@ interface SimilarCasesProps {
 }
 
 export default function SimilarCases({ cases, completedCaseIds, onSelectCase }: SimilarCasesProps) {
+  const { isDarkMode } = useTheme();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
@@ -25,19 +27,19 @@ export default function SimilarCases({ cases, completedCaseIds, onSelectCase }: 
   if (cases.length === 0) return null;
 
   return (
-    <div className="bg-[#1c1c1f] rounded-2xl p-6 border border-white/10">
+    <div className={`rounded-2xl p-6 border ${isDarkMode ? "bg-[#1c1c1f] border-white/10" : "bg-white border-slate-200 shadow-sm"}`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">Similar Cases to Practice</h3>
         <div className="flex gap-2">
           <button
             onClick={() => scroll("left")}
-            className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+            className={`p-2 rounded-lg transition-colors ${isDarkMode ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"}`}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+            className={`p-2 rounded-lg transition-colors ${isDarkMode ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"}`}
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -57,7 +59,11 @@ export default function SimilarCases({ cases, completedCaseIds, onSelectCase }: 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.1 }}
-              className="flex-shrink-0 w-64 bg-[#0a0a0c] rounded-xl border border-white/10 p-4 hover:border-primary/50 transition-colors cursor-pointer group"
+              className={`flex-shrink-0 w-64 rounded-xl border p-4 transition-colors cursor-pointer group ${
+                isDarkMode 
+                  ? "bg-[#0a0a0c] border-white/10 hover:border-primary/50" 
+                  : "bg-slate-50 border-slate-200 hover:border-primary/50"
+              }`}
               onClick={() => onSelectCase(caseItem.id)}
             >
               <div className="flex items-start justify-between mb-3">
@@ -67,7 +73,7 @@ export default function SimilarCases({ cases, completedCaseIds, onSelectCase }: 
                 {isCompleted ? (
                   <CheckCircle className="w-4 h-4 text-emerald-500" />
                 ) : (
-                  <Circle className="w-4 h-4 text-gray-600" />
+                  <Circle className={`w-4 h-4 ${isDarkMode ? "text-gray-600" : "text-slate-400"}`} />
                 )}
               </div>
               

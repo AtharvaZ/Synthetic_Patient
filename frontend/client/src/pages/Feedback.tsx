@@ -323,7 +323,7 @@ export default function Feedback() {
             <Button
               onClick={() => navigate("/dashboard")}
               variant="outline"
-              className="flex-1 border-white/10 text-white hover:bg-white/5"
+              className={`flex-1 ${isDarkMode ? "border-white/10 text-white hover:bg-white/5" : "border-slate-300 text-slate-700 hover:bg-slate-100"}`}
             >
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Dashboard
@@ -331,7 +331,7 @@ export default function Feedback() {
             <Button
               onClick={handleRetry}
               variant="outline"
-              className="flex-1 border-white/10 text-white hover:bg-white/5"
+              className={`flex-1 ${isDarkMode ? "border-white/10 text-white hover:bg-white/5" : "border-slate-300 text-slate-700 hover:bg-slate-100"}`}
               disabled={retryDiagnosis.isPending}
             >
               <RotateCcw className="w-4 h-4 mr-2" />

@@ -311,24 +311,35 @@ Include 6-10 clues covering the most important symptoms and findings.
 ## INSIGHT GENERATION
 
 ### Summary
-Write a balanced 2-3 sentence assessment. Be specific to this case, not generic.
+Write a balanced 2-3 sentence assessment. Be SPECIFIC to this exact conversation - mention the actual condition and actual questions asked. Never be generic.
 
 ### Strengths (2-4 items)
-Identify specific things the student did well:
-- Good questions they asked
-- Appropriate exam requests
-- Efficient approach
-- Good follow-up on relevant symptoms
+CRITICAL: Each strength MUST reference a specific action from the conversation. Examples:
+- "Asked about duration and severity of the chest pain early in the interview"
+- "Correctly followed up on the patient's mention of shortness of breath"
+- "Requested appropriate vitals examination before concluding"
+- "Explored family history which was relevant to the cardiac presentation"
+
+BAD (too generic - NEVER do this):
+- "Good questioning technique"
+- "Thorough approach"
+- "Nice interview style"
 
 ### Improvements (2-4 items)
-Identify specific areas to improve:
-- Missed symptoms they should have asked about
-- Systems they didn't explore
-- Examination gaps
-- Diagnostic reasoning issues
+CRITICAL: Each improvement MUST be specific and actionable. Reference actual symptoms or areas they missed. Examples:
+- "Did not ask about radiation of pain, which would have helped localize the issue"
+- "Missed exploring associated GI symptoms like nausea, which was present in this case"
+- "Should have asked about medication history earlier - patient was on relevant medications"
+- "No physical examination requested despite abdominal complaint"
+
+BAD (too generic - NEVER do this):
+- "Could improve questioning"
+- "Consider being more thorough"
+- "Work on clinical reasoning"
 
 ### Tip
-One specific, actionable recommendation for their next case.
+One SPECIFIC, ACTIONABLE recommendation that directly relates to what they missed in THIS case. Not generic advice.
+Example: "For chest pain presentations, always ask about radiation to jaw/arm and associated sweating - you missed asking about radiation which would have pointed to the cardiac origin."
 
 ## EXAMPLES
 

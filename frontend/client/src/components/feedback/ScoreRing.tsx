@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface ScoreBreakdown {
   correctDiagnosis: number;
@@ -15,6 +16,7 @@ interface ScoreRingProps {
 }
 
 export default function ScoreRing({ score, breakdown }: ScoreRingProps) {
+  const { isDarkMode } = useTheme();
   const [animatedScore, setAnimatedScore] = useState(0);
   
   const circumference = 2 * Math.PI * 90;
@@ -44,7 +46,7 @@ export default function ScoreRing({ score, breakdown }: ScoreRingProps) {
   ];
 
   return (
-    <div className={`bg-gradient-to-br ${colors.bg} rounded-2xl p-6 border border-white/10`}>
+    <div className={`bg-gradient-to-br ${colors.bg} rounded-2xl p-6 border ${isDarkMode ? "border-white/10" : "border-slate-200"}`}>
       <div className="flex flex-col md:flex-row items-center gap-6">
         <div className="relative w-48 h-48 flex-shrink-0">
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
@@ -53,7 +55,7 @@ export default function ScoreRing({ score, breakdown }: ScoreRingProps) {
               cy="100"
               r="90"
               fill="none"
-              stroke="rgba(255,255,255,0.1)"
+              stroke={isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}
               strokeWidth="12"
             />
             <motion.circle
@@ -92,9 +94,9 @@ export default function ScoreRing({ score, breakdown }: ScoreRingProps) {
               transition={{ delay: 0.2 + i * 0.1 }}
               className="flex items-center justify-between"
             >
-              <span className="text-sm text-gray-300">{item.label}</span>
+              <span className={`text-sm ${isDarkMode ? "text-gray-300" : "text-slate-600"}`}>{item.label}</span>
               <div className="flex items-center gap-2">
-                <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
+                <div className={`w-24 h-2 rounded-full overflow-hidden ${isDarkMode ? "bg-white/10" : "bg-black/10"}`}>
                   <motion.div
                     className="h-full rounded-full"
                     style={{ backgroundColor: colors.stroke }}

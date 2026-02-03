@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Check, X, AlertCircle } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Clue {
   id: string;
@@ -13,37 +14,39 @@ interface MissedCluesProps {
 }
 
 export default function MissedClues({ clues }: MissedCluesProps) {
+  const { isDarkMode } = useTheme();
+  
   const getImportanceStyles = (importance: string, asked: boolean) => {
     if (asked) {
       return {
-        bg: "bg-emerald-500/10",
-        border: "border-emerald-500/30",
+        bg: isDarkMode ? "bg-emerald-500/10" : "bg-emerald-50",
+        border: isDarkMode ? "border-emerald-500/30" : "border-emerald-200",
         icon: "text-emerald-500",
-        label: "bg-emerald-500/20 text-emerald-400"
+        label: isDarkMode ? "bg-emerald-500/20 text-emerald-400" : "bg-emerald-100 text-emerald-600"
       };
     }
     
     switch (importance) {
       case "critical":
         return {
-          bg: "bg-red-500/10",
-          border: "border-red-500/30",
+          bg: isDarkMode ? "bg-red-500/10" : "bg-red-50",
+          border: isDarkMode ? "border-red-500/30" : "border-red-200",
           icon: "text-red-500",
-          label: "bg-red-500/20 text-red-400"
+          label: isDarkMode ? "bg-red-500/20 text-red-400" : "bg-red-100 text-red-600"
         };
       case "helpful":
         return {
-          bg: "bg-yellow-500/10",
-          border: "border-yellow-500/30",
+          bg: isDarkMode ? "bg-yellow-500/10" : "bg-amber-50",
+          border: isDarkMode ? "border-yellow-500/30" : "border-amber-200",
           icon: "text-yellow-500",
-          label: "bg-yellow-500/20 text-yellow-400"
+          label: isDarkMode ? "bg-yellow-500/20 text-yellow-400" : "bg-amber-100 text-amber-600"
         };
       default:
         return {
-          bg: "bg-gray-500/10",
-          border: "border-gray-500/30",
+          bg: isDarkMode ? "bg-gray-500/10" : "bg-slate-50",
+          border: isDarkMode ? "border-gray-500/30" : "border-slate-200",
           icon: "text-gray-500",
-          label: "bg-gray-500/20 text-gray-400"
+          label: isDarkMode ? "bg-gray-500/20 text-gray-400" : "bg-slate-100 text-slate-600"
         };
     }
   };
@@ -52,13 +55,13 @@ export default function MissedClues({ clues }: MissedCluesProps) {
   const missedClues = clues.filter(c => !c.asked);
 
   return (
-    <div className="bg-[#1c1c1f] rounded-2xl p-6 border border-white/10">
+    <div className={`rounded-2xl p-6 border ${isDarkMode ? "bg-[#1c1c1f] border-white/10" : "bg-white border-slate-200 shadow-sm"}`}>
       <div className="flex items-center gap-2 mb-4">
         <AlertCircle className="w-5 h-5 text-primary" />
         <h3 className="text-lg font-semibold">Key Symptoms Checklist</h3>
       </div>
       
-      <div className="flex gap-4 mb-4 text-xs">
+      <div className={`flex gap-4 mb-4 text-xs ${isDarkMode ? "" : "text-slate-600"}`}>
         <span className="flex items-center gap-1">
           <span className="w-2 h-2 rounded-full bg-red-500" /> Critical
         </span>
@@ -81,20 +84,14 @@ export default function MissedClues({ clues }: MissedCluesProps) {
               transition={{ delay: i * 0.05 }}
               className={`flex items-center gap-3 p-3 rounded-lg border ${styles.bg} ${styles.border}`}
             >
-              <Check className={`w-4 h-4 flex-shrink-0 ${styles.icon}`} />
-              <span className="text-sm flex-1">{clue.text}</span>
-              <span className={`text-xs px-2 py-0.5 rounded-full ${styles.label}`}>
-                Asked
+              <Check className={`w-4 h-4 ${styles.icon}`} />
+              <span className={`text-sm flex-1 ${isDarkMode ? "" : "text-slate-700"}`}>{clue.text}</span>
+              <span className={`text-xs px-2 py-0.5 rounded ${styles.label}`}>
+                {clue.importance}
               </span>
             </motion.div>
           );
         })}
-        
-        {missedClues.length > 0 && askedClues.length > 0 && (
-          <div className="border-t border-white/10 my-3 pt-3">
-            <span className="text-xs text-muted-foreground">Missed Symptoms</span>
-          </div>
-        )}
         
         {missedClues.map((clue, i) => {
           const styles = getImportanceStyles(clue.importance, clue.asked);
@@ -106,9 +103,9 @@ export default function MissedClues({ clues }: MissedCluesProps) {
               transition={{ delay: (askedClues.length + i) * 0.05 }}
               className={`flex items-center gap-3 p-3 rounded-lg border ${styles.bg} ${styles.border}`}
             >
-              <X className={`w-4 h-4 flex-shrink-0 ${styles.icon}`} />
-              <span className="text-sm flex-1">{clue.text}</span>
-              <span className={`text-xs px-2 py-0.5 rounded-full ${styles.label}`}>
+              <X className={`w-4 h-4 ${styles.icon}`} />
+              <span className={`text-sm flex-1 ${isDarkMode ? "" : "text-slate-700"}`}>{clue.text}</span>
+              <span className={`text-xs px-2 py-0.5 rounded ${styles.label}`}>
                 {clue.importance}
               </span>
             </motion.div>

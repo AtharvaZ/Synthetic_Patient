@@ -58,8 +58,54 @@ export default function Chat() {
   const [showPopup, setShowPopup] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const messageCount = chat?.messages?.length || 0;
-  const progressPercent = Math.min((messageCount / 10) * 100, 100);
+  const calculateProgress = () => {
+    if (!chat?.messages || !caseData) return 10;
+    
+    const allMessages = chat.messages.map((m: { content: string }) => m.content.toLowerCase()).join(' ');
+    const patientMessages = chat.messages
+      .filter((m: { sender: string }) => m.sender === 'assistant')
+      .map((m: { content: string }) => m.content.toLowerCase())
+      .join(' ');
+    
+    const diagnosticKeywords = [
+      'pain', 'hurt', 'ache', 'fever', 'temperature', 'cough', 'breathing',
+      'nausea', 'vomit', 'dizzy', 'headache', 'tired', 'fatigue', 'weak',
+      'rash', 'itch', 'swell', 'blood', 'pressure', 'heart', 'chest',
+      'stomach', 'bowel', 'urine', 'sleep', 'appetite', 'weight', 'muscle',
+      'joint', 'back', 'neck', 'throat', 'nose', 'ear', 'eye', 'skin',
+      'medication', 'allergy', 'history', 'family', 'worse', 'better',
+      'started', 'duration', 'how long', 'severity', 'scale', 'describe'
+    ];
+    
+    const examKeywords = [
+      'examine', 'check', 'look at', 'feel', 'listen', 'blood pressure',
+      'pulse', 'temperature', 'vitals', 'physical', 'test'
+    ];
+    
+    let symptomScore = 0;
+    for (const keyword of diagnosticKeywords) {
+      if (patientMessages.includes(keyword)) {
+        symptomScore += 2;
+      }
+    }
+    symptomScore = Math.min(symptomScore, 50);
+    
+    let examScore = 0;
+    for (const keyword of examKeywords) {
+      if (allMessages.includes(keyword)) {
+        examScore += 5;
+      }
+    }
+    examScore = Math.min(examScore, 20);
+    
+    const userQuestions = chat.messages.filter((m: { sender: string }) => m.sender === 'user').length;
+    const questionScore = Math.min(userQuestions * 3, 20);
+    
+    const baseProgress = 10;
+    return Math.min(baseProgress + symptomScore + examScore + questionScore, 95);
+  };
+  
+  const progressPercent = calculateProgress();
 
   useEffect(() => {
     if (scrollRef.current) {
