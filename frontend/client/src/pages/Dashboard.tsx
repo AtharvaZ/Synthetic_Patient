@@ -100,9 +100,9 @@ export default function Dashboard() {
       
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-[120px] ${isDarkMode ? "bg-amber-500/18" : "bg-amber-500/12"}`} />
-        <div className={`absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-teal-500/15" : "bg-teal-500/10"}`} />
-        <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-emerald-500/15" : "bg-emerald-500/10"}`} />
+        <div className={`absolute -top-20 left-1/4 w-[700px] h-[700px] rounded-full blur-[100px] ${isDarkMode ? "bg-amber-500/25" : "bg-amber-500/15"}`} />
+        <div className={`absolute top-1/3 -right-20 w-[500px] h-[500px] rounded-full blur-[100px] ${isDarkMode ? "bg-teal-500/15" : "bg-teal-500/10"}`} />
+        <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-purple-500/12" : "bg-purple-500/8"}`} />
       </div>
 
       {/* Header */}
@@ -187,10 +187,10 @@ export default function Dashboard() {
               value: userStats.casesSolved, 
               suffix: "",
               desc: userStats.casesSolved > 0 ? "Great progress!" : "Solve your first case!",
-              gradient: "from-emerald-500 to-teal-500",
-              bgGradient: "from-emerald-500/10 to-teal-500/10",
-              borderColor: "border-emerald-500/20",
-              valueColor: "text-emerald-400"
+              gradient: "from-amber-500 to-yellow-500",
+              bgGradient: "from-amber-500/10 to-yellow-500/10",
+              borderColor: "border-amber-500/20",
+              valueColor: "text-amber-400"
             },
             { 
               icon: Target, 
@@ -198,10 +198,10 @@ export default function Dashboard() {
               value: userStats.accuracy, 
               suffix: "%",
               desc: "Diagnostic accuracy",
-              gradient: "from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)]",
-              bgGradient: "from-[hsl(168,84%,45%)]/10 to-[hsl(200,80%,50%)]/10",
-              borderColor: "border-[hsl(168,84%,45%)]/20",
-              valueColor: "text-[hsl(168,84%,45%)]"
+              gradient: "from-violet-500 to-purple-500",
+              bgGradient: "from-violet-500/10 to-purple-500/10",
+              borderColor: "border-violet-500/20",
+              valueColor: "text-violet-400"
             },
           ].map((stat, i) => (
             <motion.div
