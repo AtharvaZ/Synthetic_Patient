@@ -292,7 +292,6 @@ def submit_diagnosis(data: schemas.CompletionCreate, db: Session = Depends(get_d
     
     diag = data.diagnosis.lower().strip()
     expected = case.diagnosis.lower()
-    acceptable = [a.lower().strip() for a in (case.acceptable_diagnoses or "").split(",") if a.strip()]
     
     result = "wrong"
     
@@ -301,11 +300,7 @@ def submit_diagnosis(data: schemas.CompletionCreate, db: Session = Depends(get_d
         result = "correct"
     elif len(diag) >= 4 and (diag in expected or expected in diag):
         result = "correct"
-    elif any(diag == a or (len(diag) >= 4 and (diag in a or a in diag)) for a in acceptable):
-        result = "correct"
     elif any(w in expected for w in diag.split() if len(w) >= 4):
-        result = "partial"
-    elif any(any(w in a for w in diag.split() if len(w) >= 4) for a in acceptable):
         result = "partial"
     
     completion = Completion(
