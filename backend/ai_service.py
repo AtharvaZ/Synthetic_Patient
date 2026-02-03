@@ -521,6 +521,67 @@ async def generate_patient_response(
                                      internal_notes=None)
 
 
+def compare_diagnoses(user_diagnosis: str, expected_diagnosis: str) -> str:
+    """Use AI to compare user diagnosis with expected diagnosis.
+    Returns: 'correct', 'partial', or 'wrong'
+    """
+    if not user_diagnosis or len(user_diagnosis.strip()) < 2:
+        return "wrong"
+    
+    user_diag = user_diagnosis.lower().strip()
+    expected = expected_diagnosis.lower().strip()
+    
+    # Quick exact match check
+    if user_diag == expected:
+        return "correct"
+    
+    # Quick substring check for obvious matches (min 4 chars)
+    if len(user_diag) >= 4 and (user_diag in expected or expected in user_diag):
+        return "correct"
+    
+    # Use AI for fuzzy matching
+    prompt = f"""Compare these two medical diagnoses and determine if they refer to the same condition.
+
+User's diagnosis: "{user_diagnosis}"
+Expected diagnosis: "{expected_diagnosis}"
+
+Consider:
+- Common abbreviations (e.g., "UTI" = "Urinary Tract Infection")
+- Synonyms (e.g., "cold" = "common cold", "flu" = "influenza")
+- Laymen terms vs medical terms (e.g., "heart attack" = "myocardial infarction")
+- Minor spelling variations
+
+Respond with ONLY one word:
+- "correct" if they refer to the same condition
+- "partial" if they are related but not the same (e.g., user said "infection" when answer was "strep throat")
+- "wrong" if they are completely different conditions
+
+Your answer:"""
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash-lite",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0,
+                max_output_tokens=10,
+            ))
+        
+        result = response.text.strip().lower()
+        if "correct" in result:
+            return "correct"
+        elif "partial" in result:
+            return "partial"
+        else:
+            return "wrong"
+    except Exception as e:
+        print(f"AI diagnosis comparison error: {e}")
+        # Fallback to simple word matching
+        if any(w in expected for w in user_diag.split() if len(w) >= 4):
+            return "partial"
+        return "wrong"
+
+
 async def generate_feedback(
         request: FeedbackGenerationRequest) -> FeedbackGenerationResponse:
     """Generate detailed feedback using Gemini"""

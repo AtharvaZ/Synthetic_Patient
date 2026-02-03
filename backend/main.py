@@ -290,18 +290,8 @@ def submit_diagnosis(data: schemas.CompletionCreate, db: Session = Depends(get_d
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
     
-    diag = data.diagnosis.lower().strip()
-    expected = case.diagnosis.lower()
-    
-    result = "wrong"
-    
-    # Exact match or close enough (at least 4 chars and either contains the other)
-    if diag == expected:
-        result = "correct"
-    elif len(diag) >= 4 and (diag in expected or expected in diag):
-        result = "correct"
-    elif any(w in expected for w in diag.split() if len(w) >= 4):
-        result = "partial"
+    from ai_service import compare_diagnoses
+    result = compare_diagnoses(data.diagnosis, case.diagnosis)
     
     completion = Completion(
         user_id=user.id, case_id=data.case_id, chat_id=data.chat_id,
