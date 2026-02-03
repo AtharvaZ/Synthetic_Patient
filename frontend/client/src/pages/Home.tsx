@@ -99,7 +99,7 @@ export default function Home() {
                 Dashboard
               </span>
             </Link>
-            <Link href="/quiz">
+            <Link href="/dashboard">
               <Button
                 className="bg-gradient-to-r from-[#137fec] to-teal-500 hover:opacity-90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105"
                 data-testid="button-get-started"
