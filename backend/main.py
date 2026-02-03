@@ -428,6 +428,37 @@ def generate_fallback_feedback(case, messages, completion):
     time_pts = 10 if n <= 8 else (7 if n <= 12 else 3)
     diff_pts = 10 if is_correct else (5 if is_partial else 2)
     
+    if is_correct:
+        strengths = [
+            f"Correctly diagnosed {case.diagnosis}",
+            "Efficiently completed the case",
+            "Demonstrated good clinical reasoning"
+        ]
+        improvements = [
+            "Consider asking more detailed questions about symptom onset and duration",
+            "Try exploring associated symptoms to strengthen differential diagnosis"
+        ]
+    elif is_partial:
+        strengths = [
+            "Made progress toward the correct diagnosis",
+            "Asked relevant questions about the presenting complaint"
+        ]
+        improvements = [
+            f"The diagnosis was close but {case.diagnosis} was the correct answer",
+            "Consider asking about specific symptom characteristics",
+            "Try to narrow down the differential diagnosis earlier"
+        ]
+    else:
+        strengths = [
+            "Engaged with the patient case",
+            "Attempted to make a diagnosis"
+        ]
+        improvements = [
+            f"The correct diagnosis was {case.diagnosis}",
+            "Ask about chief complaint details including onset and severity",
+            "Consider exploring associated symptoms systematically"
+        ]
+    
     return {
         "score": diag_pts + q_pts + test_pts + time_pts + diff_pts,
         "breakdown": {"correctDiagnosis": diag_pts, "keyQuestions": q_pts, "rightTests": test_pts, "timeEfficiency": time_pts, "ruledOutDifferentials": diff_pts},
@@ -438,10 +469,10 @@ def generate_fallback_feedback(case, messages, completion):
             {"id": "3", "text": "Medical history", "importance": "minor", "asked": n >= 3}
         ],
         "insight": {
-            "summary": f"{'Great job!' if is_correct else 'Good attempt.'} The diagnosis was {case.diagnosis}.",
-            "strengths": ["Completed the case"] + ([f"Correctly identified {case.diagnosis}"] if is_correct else []),
-            "improvements": [] if is_correct else [f"The correct diagnosis was {case.diagnosis}"],
-            "tip": f"Review the key symptoms for {case.diagnosis}"
+            "summary": f"{'Great job!' if is_correct else ('Good effort.' if is_partial else 'Keep practicing.')} The diagnosis was {case.diagnosis}.",
+            "strengths": strengths,
+            "improvements": improvements,
+            "tip": f"For {case.diagnosis}, focus on asking about the key presenting symptoms and their characteristics."
         },
         "userDiagnosis": completion.diagnosis,
         "correctDiagnosis": case.diagnosis,
