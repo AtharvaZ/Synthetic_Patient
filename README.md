@@ -6,7 +6,8 @@ Learn to diagnose like a doctor - before you see real patients.
 
 ClinIQ lets medical students practice clinical diagnosis through conversations with AI patients trained on real medical cases.
 
-### What Makes ClinIQ Different? <br>
+### What Makes ClinIQ Different?
+
 #### 🎯 Real Cases, Real Learning
 Built on 62 validated clinical cases from real medical datasets - not fictional scenarios.
 #### 💬 Natural Conversations
