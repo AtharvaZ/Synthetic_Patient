@@ -192,9 +192,9 @@ export default function Home() {
                   <stop offset="100%" stopColor="#22c55e" />
                 </linearGradient>
               </defs>
-              {/* Curved path */}
+              {/* Curved path connecting all 4 nodes */}
               <motion.path
-                d="M 100 100 Q 250 100 300 200 Q 350 300 500 300 Q 650 300 700 200"
+                d="M 100 80 C 150 80 200 140 300 160 C 400 180 450 280 500 300 C 550 320 650 180 700 140"
                 fill="none"
                 stroke="url(#pathGradient)"
                 strokeWidth="4"
@@ -212,7 +212,7 @@ export default function Home() {
                 initial={{ offsetDistance: "0%" }}
                 animate={{ offsetDistance: "100%" }}
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                style={{ offsetPath: "path('M 100 100 Q 250 100 300 200 Q 350 300 500 300 Q 650 300 700 200')" }}
+                style={{ offsetPath: "path('M 100 80 C 150 80 200 140 300 160 C 400 180 450 280 500 300 C 550 320 650 180 700 140')" }}
               />
             </svg>
             
