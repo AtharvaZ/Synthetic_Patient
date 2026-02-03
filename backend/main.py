@@ -16,6 +16,13 @@ from typing import Optional
 from models import get_db, engine, Base
 import crud
 import schemas
+from ai_schemas import (
+    PatientSimulationRequest,
+    PatientSimulationResponse,
+    FeedbackGenerationRequest,
+    FeedbackGenerationResponse,
+)
+from ai_service import generate_patient_response, generate_feedback
 
 app = FastAPI(
     title="Medical Case Training API",
@@ -149,6 +156,36 @@ def search_by_symptom(symptom_name: str, db: Session = Depends(get_db)):
 def search_by_diagnosis(diagnosis: str, db: Session = Depends(get_db)):
     cases = crud.search_cases_by_diagnosis(db, diagnosis)
     return {"total": len(cases), "cases": cases}
+
+
+# ============================================
+# AI ENDPOINTS
+# ============================================
+
+@app.post("/api/ai/patient-response", response_model=PatientSimulationResponse)
+async def ai_patient_response(request: PatientSimulationRequest):
+    """
+    Generate a patient response based on case data and conversation history.
+    The AI acts as a patient, only revealing symptoms when asked.
+    """
+    try:
+        response = await generate_patient_response(request)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"AI generation failed: {str(e)}")
+
+
+@app.post("/api/ai/generate-feedback", response_model=FeedbackGenerationResponse)
+async def ai_generate_feedback(request: FeedbackGenerationRequest):
+    """
+    Generate detailed feedback for a completed case.
+    Analyzes the conversation and provides scores, insights, and improvement tips.
+    """
+    try:
+        response = await generate_feedback(request)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Feedback generation failed: {str(e)}")
 
 
 if __name__ == "__main__":

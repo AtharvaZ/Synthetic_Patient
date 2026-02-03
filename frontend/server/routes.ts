@@ -4,6 +4,70 @@ import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
 
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
+
+function extractSymptomsFromDescription(description: string): {
+  presenting: string[];
+  absent: string[];
+  examFindings: string[];
+} {
+  const text = description.toLowerCase();
+  
+  const symptomPatterns: Record<string, string[]> = {
+    cardiovascular: ["chest pain", "palpitations", "shortness of breath", "radiating pain", "arm pain", "jaw pain", "sweating", "diaphoresis"],
+    neurological: ["headache", "weakness", "numbness", "confusion", "aphasia", "hemiparesis", "dizziness", "vision changes", "seizure"],
+    respiratory: ["cough", "wheezing", "dyspnea", "sputum", "hemoptysis", "breathing difficulty"],
+    gastrointestinal: ["nausea", "vomiting", "abdominal pain", "diarrhea", "constipation", "bloating"],
+    infectious: ["fever", "chills", "rash", "fatigue", "malaise", "night sweats"],
+    musculoskeletal: ["joint pain", "stiffness", "swelling", "muscle pain", "back pain"],
+    dermatological: ["rash", "itching", "skin lesion", "discoloration"],
+    general: ["fatigue", "weight loss", "appetite loss", "sleep disturbance"]
+  };
+
+  const presenting: string[] = [];
+  const examFindings: string[] = [];
+  
+  for (const [category, symptoms] of Object.entries(symptomPatterns)) {
+    for (const symptom of symptoms) {
+      if (text.includes(symptom)) {
+        presenting.push(symptom);
+      }
+    }
+  }
+
+  const examPatterns = ["blood pressure", "heart rate", "pulse", "temperature", "respiratory rate", "oxygen saturation", "tenderness", "swelling", "bruising", "pallor", "cyanosis", "edema"];
+  for (const finding of examPatterns) {
+    if (text.includes(finding)) {
+      examFindings.push(finding);
+    }
+  }
+
+  const absent: string[] = [];
+  const commonRuleOuts = ["fever", "nausea", "vomiting", "headache", "rash", "cough"];
+  for (const symptom of commonRuleOuts) {
+    if (!text.includes(symptom) && presenting.length > 0) {
+      absent.push(symptom);
+      if (absent.length >= 3) break;
+    }
+  }
+
+  return { presenting: Array.from(new Set(presenting)), absent: Array.from(new Set(absent)), examFindings: Array.from(new Set(examFindings)) };
+}
+
+function inferPatientDemographics(description: string): { age: string | null; gender: string | null } {
+  const ageMatch = description.match(/(\d+)[\s-]*(year|yr|y\.?o\.?)/i);
+  const age = ageMatch ? `${ageMatch[1]} years old` : null;
+  
+  let gender: string | null = null;
+  if (/\b(male|man|boy|gentleman|he|his)\b/i.test(description)) {
+    gender = "male";
+  } else if (/\b(female|woman|girl|lady|she|her)\b/i.test(description)) {
+    gender = "female";
+  }
+  
+  return { age, gender };
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
@@ -105,22 +169,80 @@ export async function registerRoutes(
       const chatId = Number(req.params.id);
       const input = api.messages.create.input.parse(req.body);
       
-      // Add user message
       const message = await storage.addMessage({
         chatId,
         sender: input.sender,
         content: input.content
       });
 
-      // Mock AI response if user sent a message
       if (input.sender === "user") {
-        setTimeout(async () => {
+        const chat = await storage.getChat(chatId);
+        if (!chat) {
+          return res.status(404).json({ message: "Chat not found" });
+        }
+        
+        const caseData = await storage.getCase(chat.caseId);
+        if (!caseData) {
+          return res.status(404).json({ message: "Case not found" });
+        }
+        
+        const messages = await storage.getChatMessages(chatId);
+        
+        const conversationHistory = messages.slice(0, -1).map(m => ({
+          role: m.sender === "user" ? "user" : "assistant",
+          content: m.content
+        }));
+
+        try {
+          const extracted = extractSymptomsFromDescription(caseData.description);
+          const demographics = inferPatientDemographics(caseData.description);
+          
+          const aiResponse = await fetch(`${BACKEND_URL}/api/ai/patient-response`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              case: {
+                case_id: `case_${caseData.id}`,
+                age: demographics.age,
+                gender: demographics.gender,
+                chief_complaint: caseData.title,
+                history: caseData.description,
+                duration: null,
+                severity: caseData.difficulty,
+                triggers: null,
+                diagnosis: caseData.expectedDiagnosis,
+                description: caseData.description,
+                presenting_symptoms: extracted.presenting,
+                absent_symptoms: extracted.absent,
+                exam_findings: extracted.examFindings
+              },
+              conversation_history: conversationHistory,
+              student_message: input.content
+            })
+          });
+
+          if (aiResponse.ok) {
+            const aiData = await aiResponse.json();
+            await storage.addMessage({
+              chatId,
+              sender: "ai",
+              content: aiData.patient_response
+            });
+          } else {
+            await storage.addMessage({
+              chatId,
+              sender: "ai",
+              content: "I'm not feeling well... could you ask me more specific questions about my symptoms?"
+            });
+          }
+        } catch (aiError) {
+          console.error("AI service error:", aiError);
           await storage.addMessage({
             chatId,
             sender: "ai",
-            content: "I see. The pain started about an hour ago, mostly in my chest but moving to my arm."
+            content: "I'm here, doctor. What would you like to know about how I'm feeling?"
           });
-        }, 1000);
+        }
       }
 
       res.status(201).json(message);
@@ -213,7 +335,7 @@ export async function registerRoutes(
     res.json(completedIds);
   });
 
-  // Get feedback for a chat
+  // Get feedback for a chat - uses AI when available
   app.get("/api/feedback/:chatId", async (req, res) => {
     const chatId = Number(req.params.chatId);
     const chat = await storage.getChat(chatId);
@@ -238,8 +360,60 @@ export async function registerRoutes(
       });
     }
 
+    try {
+      const extracted = extractSymptomsFromDescription(caseData.description);
+      
+      const aiResponse = await fetch(`${BACKEND_URL}/api/ai/generate-feedback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          case: {
+            case_id: `case_${caseData.id}`,
+            title: caseData.title,
+            description: caseData.description,
+            specialty: caseData.specialty,
+            difficulty: caseData.difficulty,
+            expected_diagnosis: caseData.expectedDiagnosis,
+            acceptable_diagnoses: caseData.acceptableDiagnoses,
+            presenting_symptoms: extracted.presenting,
+            absent_symptoms: extracted.absent,
+            exam_findings: extracted.examFindings
+          },
+          conversation: messages.map(m => ({
+            sender: m.sender,
+            content: m.content,
+            timestamp: m.createdAt
+          })),
+          student_diagnosis: completion.diagnosis,
+          diagnosis_result: completion.result,
+          time_spent_seconds: null
+        })
+      });
+
+      if (aiResponse.ok) {
+        const aiFeedback = await aiResponse.json();
+        return res.json({
+          score: aiFeedback.score,
+          breakdown: {
+            correctDiagnosis: aiFeedback.breakdown.correct_diagnosis,
+            keyQuestions: aiFeedback.breakdown.key_questions,
+            rightTests: aiFeedback.breakdown.right_tests,
+            timeEfficiency: aiFeedback.breakdown.time_efficiency,
+            ruledOutDifferentials: aiFeedback.breakdown.ruled_out_differentials
+          },
+          decisionTree: aiFeedback.decision_tree,
+          clues: aiFeedback.clues,
+          insight: aiFeedback.insight,
+          userDiagnosis: aiFeedback.user_diagnosis,
+          correctDiagnosis: aiFeedback.correct_diagnosis,
+          result: aiFeedback.result
+        });
+      }
+    } catch (aiError) {
+      console.error("AI feedback generation failed, using fallback:", aiError);
+    }
+
     const userMessages = messages.filter(m => m.sender === "user");
-    const aiMessages = messages.filter(m => m.sender === "ai");
     const messageCount = userMessages.length;
     const allConversation = messages.map(m => m.content.toLowerCase()).join(" ");
 
@@ -286,16 +460,14 @@ export async function registerRoutes(
       const root: any = {
         id: "root",
         label: caseData.title.substring(0, 40),
-        type: "symptom",
-        asked: true,
+        correct: null,
         children: []
       };
 
       const userQuestionNodes = userMessages.slice(0, 3).map((msg, i) => ({
         id: `q${i + 1}`,
         label: msg.content.length > 35 ? msg.content.substring(0, 35) + "..." : msg.content,
-        type: "symptom" as const,
-        asked: true
+        correct: true
       }));
 
       if (userQuestionNodes.length > 0) {
@@ -314,8 +486,8 @@ export async function registerRoutes(
           {
             id: "diag",
             label: (caseData.expectedDiagnosis || "Unknown").toUpperCase(),
-            type: "diagnosis",
-            asked: isCorrect || isPartial
+            correct: isCorrect || isPartial,
+            children: []
           }
         ];
 
@@ -323,16 +495,16 @@ export async function registerRoutes(
           current.children.push({
             id: "alt",
             label: acceptableDiags[0].toUpperCase() + " (ruled out)",
-            type: "ruled_out",
-            asked: false
+            correct: false,
+            children: []
           });
         }
       } else {
         root.children = [{
           id: "diag",
           label: (caseData.expectedDiagnosis || "Unknown").toUpperCase(),
-          type: "diagnosis",
-          asked: isCorrect || isPartial
+          correct: isCorrect || isPartial,
+          children: []
         }];
       }
 
