@@ -22,13 +22,17 @@ import {
   RotateCcw,
   ArrowRight,
   MessageSquare,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type DiagnosisResult = "correct" | "partial" | "wrong" | null;
 
 export default function Chat() {
+  const { isDarkMode, toggleTheme } = useTheme();
   const { id } = useParams<{ id: string }>();
   const [, navigate] = useLocation();
   const chatId = parseInt(id);
@@ -143,7 +147,7 @@ export default function Chat() {
 
   if (chatLoading || caseLoading) {
     return (
-      <div className="h-screen bg-[#0a0a0c] flex items-center justify-center text-white">
+      <div className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex items-center justify-center`}>
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
@@ -151,7 +155,7 @@ export default function Chat() {
 
   if (!chat || !caseData) {
     return (
-      <div className="h-screen bg-[#0a0a0c] flex flex-col items-center justify-center text-white gap-4">
+      <div className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col items-center justify-center gap-4`}>
         <h2 className="text-xl font-semibold">Chat not found</h2>
         <Link href="/dashboard">
           <Button>Return to Dashboard</Button>
@@ -161,18 +165,28 @@ export default function Chat() {
   }
 
   return (
-    <div className="h-screen bg-[#0a0a0c] text-white flex flex-col overflow-hidden">
-      <header className="border-b border-white/5 bg-[#161618]">
+    <div className={`h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col overflow-hidden transition-colors duration-300`}>
+      <header className={`border-b ${isDarkMode ? "border-white/5 bg-[#161618]" : "border-slate-200 bg-white"}`}>
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-3">
             <Link
               href="/dashboard"
-              className="inline-flex items-center text-sm text-muted-foreground hover:text-white transition-colors"
+              className={`inline-flex items-center text-sm ${isDarkMode ? "text-muted-foreground hover:text-white" : "text-slate-500 hover:text-slate-900"} transition-colors`}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={toggleTheme}
+                className={`p-2 rounded-lg transition-colors ${isDarkMode ? "hover:bg-white/10" : "hover:bg-slate-100"}`}
+              >
+                {isDarkMode ? (
+                  <Sun className="w-5 h-5 text-yellow-400" />
+                ) : (
+                  <Moon className="w-5 h-5 text-slate-600" />
+                )}
+              </button>
               <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
                 <Stethoscope className="w-4 h-4" />
               </div>

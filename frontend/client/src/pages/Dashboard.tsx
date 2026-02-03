@@ -2,11 +2,13 @@ import { Link, useLocation } from "wouter";
 import { useCases, useUserStats, useCompletedCases } from "@/hooks/use-cases";
 import { 
   Flame, Trophy, Target, Stethoscope, ArrowRight, 
-  GraduationCap, BookOpen, ChevronRight, Home, Check
+  GraduationCap, BookOpen, ChevronRight, Home, Check, Sun, Moon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Dashboard() {
+  const { isDarkMode, toggleTheme } = useTheme();
   const [, navigate] = useLocation();
   const { data: cases, isLoading } = useCases();
   const { data: stats } = useUserStats();
@@ -41,8 +43,8 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] text-white">
-      <header className="sticky top-0 z-50 w-full border-b border-[#283039] bg-[#0a0a0c]/80 backdrop-blur-md">
+    <div className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-gradient-to-br from-slate-50 to-blue-50 text-slate-900"} transition-colors duration-300`}>
+      <header className={`sticky top-0 z-50 w-full border-b ${isDarkMode ? "border-[#283039] bg-[#0a0a0c]/80" : "border-slate-200 bg-white/80"} backdrop-blur-md`}>
         <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
@@ -51,8 +53,18 @@ export default function Dashboard() {
             <h2 className="text-xl font-bold tracking-tight">Examen</h2>
           </div>
           <div className="flex items-center gap-4">
+            <button
+              onClick={toggleTheme}
+              className={`p-2 rounded-lg transition-colors ${isDarkMode ? "hover:bg-white/10" : "hover:bg-slate-100"}`}
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5 text-yellow-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-slate-600" />
+              )}
+            </button>
             <Link href="/">
-              <span className="text-sm font-medium text-slate-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1">
+              <span className={`text-sm font-medium ${isDarkMode ? "text-slate-300 hover:text-white" : "text-slate-600 hover:text-slate-900"} transition-colors cursor-pointer flex items-center gap-1`}>
                 <Home className="w-4 h-4" />
                 Home
               </span>

@@ -38,6 +38,7 @@ import {
   Gauge,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 // Animated counter component
 function AnimatedCounter({
@@ -64,7 +65,7 @@ function AnimatedCounter({
 }
 
 export default function Home() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <div
@@ -83,7 +84,7 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              onClick={toggleTheme}
               className={`p-2 rounded-lg transition-colors ${isDarkMode ? "hover:bg-white/10" : "hover:bg-slate-100"}`}
             >
               {isDarkMode ? (

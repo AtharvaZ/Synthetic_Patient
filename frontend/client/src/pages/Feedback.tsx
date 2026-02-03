@@ -8,8 +8,11 @@ import {
   ArrowRight,
   LayoutDashboard,
   Loader2,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/contexts/ThemeContext";
 import ScoreRing from "@/components/feedback/ScoreRing";
 import DecisionTree, {
   type TreeNode,
@@ -53,6 +56,7 @@ interface FeedbackData {
 }
 
 export default function Feedback() {
+  const { isDarkMode, toggleTheme } = useTheme();
   const { chatId } = useParams<{ chatId: string }>();
   const [, navigate] = useLocation();
   const chatIdNum = parseInt(chatId);
@@ -155,7 +159,7 @@ export default function Feedback() {
 
   if (chatLoading || caseLoading || feedbackLoading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center text-white">
+      <div className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex items-center justify-center`}>
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
@@ -165,14 +169,14 @@ export default function Feedback() {
     const isIncomplete = (feedbackError as any)?.status === "incomplete";
 
     return (
-      <div className="min-h-screen bg-[#0a0a0c] flex flex-col items-center justify-center text-white gap-4 p-4">
+      <div className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} flex flex-col items-center justify-center gap-4 p-4`}>
         <div className="text-center max-w-md">
           <h2 className="text-xl font-semibold mb-2">
             {isIncomplete
               ? "Complete the Case First"
               : "Feedback Not Available"}
           </h2>
-          <p className="text-muted-foreground mb-6">
+          <p className={`${isDarkMode ? "text-muted-foreground" : "text-slate-500"} mb-6`}>
             {isIncomplete
               ? "You need to submit a diagnosis before viewing feedback."
               : "Unable to load feedback for this case."}
@@ -187,7 +191,7 @@ export default function Feedback() {
               </Button>
             )}
             <Link href="/dashboard">
-              <Button variant="outline" className="border-white/10 text-white">
+              <Button variant="outline" className={isDarkMode ? "border-white/10 text-white" : ""}>
                 Dashboard
               </Button>
             </Link>
@@ -202,18 +206,28 @@ export default function Feedback() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] text-white">
-      <header className="border-b border-white/5 bg-[#161618] sticky top-0 z-10">
+    <div className={`min-h-screen ${isDarkMode ? "bg-[#0a0a0c] text-white" : "bg-slate-50 text-slate-900"} transition-colors duration-300`}>
+      <header className={`border-b ${isDarkMode ? "border-white/5 bg-[#161618]" : "border-slate-200 bg-white"} sticky top-0 z-10`}>
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
               href="/dashboard"
-              className="inline-flex items-center text-sm text-muted-foreground hover:text-white transition-colors"
+              className={`inline-flex items-center text-sm ${isDarkMode ? "text-muted-foreground hover:text-white" : "text-slate-500 hover:text-slate-900"} transition-colors`}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={toggleTheme}
+                className={`p-2 rounded-lg transition-colors ${isDarkMode ? "hover:bg-white/10" : "hover:bg-slate-100"}`}
+              >
+                {isDarkMode ? (
+                  <Sun className="w-5 h-5 text-yellow-400" />
+                ) : (
+                  <Moon className="w-5 h-5 text-slate-600" />
+                )}
+              </button>
               <div className="size-8 bg-gradient-to-br from-[#137fec] to-teal-500 rounded flex items-center justify-center text-white">
                 <Stethoscope className="w-4 h-4" />
               </div>
