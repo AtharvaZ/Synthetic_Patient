@@ -3,7 +3,7 @@ import { useCases, useUserStats, useCompletedCases } from "@/hooks/use-cases";
 import { motion } from "framer-motion";
 import { 
   Flame, Trophy, Target, Stethoscope, ArrowRight, 
-  GraduationCap, BookOpen, ChevronRight, Home, Check, Sun, Moon, Shuffle, Zap
+  GraduationCap, BookOpen, ChevronRight, Home, Check, Sun, Moon, Zap
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -26,27 +26,18 @@ export default function Dashboard() {
 
   const userStats = stats || { streak: 0, casesSolved: 0, accuracy: 0 };
 
-  const handleStartCase = async (difficulty: string) => {
-    let targetCases: typeof cases = [];
+  const handleDifficultyClick = (difficulty: string) => {
+    navigate(`/cases?difficulty=${difficulty}`);
+  };
+
+  const handleContinueLearning = () => {
+    const allCases = cases || [];
+    const unsolvedCases = allCases.filter(c => !completedSet.has(c.id));
+    const targetCases = unsolvedCases.length > 0 ? unsolvedCases : allCases;
     
-    if (difficulty === "Random") {
-      const allCases = cases || [];
-      const unsolvedCases = allCases.filter(c => !completedSet.has(c.id));
-      targetCases = unsolvedCases.length > 0 ? unsolvedCases : allCases;
-    } else {
-      targetCases = cases?.filter(c => c.difficulty === difficulty) || [];
-    }
-    
-    let selectedCase;
-    if (difficulty === "Random") {
+    if (targetCases.length > 0) {
       const randomIndex = Math.floor(Math.random() * targetCases.length);
-      selectedCase = targetCases[randomIndex];
-    } else {
-      selectedCase = targetCases.find(c => !completedSet.has(c.id)) || targetCases[0];
-    }
-    
-    if (selectedCase) {
-      navigate(`/chat/${selectedCase.id}`);
+      navigate(`/chat/${targetCases[randomIndex].id}`);
     }
   };
 
@@ -80,16 +71,6 @@ export default function Dashboard() {
       bgGlow: "bg-orange-500/20",
       accentColor: "text-orange-400",
       borderHover: "hover:border-orange-500/30",
-    },
-    {
-      key: "Random",
-      icon: Shuffle,
-      cases: cases || [],
-      completed: completedCases?.length || 0,
-      gradient: "from-teal-400 to-emerald-500",
-      bgGlow: "bg-teal-500/20",
-      accentColor: "text-teal-400",
-      borderHover: "hover:border-teal-500/30",
     },
   ];
 
@@ -187,10 +168,10 @@ export default function Dashboard() {
               value: userStats.casesSolved, 
               suffix: "",
               desc: userStats.casesSolved > 0 ? "Great progress!" : "Solve your first case!",
-              gradient: "from-amber-500 to-yellow-500",
-              bgGradient: "from-amber-500/10 to-yellow-500/10",
-              borderColor: "border-amber-500/20",
-              valueColor: "text-amber-400"
+              gradient: "from-emerald-500 to-green-500",
+              bgGradient: "from-emerald-500/10 to-green-500/10",
+              borderColor: "border-emerald-500/20",
+              valueColor: "text-emerald-400"
             },
             { 
               icon: Target, 
@@ -249,14 +230,14 @@ export default function Dashboard() {
             <div className="w-8 h-8 border-2 border-[hsl(168,84%,45%)] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {difficultyCards.map((card, i) => (
               <motion.div
                 key={card.key}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }}
-                onClick={() => handleStartCase(card.key)}
+                onClick={() => handleDifficultyClick(card.key)}
                 className={`group relative rounded-2xl p-5 border cursor-pointer transition-all duration-300 hover-lift ${isDarkMode ? `bg-white/[0.02] border-white/[0.06] ${card.borderHover}` : `bg-white border-slate-200 ${card.borderHover} shadow-sm hover:shadow-md`}`}
               >
                 {/* Hover glow */}
@@ -327,7 +308,7 @@ export default function Dashboard() {
               </p>
             </div>
             <button
-              onClick={() => handleStartCase("Random")}
+              onClick={handleContinueLearning}
               className="btn-primary flex items-center gap-2 text-sm"
             >
               Continue Learning
