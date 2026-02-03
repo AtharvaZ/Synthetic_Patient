@@ -299,10 +299,12 @@ export default function PatientCases() {
                            status === "wrong" ? "Wrong" : "Not Attempted"}
                         </span>
                       </div>
-                      <p className={`text-sm line-clamp-2 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
-                        {caseItem.description}
-                      </p>
-                      <div className="flex items-center gap-3 mt-3">
+                      {status === "correct" && (
+                        <p className={`text-sm line-clamp-2 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+                          {caseItem.description}
+                        </p>
+                      )}
+                      <div className={`flex items-center gap-3 ${status === "correct" ? "mt-3" : "mt-2"}`}>
                         <span className={`text-xs px-2 py-1 rounded-full ${isDarkMode ? "bg-white/[0.06] text-slate-400" : "bg-slate-100 text-slate-500"}`}>
                           {caseItem.specialty}
                         </span>
