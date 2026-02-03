@@ -283,9 +283,9 @@ export default function Chat() {
 
   if (caseLoading) {
     return (
-      <div className={`h-screen flex items-center justify-center ${isDarkMode ? "bg-[hsl(220,15%,5%)]" : "bg-[hsl(220,20%,97%)]"}`}>
+      <div className={`h-screen flex items-center justify-center ${isDarkMode ? "bg-[hsl(180,8%,5%)]" : "bg-[hsl(45,25%,97%)]"}`}>
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 text-[hsl(168,84%,45%)] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[hsl(168,65%,42%)] animate-spin" />
           <p className={`text-sm ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Loading case...</p>
         </div>
       </div>
@@ -294,7 +294,7 @@ export default function Chat() {
 
   if (!caseData) {
     return (
-      <div className={`h-screen flex flex-col items-center justify-center gap-4 ${isDarkMode ? "bg-[hsl(220,15%,5%)] text-white" : "bg-[hsl(220,20%,97%)] text-slate-900"}`}>
+      <div className={`h-screen flex flex-col items-center justify-center gap-4 ${isDarkMode ? "bg-[hsl(180,8%,5%)] text-white" : "bg-[hsl(45,25%,97%)] text-slate-900"}`}>
         <h2 className="text-xl font-semibold">Case not found</h2>
         <Link href="/dashboard">
           <button className="btn-primary">Return to Dashboard</button>
@@ -304,12 +304,12 @@ export default function Chat() {
   }
 
   return (
-    <div className={`h-screen flex flex-col overflow-hidden transition-colors duration-300 ${isDarkMode ? "bg-[hsl(220,15%,5%)]" : "bg-[hsl(220,20%,97%)]"}`}>
+    <div className={`h-screen flex flex-col overflow-hidden transition-colors duration-300 ${isDarkMode ? "bg-[hsl(180,8%,5%)]" : "bg-[hsl(45,25%,97%)]"}`}>
       {/* Noise overlay */}
       <div className="noise-overlay" />
 
       {/* Header */}
-      <header className={`relative z-10 border-b backdrop-blur-xl ${isDarkMode ? "border-white/[0.06] bg-[hsl(220,12%,8%)]/90" : "border-slate-200/80 bg-white/90"}`}>
+      <header className={`relative z-10 border-b backdrop-blur-xl ${isDarkMode ? "border-white/[0.06] bg-[hsl(180,8%,8%)]/90" : "border-slate-200/80 bg-white/90"}`}>
         <div className="max-w-3xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <Link href="/dashboard">
@@ -335,8 +335,8 @@ export default function Chat() {
                 )}
               </motion.button>
               <div className="flex items-center gap-2">
-                <div className="size-7 bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] rounded-lg flex items-center justify-center">
-                  <Stethoscope className="w-3.5 h-3.5 text-[hsl(220,15%,5%)]" />
+                <div className="size-7 bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] rounded-lg flex items-center justify-center">
+                  <Stethoscope className="w-3.5 h-3.5 text-[hsl(180,8%,5%)]" />
                 </div>
                 <span className={`font-semibold text-sm ${isDarkMode ? "text-white" : "text-slate-900"}`}>ClinIQ</span>
               </div>
@@ -377,7 +377,7 @@ export default function Chat() {
             </div>
             <div className={`h-1.5 rounded-full overflow-hidden ${isDarkMode ? "bg-white/[0.06]" : "bg-slate-200"}`}>
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)]"
+                className="h-full rounded-full bg-gradient-to-r from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
@@ -421,7 +421,7 @@ export default function Chat() {
                 <div
                   className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed ${
                     msg.role === "user"
-                      ? "bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] text-[hsl(220,15%,5%)] rounded-2xl rounded-br-md"
+                      ? "bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] text-[hsl(180,8%,5%)] rounded-2xl rounded-br-md"
                       : isDarkMode
                       ? "bg-white/[0.04] border border-white/[0.06] text-slate-200 rounded-2xl rounded-bl-md"
                       : "bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-bl-md shadow-sm"
@@ -430,8 +430,8 @@ export default function Chat() {
                   <p className={msg.role === "user" ? "font-medium" : ""}>{msg.content}</p>
                 </div>
                 {msg.role === "user" && (
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] flex items-center justify-center flex-shrink-0 mb-0.5">
-                    <Stethoscope className="w-3.5 h-3.5 text-[hsl(220,15%,5%)]" />
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] flex items-center justify-center flex-shrink-0 mb-0.5">
+                    <Stethoscope className="w-3.5 h-3.5 text-[hsl(180,8%,5%)]" />
                   </div>
                 )}
               </motion.div>
@@ -460,7 +460,7 @@ export default function Chat() {
       </div>
 
       {/* Input */}
-      <div className={`relative z-10 p-4 border-t backdrop-blur-xl ${isDarkMode ? "border-white/[0.06] bg-[hsl(220,12%,8%)]/90" : "border-slate-200/80 bg-white/90"}`}>
+      <div className={`relative z-10 p-4 border-t backdrop-blur-xl ${isDarkMode ? "border-white/[0.06] bg-[hsl(180,8%,8%)]/90" : "border-slate-200/80 bg-white/90"}`}>
         <div className="max-w-3xl mx-auto">
           <form onSubmit={handleSend} className="relative">
             <input
@@ -470,14 +470,14 @@ export default function Chat() {
               disabled={isSending}
               className={`w-full h-12 pl-4 pr-14 rounded-xl text-sm transition-all duration-200 ${
                 isDarkMode 
-                  ? "bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-slate-500 focus:bg-white/[0.06] focus:border-[hsl(168,84%,45%)]/40 focus:ring-2 focus:ring-[hsl(168,84%,45%)]/20" 
-                  : "bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-[hsl(168,84%,45%)]/50 focus:ring-2 focus:ring-[hsl(168,84%,45%)]/20"
+                  ? "bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-slate-500 focus:bg-white/[0.06] focus:border-[hsl(168,65%,42%)]/40 focus:ring-2 focus:ring-[hsl(168,65%,42%)]/20" 
+                  : "bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-[hsl(168,65%,42%)]/50 focus:ring-2 focus:ring-[hsl(168,65%,42%)]/20"
               } focus:outline-none`}
             />
             <motion.button
               type="submit"
               disabled={!input.trim() || isSending}
-              className="absolute right-1.5 top-1.5 w-9 h-9 rounded-lg bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] flex items-center justify-center text-[hsl(220,15%,5%)] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="absolute right-1.5 top-1.5 w-9 h-9 rounded-lg bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] flex items-center justify-center text-[hsl(180,8%,5%)] disabled:opacity-50 disabled:cursor-not-allowed"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -505,7 +505,7 @@ export default function Chat() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: "spring", duration: 0.3 }}
-              className={`w-full max-w-md rounded-2xl p-6 ${isDarkMode ? "bg-[hsl(220,12%,10%)] border border-white/[0.08]" : "bg-white border border-slate-200 shadow-xl"}`}
+              className={`w-full max-w-md rounded-2xl p-6 ${isDarkMode ? "bg-[hsl(180,8%,10%)] border border-white/[0.08]" : "bg-white border border-slate-200 shadow-xl"}`}
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
@@ -528,9 +528,9 @@ export default function Chat() {
                 autoFocus
                 className={`w-full h-11 px-4 rounded-xl text-sm mb-4 transition-all ${
                   isDarkMode 
-                    ? "bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-slate-500 focus:border-[hsl(168,84%,45%)]/40" 
-                    : "bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-[hsl(168,84%,45%)]/50"
-                } focus:outline-none focus:ring-2 focus:ring-[hsl(168,84%,45%)]/20`}
+                    ? "bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-slate-500 focus:border-[hsl(168,65%,42%)]/40" 
+                    : "bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-[hsl(168,65%,42%)]/50"
+                } focus:outline-none focus:ring-2 focus:ring-[hsl(168,65%,42%)]/20`}
               />
               <div className="flex gap-3">
                 <button
@@ -570,7 +570,7 @@ export default function Chat() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: "spring", duration: 0.3 }}
-              className={`w-full max-w-md rounded-2xl p-6 text-center ${isDarkMode ? "bg-[hsl(220,12%,10%)] border border-white/[0.08]" : "bg-white border border-slate-200 shadow-xl"}`}
+              className={`w-full max-w-md rounded-2xl p-6 text-center ${isDarkMode ? "bg-[hsl(180,8%,10%)] border border-white/[0.08]" : "bg-white border border-slate-200 shadow-xl"}`}
             >
               {diagnosisResult === "correct" && (
                 <>

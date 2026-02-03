@@ -86,15 +86,15 @@ export default function Dashboard() {
       icon: Shuffle,
       cases: cases || [],
       completed: completedCases?.length || 0,
-      gradient: "from-violet-500 to-purple-500",
-      bgGlow: "bg-violet-500/20",
-      accentColor: "text-violet-400",
-      borderHover: "hover:border-violet-500/30",
+      gradient: "from-amber-500 to-orange-500",
+      bgGlow: "bg-amber-500/20",
+      accentColor: "text-amber-400",
+      borderHover: "hover:border-amber-500/30",
     },
   ];
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 ${isDarkMode ? "bg-[hsl(220,15%,5%)]" : "bg-[hsl(220,20%,97%)]"}`}>
+    <div className={`min-h-screen transition-colors duration-500 ${isDarkMode ? "bg-[hsl(180,8%,5%)]" : "bg-[hsl(45,25%,97%)]"}`}>
       {/* Noise overlay */}
       <div className="noise-overlay" />
       

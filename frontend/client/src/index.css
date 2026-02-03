@@ -5,65 +5,65 @@
 @tailwind utilities;
 
 :root {
-  --background: 220 15% 5%;
-  --foreground: 0 0% 98%;
+  --background: 180 8% 5%;
+  --foreground: 45 20% 95%;
   
-  --card: 220 12% 8%;
-  --card-foreground: 0 0% 98%;
+  --card: 180 8% 8%;
+  --card-foreground: 45 20% 95%;
   
-  --popover: 220 12% 8%;
-  --popover-foreground: 0 0% 98%;
+  --popover: 180 8% 8%;
+  --popover-foreground: 45 20% 95%;
   
-  --primary: 168 84% 45%;
-  --primary-foreground: 220 15% 5%;
+  --primary: 168 65% 42%;
+  --primary-foreground: 180 8% 5%;
   
-  --secondary: 220 12% 14%;
-  --secondary-foreground: 0 0% 98%;
+  --secondary: 180 8% 14%;
+  --secondary-foreground: 45 20% 95%;
   
-  --muted: 220 12% 14%;
-  --muted-foreground: 220 10% 55%;
+  --muted: 180 8% 14%;
+  --muted-foreground: 180 8% 55%;
   
-  --accent: 280 75% 60%;
-  --accent-foreground: 0 0% 98%;
+  --accent: 38 75% 55%;
+  --accent-foreground: 180 8% 5%;
   
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 98%;
 
-  --border: 220 12% 14%;
-  --input: 220 12% 14%;
-  --ring: 168 84% 45%;
+  --border: 180 8% 14%;
+  --input: 180 8% 14%;
+  --ring: 168 65% 42%;
   
   --radius: 0.75rem;
   
-  --gradient-primary: linear-gradient(135deg, hsl(168 84% 45%) 0%, hsl(200 80% 50%) 100%);
-  --gradient-accent: linear-gradient(135deg, hsl(280 75% 60%) 0%, hsl(320 70% 55%) 100%);
-  --gradient-warm: linear-gradient(135deg, hsl(35 90% 55%) 0%, hsl(15 85% 55%) 100%);
+  --gradient-primary: linear-gradient(135deg, hsl(168 65% 42%) 0%, hsl(150 55% 45%) 100%);
+  --gradient-accent: linear-gradient(135deg, hsl(38 75% 55%) 0%, hsl(28 80% 50%) 100%);
+  --gradient-warm: linear-gradient(135deg, hsl(38 75% 55%) 0%, hsl(25 80% 50%) 100%);
 }
 
 .light {
-  --background: 220 20% 97%;
-  --foreground: 220 15% 10%;
+  --background: 45 25% 97%;
+  --foreground: 180 15% 10%;
   
   --card: 0 0% 100%;
-  --card-foreground: 220 15% 10%;
+  --card-foreground: 180 15% 10%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 220 15% 10%;
+  --popover-foreground: 180 15% 10%;
   
-  --primary: 168 84% 40%;
+  --primary: 168 60% 38%;
   --primary-foreground: 0 0% 100%;
   
-  --secondary: 220 15% 92%;
-  --secondary-foreground: 220 15% 10%;
+  --secondary: 45 20% 92%;
+  --secondary-foreground: 180 15% 10%;
   
-  --muted: 220 15% 92%;
-  --muted-foreground: 220 10% 40%;
+  --muted: 45 20% 92%;
+  --muted-foreground: 180 10% 40%;
   
-  --accent: 280 75% 55%;
+  --accent: 38 75% 50%;
   --accent-foreground: 0 0% 100%;
   
-  --border: 220 15% 88%;
-  --input: 220 15% 88%;
+  --border: 45 15% 88%;
+  --input: 45 15% 88%;
 }
 
 @layer base {

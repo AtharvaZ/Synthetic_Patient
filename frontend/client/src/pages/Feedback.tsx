@@ -131,7 +131,7 @@ export default function Feedback() {
 
   if (!feedbackData) {
     return (
-      <div className={`min-h-screen flex flex-col items-center justify-center gap-4 ${isDarkMode ? "bg-[hsl(220,15%,5%)] text-white" : "bg-[hsl(220,20%,97%)] text-slate-900"}`}>
+      <div className={`min-h-screen flex flex-col items-center justify-center gap-4 ${isDarkMode ? "bg-[hsl(180,8%,5%)] text-white" : "bg-[hsl(45,25%,97%)] text-slate-900"}`}>
         <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${isDarkMode ? "bg-white/[0.04]" : "bg-slate-100"}`}>
           <Stethoscope className={`w-8 h-8 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`} />
         </div>
@@ -155,18 +155,18 @@ export default function Feedback() {
     : resultConfig.wrong;
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? "bg-[hsl(220,15%,5%)]" : "bg-[hsl(220,20%,97%)]"}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? "bg-[hsl(180,8%,5%)]" : "bg-[hsl(45,25%,97%)]"}`}>
       {/* Noise overlay */}
       <div className="noise-overlay" />
 
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-[hsl(168,84%,45%)]/6" : "bg-[hsl(168,84%,45%)]/4"}`} />
-        <div className={`absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-[hsl(280,75%,60%)]/5" : "bg-[hsl(280,75%,60%)]/3"}`} />
+        <div className={`absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] ${isDarkMode ? "bg-[hsl(168,65%,42%)]/6" : "bg-[hsl(168,65%,42%)]/4"}`} />
+        <div className={`absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full blur-[100px] ${isDarkMode ? "bg-[hsl(38,75%,55%)]/5" : "bg-[hsl(38,75%,55%)]/3"}`} />
       </div>
 
       {/* Header */}
-      <header className={`sticky top-0 z-50 w-full backdrop-blur-xl transition-colors duration-300 ${isDarkMode ? "bg-[hsl(220,15%,5%)]/80 border-b border-white/[0.06]" : "bg-white/80 border-b border-slate-200/80"}`}>
+      <header className={`sticky top-0 z-50 w-full backdrop-blur-xl transition-colors duration-300 ${isDarkMode ? "bg-[hsl(180,8%,5%)]/80 border-b border-white/[0.06]" : "bg-white/80 border-b border-slate-200/80"}`}>
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/dashboard">
             <motion.span
@@ -191,8 +191,8 @@ export default function Feedback() {
               )}
             </motion.button>
             <div className="flex items-center gap-2">
-              <div className="size-8 bg-gradient-to-br from-[hsl(168,84%,45%)] to-[hsl(200,80%,50%)] rounded-xl flex items-center justify-center">
-                <Stethoscope className="w-4 h-4 text-[hsl(220,15%,5%)]" />
+              <div className="size-8 bg-gradient-to-br from-[hsl(168,65%,42%)] to-[hsl(150,55%,45%)] rounded-xl flex items-center justify-center">
+                <Stethoscope className="w-4 h-4 text-[hsl(180,8%,5%)]" />
               </div>
               <span className={`font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>ClinIQ</span>
             </div>
@@ -215,7 +215,7 @@ export default function Feedback() {
               {feedbackData.source && (
                 <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
                   feedbackData.source.isAiGenerated 
-                    ? isDarkMode ? "bg-purple-500/20 text-purple-300 border border-purple-500/30" : "bg-purple-100 text-purple-700 border border-purple-200"
+                    ? isDarkMode ? "bg-teal-500/20 text-teal-300 border border-teal-500/30" : "bg-teal-100 text-teal-700 border border-teal-200"
                     : isDarkMode ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" : "bg-amber-100 text-amber-700 border border-amber-200"
                 }`}>
                   {feedbackData.source.isAiGenerated ? (
@@ -245,7 +245,7 @@ export default function Feedback() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
-              className={`mb-6 rounded-2xl p-6 ${isDarkMode ? "bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/20" : "bg-gradient-to-br from-primary/5 to-purple-500/5 border border-primary/20"}`}
+              className={`mb-6 rounded-2xl p-6 ${isDarkMode ? "bg-gradient-to-br from-primary/10 to-emerald-500/10 border border-primary/20" : "bg-gradient-to-br from-primary/5 to-emerald-500/5 border border-primary/20"}`}
             >
               <div className="flex items-center gap-2 mb-3">
                 <div className={`p-1.5 rounded-lg ${isDarkMode ? "bg-primary/20" : "bg-primary/10"}`}>
