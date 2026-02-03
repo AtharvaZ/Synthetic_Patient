@@ -186,24 +186,21 @@ cd ..
 
 ### Step 4: Configure Environment Variables
 
-Create a `.env` file in the project root:
+The backend reads environment variables directly (not from a `.env` file). You'll need to export them before running:
 
+**Required:**
 ```bash
-# Database - use YOUR local PostgreSQL credentials
-DATABASE_URL=postgresql://yourusername:yourpassword@localhost:5432/cliniq
-
-# Or if using default postgres user with no password:
-DATABASE_URL=postgresql://postgres@localhost:5432/cliniq
-
-# AI Integration (optional but recommended)
-# Get your API key from https://aistudio.google.com/apikey
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Backend URL (default for local development)
-BACKEND_URL=http://localhost:8000
+# Use YOUR local PostgreSQL credentials
+export DATABASE_URL=postgresql://postgres@localhost:5432/cliniq
 ```
 
-**Note:** The `GEMINI_API_KEY` is optional. Without it, AI patient responses will use basic fallback messages instead of realistic simulated conversations.
+**Optional (for AI features):**
+```bash
+# Get your API key from https://aistudio.google.com/apikey
+export GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+**Note:** `DATABASE_URL` is required - the app won't start without it. `GEMINI_API_KEY` is optional; without it, AI patient responses will use basic fallback messages.
 
 ### Step 5: Seed the Database
 
@@ -211,7 +208,7 @@ This populates your database with the 62 clinical training cases:
 
 ```bash
 cd backend
-python seed_data.py
+DATABASE_URL=postgresql://postgres@localhost:5432/cliniq python seed_data.py
 ```
 
 You should see output confirming cases were inserted.
@@ -223,6 +220,7 @@ Open **two terminal windows**:
 **Terminal 1 - Backend API (Port 8000):**
 ```bash
 cd backend
+export DATABASE_URL=postgresql://postgres@localhost:5432/cliniq
 python main.py
 ```
 
