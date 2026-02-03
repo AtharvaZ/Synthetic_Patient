@@ -6,17 +6,22 @@ CaseLab is a medical education platform that helps medical students practice cli
 
 ## Architecture
 
-**Frontend (Port 5000)**: React + Express.js serving the UI, proxying all API calls to backend
-**Backend API (Port 8000)**: FastAPI providing case data, chat management, AI integration, and all business logic
+**Frontend (Port 5000)**: React + Express.js serving the UI, managing chat state in React, storing user progress in localStorage, and proxying API requests to backend
+**Backend API (Port 8000)**: FastAPI serving case data and providing stateless AI processing endpoints (no session/user persistence)
 
 ## Recent Changes (Feb 2026)
 
-### Backend Consolidation
-- All data now stored in PostgreSQL database
-- New tables: users, chats, messages, completions
-- Removed unnecessary CRUD endpoints (symptoms, case mutations)
-- Cases are read-only from the 62 validated training cases
-- Frontend now proxies to backend instead of using in-memory storage
+### LocalStorage-Based Architecture
+- User progress (completed cases, stats, streaks) stored in localStorage
+- Chat sessions managed in React state (session-based, not persisted)
+- Feedback stored in sessionStorage after diagnosis submission
+- Database now only stores the 62 validated clinical cases (read-only)
+- Removed database persistence for users, chats, messages, and completions
+
+### Stateless Backend
+- `/api/patient-message`: Receives case data + conversation, returns AI patient response
+- `/api/submit-diagnosis`: Receives full conversation + diagnosis, returns result + feedback
+- All endpoints are stateless - no session management on backend
 
 ### AI Integration
 - Gemini AI integration for realistic patient simulation
