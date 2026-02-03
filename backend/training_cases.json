@@ -1399,11 +1399,11 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Burning, Itching, Tingling, Then a Rash An outbreak of shingles usually begins with a burning, itching, or tingling sensation on the back, chest, or around the rib cage or waist",
-        "history": "Caused By A Virus Shingles is caused by a virus called varicella-zoster virus -- the one that gave you chickenpox when you were a child. As you recovered from chickenpox, the sores healed and the other symptoms went away, but the virus remained. It is with you for life. The virus hides out in nerve ",
-        "duration": "As described",
-        "severity": "Variable",
-        "triggers": "Caused By A Virus Shingles is caused by a virus called varicella-zoster virus -- the one that gave you chickenpox when you were a child. As you recovered from chickenpox, the sores healed and the othe"
+        "chief_complaint": "I have a painful, burning rash on one side of my body",
+        "history": "I had chickenpox as a child. A few days ago I started feeling a burning and tingling sensation on my left side, near my ribs. Then a rash with blisters appeared in that same area.",
+        "duration": "Started about a week ago with tingling, rash appeared 3 days later",
+        "severity": "The pain is quite intense, feels like burning",
+        "triggers": "I've been under a lot of stress lately and haven't been sleeping well"
       },
       "symptoms": {
         "reported": [
@@ -1428,20 +1428,19 @@
         "gender": "Unspecified"
       },
       "presentation": {
-        "chief_complaint": "Swelling and Pain in the Joints Different types of arthritis have different symptoms",
-        "history": "Actual Cause Is Unknown Scientists believe that rheumatoid arthritis may result from the interaction of many factors such as genetics, hormones, and the environment. Although rheumatoid arthritis sometimes runs in families, the actual cause of rheumatoid arthritis is still unknown. Research suggests",
-        "duration": "As described",
-        "severity": "Variable",
-        "triggers": "Actual Cause Is Unknown Scientists believe that rheumatoid arthritis may result from the interaction of many factors such as genetics, hormones, and the environment. Although rheumatoid arthritis some"
+        "chief_complaint": "My joints are swollen, stiff, and painful, especially in the morning",
+        "history": "My mother had arthritis too. The stiffness and pain started in my fingers and wrists, and now it affects both hands symmetrically. Mornings are the worst - it takes over an hour for the stiffness to go away.",
+        "duration": "Several months, gradually getting worse",
+        "severity": "Moderate to severe, worse in the mornings",
+        "triggers": "Cold weather and stress seem to make it worse"
       },
       "symptoms": {
         "reported": [
-          "pain-relieving drugs",
-          "medications that slow joint damage",
-          "a balance between rest",
-          "exercise",
-          "patient education",
-          "support programs"
+          "joint pain",
+          "joint swelling",
+          "morning stiffness",
+          "fatigue",
+          "symmetrical joint involvement"
         ],
         "negative": [],
         "exam_findings": []
