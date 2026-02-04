@@ -6,6 +6,11 @@ import { createServer } from "http";
 const app = express();
 const httpServer = createServer(app);
 
+// Health check endpoint - responds immediately for deployment health checks
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
 // Add CORS headers to all responses
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
