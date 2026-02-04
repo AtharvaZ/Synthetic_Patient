@@ -199,6 +199,7 @@ class FrontendCaseResponse(BaseModel):
     acceptable_diagnoses: str
     image_url: Optional[str] = None
     status: str = "available"
+    has_exams: bool = False
     
     class Config:
         from_attributes = True

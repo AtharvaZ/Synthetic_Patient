@@ -124,6 +124,15 @@ def get_specialty(desc: str, diag: str) -> str:
     return "General Medicine"
 
 
+def has_exam_findings(description: str) -> bool:
+    """Check if the case description contains exam/test findings"""
+    text = description.lower()
+    exam_keywords = ["blood pressure", "heart rate", "pulse", "temperature", "tenderness", 
+                     "swelling", "blood test", "x-ray", "mri", "ct scan", "ultrasound", 
+                     "lab results", "test results", "exam", "physical examination"]
+    return any(keyword in text for keyword in exam_keywords)
+
+
 @app.get("/")
 def root():
     return {"message": "Medical Case Training API", "version": "3.0.0", "docs": "/docs"}
@@ -146,7 +155,8 @@ def list_cases(db: Session = Depends(get_db)):
         expected_diagnosis=c.diagnosis,
         acceptable_diagnoses="",
         image_url=None,
-        status="available"
+        status="available",
+        has_exams=has_exam_findings(c.description or "")
     ) for c in cases]
 
 
@@ -164,7 +174,8 @@ def get_case(case_id: int, db: Session = Depends(get_db)):
         expected_diagnosis=c.diagnosis,
         acceptable_diagnoses="",
         image_url=None,
-        status="available"
+        status="available",
+        has_exams=has_exam_findings(c.description or "")
     )
 
 
@@ -182,7 +193,8 @@ def cases_by_difficulty(difficulty: str, db: Session = Depends(get_db)):
         expected_diagnosis=c.diagnosis,
         acceptable_diagnoses="",
         image_url=None,
-        status="available"
+        status="available",
+        has_exams=has_exam_findings(c.description or "")
     ) for c in cases]
 
 
@@ -231,7 +243,8 @@ def get_similar_cases(case_id: int, db: Session = Depends(get_db)):
         expected_diagnosis=c.diagnosis,
         acceptable_diagnoses="",
         image_url=None,
-        status="available"
+        status="available",
+        has_exams=has_exam_findings(c.description or "")
     ) for c, _ in similar_cases]
 
 

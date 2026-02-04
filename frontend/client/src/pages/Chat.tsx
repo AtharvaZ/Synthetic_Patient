@@ -18,6 +18,7 @@ import {
   Moon,
   User,
   Lightbulb,
+  ClipboardList,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -399,7 +400,7 @@ export default function Chat() {
           </div>
 
           <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isDarkMode ? "bg-white/[0.06] text-slate-300" : "bg-slate-100 text-slate-600"}`}>
                 {caseData.specialty}
               </span>
@@ -412,6 +413,12 @@ export default function Chat() {
               }`}>
                 {caseData.difficulty}
               </span>
+              {caseData.hasExams && (
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1 ${isDarkMode ? "bg-blue-500/10 text-blue-400" : "bg-blue-100 text-blue-600"}`}>
+                  <ClipboardList className="w-3 h-3" />
+                  Exams Available
+                </span>
+              )}
             </div>
             <motion.button
               onClick={() => setShowDiagnoseInput(true)}

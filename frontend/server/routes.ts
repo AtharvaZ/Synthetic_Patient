@@ -40,7 +40,8 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
         expectedDiagnosis: c.expected_diagnosis,
         acceptableDiagnoses: c.acceptable_diagnoses || "",
         imageUrl: c.image_url,
-        status: c.status || "available"
+        status: c.status || "available",
+        hasExams: c.has_exams || false
       })));
     } catch (e) {
       console.error("Error:", e);
@@ -63,7 +64,8 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
         expectedDiagnosis: c.expected_diagnosis,
         acceptableDiagnoses: c.acceptable_diagnoses || "",
         imageUrl: c.image_url,
-        status: c.status || "available"
+        status: c.status || "available",
+        hasExams: c.has_exams || false
       });
     } catch (e) {
       console.error("Error:", e);
@@ -85,7 +87,8 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
         expectedDiagnosis: c.expected_diagnosis,
         acceptableDiagnoses: c.acceptable_diagnoses || "",
         imageUrl: c.image_url,
-        status: c.status || "available"
+        status: c.status || "available",
+        hasExams: c.has_exams || false
       })));
     } catch (e) {
       console.error("Error:", e);
@@ -108,7 +111,8 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
         expectedDiagnosis: c.expected_diagnosis,
         acceptableDiagnoses: c.acceptable_diagnoses || "",
         imageUrl: c.image_url,
-        status: c.status || "available"
+        status: c.status || "available",
+        hasExams: c.has_exams || false
       })));
     } catch (e) {
       console.error("Error:", e);
