@@ -150,5 +150,22 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  app.post("/api/hint", async (req, res) => {
+    try {
+      const resp = await backendFetch("/api/hint", {
+        method: "POST",
+        body: JSON.stringify(req.body),
+      });
+      if (!resp.ok) {
+        const err = await resp.json();
+        return res.status(resp.status).json(err);
+      }
+      res.json(await resp.json());
+    } catch (e) {
+      console.error("Error:", e);
+      res.status(500).json({ message: "Failed to get hint" });
+    }
+  });
+
   return httpServer;
 }
