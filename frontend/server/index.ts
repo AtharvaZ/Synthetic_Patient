@@ -6,9 +6,20 @@ import { createServer } from "http";
 const app = express();
 const httpServer = createServer(app);
 
-// Health check endpoint - responds immediately for deployment health checks
+// Health check endpoints - respond immediately for deployment health checks
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// Root health check for deployments that check "/"
+// Only responds to non-browser requests (health checks), browsers get the React app
+app.get("/", (req, res, next) => {
+  const acceptHeader = req.headers.accept || "";
+  const isHealthCheck = !acceptHeader.includes("text/html");
+  if (isHealthCheck) {
+    return res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+  }
+  next();
 });
 
 // Add CORS headers to all responses
